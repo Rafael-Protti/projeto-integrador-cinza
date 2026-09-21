@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Página de Login e Cadastro - Minha conta. Acesse ou crie sua conta com facilidade e segurança.">
+  <title>Minha conta - Cadastro e Login</title>
+  
+  <!-- Fontes do Google (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6 para ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Estilos CSS da página de Login/Cadastro -->
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+  <!-- A. CABEÇALHO / NAVBAR (RETÂNGULO COMPRIDO DE PONTA A PONTA) -->
+  <header class="topbar">
+    <div class="topbar-container">
+      
+      <!-- Lado Esquerdo: Planeta Pequeno + Minha Conta -->
+      <a href="login.html" class="brand-minha-conta" aria-label="Página Minha Conta">
+        <i class="fas fa-globe icone-planeta"></i>
+        <span>Minha conta</span>
+      </a>
+
+      <!-- Lado Direito: Três Ícones (Casa, Escudo, Homem de Contato) num Quadrado com Espaçamento de 1cm -->
+      <div class="caixa-icones-direita" aria-label="Navegação rápida">
+        <a href="Cadastro.html" class="item-icon-nav" title="Início / Perfil" aria-label="Início">
+          <i class="fas fa-house"></i>
+        </a>
+        <a href="gameficacao.html" class="item-icon-nav" title="Segurança e Gamificação" aria-label="Segurança">
+          <i class="fas fa-shield-alt"></i>
+        </a>
+        <a href="produtos.html" class="item-icon-nav" title="Produtos / Contato" aria-label="Contato">
+          <i class="fas fa-user"></i>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- B. CONTEÚDO PRINCIPAL (PAINEL DE CADASTRO E LOGIN) -->
+  <main class="conteudo-principal">
+
+    <section class="painel-autenticacao">
+      
+      <!-- 1. LADO ESQUERDO: QUERO CRIAR UMA CONTA -->
+      <div class="coluna-cadastro">
+        
+        <header class="header-cadastro">
+          <!-- Imagem pequena de contato no centro e acima da escrita -->
+          <div class="avatar-contato-box">
+            <i class="fas fa-user-plus"></i>
+          </div>
+          <h2 class="titulo-criar-conta">Quero criar uma conta</h2>
+        </header>
+
+        <!-- Formulário de Criar Conta -->
+        <form class="form-autenticacao" action="Cadastro.html" method="GET">
+          
+          <!-- E-mail para cadastro -->
+          <div class="campo-grupo">
+            <label for="cadastro-email" class="campo-rotulo">
+              <i class="fas fa-envelope"></i> Email
+            </label>
+            <div class="input-wrapper">
+              <i class="fas fa-envelope input-icon-prefix"></i>
+              <input 
+                type="email" 
+                id="cadastro-email" 
+                name="email" 
+                class="campo-input-retangulo" 
+                placeholder="Digite seu e-mail" 
+                autocomplete="email" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Senha para cadastro -->
+          <div class="campo-grupo">
+            <label for="cadastro-senha" class="campo-rotulo">
+              <i class="fas fa-lock"></i> Senha
+            </label>
+            <div class="input-wrapper">
+              <i class="fas fa-lock input-icon-prefix"></i>
+              <input 
+                type="password" 
+                id="cadastro-senha" 
+                name="senha" 
+                class="campo-input-retangulo" 
+                placeholder="Digite sua senha" 
+                autocomplete="new-password"
+                minlength="8"
+                required
+              >
+            </div>
+            <p class="texto-ajuda-senha">
+              <i class="fas fa-info-circle"></i> A senha deve conter pelo menos 8 caracteres, incluindo letras e números.
+            </p>
+          </div>
+
+          <!-- Botão Continuar > com bordas arredondadas e 2cm de espaçamento superior -->
+          <div class="espacamento-botao-2cm">
+            <button type="submit" class="btn-continuar">
+              <span>Continuar</span>
+              <i class="fas fa-chevron-right setinha"></i>
+            </button>
+          </div>
+
+          <!-- Opções de Social Login (Google, Apple, Facebook) -->
+          <div class="divisor-social">Ou crie sua conta com</div>
+          <div class="botoes-social">
+            <button type="button" class="btn-social" title="Criar com Google">
+              <i class="fab fa-google"></i> Google
+            </button>
+            <button type="button" class="btn-social" title="Criar com Apple">
+              <i class="fab fa-apple"></i> Apple
+            </button>
+            <button type="button" class="btn-social" title="Criar com Facebook">
+              <i class="fab fa-facebook-f"></i> Facebook
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- 2. DIVISOR CENTRAL: "OU" -->
+      <div class="divisor-central-ou">
+        <div class="linha-vertical"></div>
+        <div class="circulo-ou">Ou</div>
+      </div>
+
+      <!-- 3. LADO DIREITO: JÁ TENHO CONTA -->
+      <div class="coluna-login">
+        
+        <header class="header-login">
+          <!-- Imagem pequena de cadeado na esquerda/centro dentro do container -->
+          <div class="cadeado-topo-box">
+            <i class="fas fa-lock"></i>
+          </div>
+          <h2 class="titulo-ja-tenho-conta">Já tenho conta</h2>
+        </header>
+
+        <!-- Formulário de Login -->
+        <form class="form-autenticacao" action="Cadastro.html" method="GET">
+          
+          <!-- Email -->
+          <div class="campo-grupo">
+            <label for="login-email" class="campo-rotulo">
+              <i class="fas fa-envelope"></i> Email
+            </label>
+            <div class="input-wrapper">
+              <i class="fas fa-envelope input-icon-prefix"></i>
+              <input 
+                type="email" 
+                id="login-email" 
+                name="email" 
+                class="campo-input-retangulo" 
+                placeholder="Digite seu email" 
+                autocomplete="username" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Senha com Olho Privando/Liberando o Acesso (CSS Checkbox Hack) -->
+          <div class="campo-grupo">
+            <label for="login-senha" class="campo-rotulo">
+              <i class="fas fa-lock"></i> Senha
+            </label>
+            <div class="input-wrapper">
+              <i class="fas fa-lock input-icon-prefix"></i>
+              
+              <!-- Checkbox invisível para toggle sem JS -->
+              <input type="checkbox" id="toggle-senha-login" class="toggle-senha-checkbox">
+              
+              <input 
+                type="password" 
+                id="login-senha" 
+                name="senha" 
+                class="campo-input-retangulo" 
+                placeholder="digite sua senha" 
+                autocomplete="current-password" 
+                required
+              >
+              
+              <!-- Ícone de Olho Interativo sem JS -->
+              <label for="toggle-senha-login" class="btn-olho-toggle" title="Exibir/Ocultar senha">
+                <i class="fas fa-eye icone-olho-fechado"></i>
+                <i class="fas fa-eye-slash icone-olho-aberto"></i>
+              </label>
+            </div>
+          </div>
+
+          <!-- Botão Continuar > com bordas arredondadas e setinha na frente -->
+          <div class="caixa-acoes-login">
+            <button type="submit" class="btn-continuar">
+              <span>Continuar</span>
+              <i class="fas fa-chevron-right setinha"></i>
+            </button>
+          </div>
+
+          <!-- Botão Entrar Sem Senha (Link Mágico/OTP) com Envelope na Frente -->
+          <button type="button" class="btn-entrar-sem-senha">
+            <i class="fas fa-envelope"></i>
+            <span>entrar sem senha</span>
+          </button>
+
+          <!-- Link Esqueci a Senha logo em baixo -->
+          <div class="caixa-esqueci-senha">
+            <a href="#" class="link-esqueci-senha">esqueci a senha</a>
+          </div>
+
+          <!-- Dica de Segurança e 2FA -->
+          <div class="dica-seguranca">
+            <i class="fas fa-shield-halved"></i>
+            <span>Autenticação de dois fatores (2FA) e proteção contra acessos não autorizados ativada.</span>
+          </div>
+
+        </form>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- C. RODAPÉ (FOOTER BARRA COMPRIDA DE PONTA A PONTA) -->
+  <footer class="rodape">
+    <div class="rodape-container">
+      <p class="copyright">@2025nomedosite.Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

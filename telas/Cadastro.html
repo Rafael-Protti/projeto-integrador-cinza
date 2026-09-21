@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Página de cadastro e perfil de usuário com coleções de produtos.">
+  <title>Cadastro e Perfil - Galeria Atemporal</title>
+  
+  <!-- Fontes do Google (Inter & Segoe UI fallback) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6 para ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Estilos CSS -->
+  <link rel="stylesheet" href="Cadastro.css">
+</head>
+<body>
+
+  <!-- A. BARRA SUPERIOR (HEADER ESCURO / TOPBAR) -->
+  <header class="topbar">
+    <div class="topbar-container">
+      
+      <!-- 1. Logo / Título -->
+      <a href="Cadastro.html" class="logo">Galeria Atemporal</a>
+
+      <!-- 2. Barra de Pesquisa com Bordas Arredondadas e Lupa -->
+      <div class="caixa-pesquisa">
+        <input type="text" id="input-pesquisa" class="input-pesquisa" placeholder="Digite para pesquisar produtos ou perfil..." aria-label="Barra de pesquisa">
+        <button class="btn-lupa" aria-label="Pesquisar">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+
+      <!-- 3 e 4. Notificações, Mensagens e Login/Cadastro (Ícones P&B) -->
+      <div class="acoes-usuario">
+        <button class="btn-icon" title="Notificações" aria-label="Notificações">
+          <i class="fas fa-bell"></i>
+        </button>
+        <button class="btn-icon" title="Mensagens" aria-label="Mensagens">
+          <i class="fas fa-envelope"></i>
+        </button>
+        <a href="Cadastro.html" class="btn-login">
+          <i class="fas fa-user"></i>
+          <span>Login/Cadastro</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- B. SUBNAV (RETÂNGULOS ESCUROS NO TOPO) -->
+  <nav class="subnav" aria-label="Navegação secundária">
+    <div class="subnav-container">
+      <div class="botoes-topo">
+        <a href="#" class="btn-retangulo active">Início</a>
+        <a href="#" class="btn-retangulo">Mensagens</a>
+        <a href="#" class="btn-retangulo">Configurações</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTEÚDO PRINCIPAL DA PÁGINA -->
+  <main class="conteudo-principal">
+
+    <!-- C. PAINEL DE PERFIL DO USUÁRIO -->
+    <section class="painel-perfil">
+      
+      <!-- LADO ESQUERDO: FOTO E BOTÃO TROCAR FOTO -->
+      <div class="perfil-esquerdo">
+        <div class="moldura-foto">
+          <img id="img-usuario-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Foto do Usuário" class="foto-usuario">
+          <span class="legenda-foto">Foto</span>
+        </div>
+        
+        <button type="button" id="btn-trocar-foto" class="btn-trocar-foto">
+          <i class="fas fa-camera"></i> Trocar foto
+        </button>
+        <!-- Input de Arquivo Escondido (Aceita apenas .jpg, .png e max 2MB no JS) -->
+        <input type="file" id="input-foto-file" accept="image/jpeg, image/jpg, image/png" style="display: none;">
+      </div>
+
+      <!-- LADO DIREITO: FORMULÁRIO COM INFORMAÇÕES CADASTRAIS -->
+      <div class="perfil-direito">
+        <h2 class="titulo-painel">Informações Cadastrais</h2>
+        
+        <!-- Mensagem de Feedback (Sucesso / Erro) -->
+        <div id="msg-feedback" class="msg-feedback" style="display: none;"></div>
+
+        <form id="form-perfil" class="form-perfil">
+          
+          <!-- Nome Completo -->
+          <div class="campo-grupo">
+            <label for="input-nome" class="campo-rotulo">
+              <i class="fas fa-user icone-pb"></i> Nome Completo
+            </label>
+            <input type="text" id="input-nome" class="campo-input" value="Ingrid Silva" placeholder="Ex: Maria Silva" required>
+          </div>
+
+          <!-- Telefone com Máscara (11) 99999-9999 -->
+          <div class="campo-grupo">
+            <label for="input-telefone" class="campo-rotulo">
+              <i class="fas fa-phone icone-pb"></i> Telefone
+            </label>
+            <input type="text" id="input-telefone" class="campo-input" value="(11) 98765-4321" placeholder="(11) 99999-9999" required>
+          </div>
+
+          <!-- E-mail com Validação -->
+          <div class="campo-grupo">
+            <label for="input-email" class="campo-rotulo">
+              <i class="fas fa-envelope icone-pb"></i> E-mail
+            </label>
+            <input type="email" id="input-email" class="campo-input" value="ingrid.silva@email.com" placeholder="seuemail@dominio.com" required>
+          </div>
+
+          <!-- Número de Trocas (Contador Dinâmico +1 Ponto) -->
+          <div class="campo-grupo">
+            <label for="input-trocas" class="campo-rotulo">
+              <i class="fas fa-exchange-alt icone-pb"></i> Número de Trocas
+            </label>
+            <div class="caixa-trocas">
+              <div class="badge-trocas">
+                <span id="span-trocas-contador">12</span> trocas realizadas
+              </div>
+              <button type="button" id="btn-incrementar-troca" class="btn-add-ponto" title="Adicionar +1 ponto de troca">
+                <i class="fas fa-plus"></i> +1 Transação
+              </button>
+            </div>
+            <input type="hidden" id="input-trocas" value="12">
+          </div>
+
+          <!-- Botão "Salvar alterações" (Aparece apenas ao modificar algum dado) -->
+          <div class="caixa-acoes-form">
+            <button type="submit" id="btn-salvar-alteracoes" class="btn-salvar oculto" disabled>
+              <i class="fas fa-save"></i> Salvar alterações
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </section>
+
+    <!-- D. SEÇÃO DE COLEÇÕES (CARDS DE PRODUTOS) -->
+    <section class="secao-colecoes">
+      
+      <header class="header-colecoes">
+        <div class="titulo-estrela-wrapper">
+          <i class="fas fa-star icone-estrela-pb"></i>
+          <h2>Coleções</h2>
+        </div>
+      </header>
+
+      <div id="grid-colecoes" class="grid-colecoes">
+        
+        <!-- CARD 1: Discos de Vinil -->
+        <article class="card-colecao">
+          <div class="imagem-colecao-box">
+            <img src="https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=600&q=80" alt="Discos de Vinil" class="img-colecao">
+          </div>
+          <div class="info-card-colecao">
+            <h3 class="nome-colecao">Discos de Vinil</h3>
+            <p class="qtd-itens">12 itens disponíveis</p>
+            <button class="btn-ver-colecao" data-categoria="vinil">Ver coleção</button>
+          </div>
+        </article>
+
+        <!-- CARD 2: Livros -->
+        <article class="card-colecao">
+          <div class="imagem-colecao-box">
+            <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80" alt="Livros" class="img-colecao">
+          </div>
+          <div class="info-card-colecao">
+            <h3 class="nome-colecao">Livros</h3>
+            <p class="qtd-itens">20 itens disponíveis</p>
+            <button class="btn-ver-colecao" data-categoria="livros">Ver coleção</button>
+          </div>
+        </article>
+
+        <!-- CARD 3: Cartinhas -->
+        <article class="card-colecao">
+          <div class="imagem-colecao-box">
+            <img src="https://images.unsplash.com/photo-1613771404721-1f92d799e49f?auto=format&fit=crop&w=600&q=80" alt="Cartinhas" class="img-colecao">
+          </div>
+          <div class="info-card-colecao">
+            <h3 class="nome-colecao">Cartinhas</h3>
+            <p class="qtd-itens">36 itens disponíveis</p>
+            <button class="btn-ver-colecao" data-categoria="cartinhas">Ver coleção</button>
+          </div>
+        </article>
+
+        <!-- CARD 4: Jogo -->
+        <article class="card-colecao">
+          <div class="imagem-colecao-box">
+            <img src="https://images.unsplash.com/photo-1606167668584-78701c57f13d?auto=format&fit=crop&w=600&q=80" alt="Jogo" class="img-colecao">
+          </div>
+          <div class="info-card-colecao">
+            <h3 class="nome-colecao">Jogo</h3>
+            <p class="qtd-itens">9 itens disponíveis</p>
+            <button class="btn-ver-colecao" data-categoria="jogos">Ver coleção</button>
+          </div>
+        </article>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- MODAL VISUAL PARA AJUSTE / CORTE CIRCULAR DE FOTO DE PERFIL -->
+  <div id="modal-corte" class="modal-overlay">
+    <div class="modal-conteudo">
+      <h3>Ajustar Foto de Perfil</h3>
+      <p class="subtitulo-modal">Centralize ou confirme o corte circular da imagem (Máx. 2MB)</p>
+      
+      <div class="cropper-container">
+        <div class="cropper-mask-circular">
+          <img id="img-modal-preview" src="" alt="Pré-visualização da Foto">
+        </div>
+      </div>
+
+      <div class="modal-botoes">
+        <button id="btn-cancelar-corte" class="btn-modal-secundario">Cancelar</button>
+        <button id="btn-confirmar-corte" class="btn-modal-primario">Aplicar Foto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- E. RODAPÉ (FOOTER BARRA COMPRIDA DE PONTA A PONTA) -->
+  <footer class="rodape">
+    <div class="rodape-container">
+      <p class="copyright">@2025nomedosite.Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Script JS Interativo -->
+  <script src="Cadastro.js"></script>
+</body>
+</html>

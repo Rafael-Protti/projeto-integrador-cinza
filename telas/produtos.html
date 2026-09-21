@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Página de exibição de produtos com catálogo responsivo, carrossel de destaque e navegação por abas.">
+  <title>Nome do site - Catálogo de Produtos</title>
+  
+  <!-- Fonte do Google Fonts (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Arquivo de Estilos CSS -->
+  <link rel="stylesheet" href="produtos.css">
+</head>
+<body>
+
+  <!-- A. BARRA SUPERIOR (HEADER ESCURO / TOPBAR) -->
+  <header class="topbar">
+    <div class="topbar-container">
+      
+      <!-- 1. Logo / Título -->
+      <h1 class="logo">Nome do site</h1>
+
+      <!-- 2. Barra de Pesquisa -->
+      <div class="caixa-pesquisa">
+        <input type="text" class="input-pesquisa" placeholder="Barra de pesquisa" aria-label="Barra de pesquisa">
+        <button class="btn-lupa" aria-label="Pesquisar">🔍</button>
+      </div>
+
+      <!-- 3 e 4. Notificações, Mensagens e Login -->
+      <div class="acoes-usuario">
+        <button class="btn-icon" title="Notificações" aria-label="Notificações">🔔</button>
+        <button class="btn-icon" title="Mensagens" aria-label="Mensagens">✉️</button>
+        <button class="btn-login">👤 Login/Cadastro</button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- B. MENU DE NAVEGAÇÃO SECUNDÁRIO (TABS / SUB-HEADER) -->
+  <nav class="subnav" aria-label="Navegação secundária">
+    <div class="subnav-container">
+      <ul class="menu-lista">
+        <li><a href="#" class="menu-link active">Itens</a></li>
+        <li><a href="#" class="menu-link">Histórico</a></li>
+        <li><a href="#" class="menu-link">Conquistas</a></li>
+        <li><a href="#" class="menu-link">Rankings</a></li>
+        <li><a href="#" class="menu-link">Planos</a></li>
+        <li><a href="#" class="menu-link">Livros</a></li>
+        <li><a href="#" class="menu-link">CDs</a></li>
+        <li><a href="#" class="menu-link">Cartinhas</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- CONTEÚDO PRINCIPAL DA PÁGINA -->
+  <main class="conteudo-principal">
+
+    <!-- C. CARROSSEL DE IMAGENS (BANNER / HERO SECTION) -->
+    <section class="secao-carrossel" aria-label="Destaques">
+      <div class="carrossel-box">
+        <!-- Botão Esquerda -->
+        <button class="btn-seta" aria-label="Imagem anterior">◀</button>
+        
+        <!-- Área Central -->
+        <div class="carrossel-centro">
+          <span class="icone-carrossel">🖼️</span>
+          <h2>Carrossel de imagens</h2>
+        </div>
+
+        <!-- Botão Direita -->
+        <button class="btn-seta" aria-label="Próxima imagem">▶</button>
+      </div>
+
+      <!-- Indicador de Páginas (3 Pontos / Dots) -->
+      <div class="carrossel-dots">
+        <span class="dot active" title="Página 1"></span>
+        <span class="dot" title="Página 2"></span>
+        <span class="dot" title="Página 3"></span>
+      </div>
+    </section>
+
+    <!-- D. SEÇÃO DO CATÁLOGO ("CARDS DOS PRODUTOS") -->
+    <section class="secao-catalogo">
+      <h2 class="titulo-secao">Cards dos produtos</h2>
+
+      <div class="grid-produtos">
+        
+        <!-- CARD 1 -->
+        <article class="card-produto">
+          <div class="imagem-box">
+            <span class="icone-imagem">🖼️</span>
+          </div>
+          <h3 class="nome-produto">Nome do produto</h3>
+          <p class="categoria-produto">Categoria</p>
+          <p class="preco-produto">R$ 0,00</p>
+          <button class="btn-comprar">🛒 Ver produto</button>
+        </article>
+
+        <!-- CARD 2 -->
+        <article class="card-produto">
+          <div class="imagem-box">
+            <span class="icone-imagem">🖼️</span>
+          </div>
+          <h3 class="nome-produto">Nome do produto</h3>
+          <p class="categoria-produto">Categoria</p>
+          <p class="preco-produto">R$ 0,00</p>
+          <button class="btn-comprar">🛒 Ver produto</button>
+        </article>
+
+        <!-- CARD 3 -->
+        <article class="card-produto">
+          <div class="imagem-box">
+            <span class="icone-imagem">🖼️</span>
+          </div>
+          <h3 class="nome-produto">Nome do produto</h3>
+          <p class="categoria-produto">Categoria</p>
+          <p class="preco-produto">R$ 0,00</p>
+          <button class="btn-comprar">🛒 Ver produto</button>
+        </article>
+
+        <!-- CARD 4 -->
+        <article class="card-produto">
+          <div class="imagem-box">
+            <span class="icone-imagem">🖼️</span>
+          </div>
+          <h3 class="nome-produto">Nome do produto</h3>
+          <p class="categoria-produto">Categoria</p>
+          <p class="preco-produto">R$ 0,00</p>
+          <button class="btn-comprar">🛒 Ver produto</button>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- E. RODAPÉ (FOOTER) -->
+  <footer class="rodape">
+    <div class="caixa-tag-rodape">
+      <span class="tag-rodape">Rodapé</span>
+    </div>
+    <p class="copyright">&copy; 2025 Nome do site. Todos os direitos reservados.</p>
+  </footer>
+
+</body>
+</html>

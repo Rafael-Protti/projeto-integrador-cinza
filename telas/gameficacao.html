@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gameficação - Troca de Colecionáveis</title>
+    <link rel="stylesheet" href="gameficacao.css">
+    <!-- Usando FontAwesome para os ícones, conforme padrão de ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">Colecionáveis</a>
+
+        <div class="search-bar">
+            <span class="search-text">Digite para pesquisa</span>
+            <i class="fas fa-search search-icon"></i>
+        </div>
+
+        <div class="nav-actions">
+            <a href="#" class="btn-notification">
+                <i class="fas fa-bell"></i>
+            </a>
+            <a href="#" class="btn-messages">
+                <i class="fas fa-envelope"></i>
+            </a>
+            <a href="#" class="btn-login">
+                <i class="fas fa-user"></i>
+                <span>Login/Cadastro</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="conteudo">
+        <header class="titulo-pagina">
+            <div class="titulo-wrapper">
+                <i class="fas fa-trophy icone-titulo"></i>
+                <h1>Gameficação</h1>
+            </div>
+            <p class="desc-titulo">Acompanhe seu progresso e conquiste recompensas!</p>
+        </header>
+
+        <section class="painel-perfil">
+            <div class="perfil-esquerdo">
+                <img src="https://placehold.co/100x100" alt="Foto do usuário" class="foto-usuario">
+                <div class="info-usuario">
+                    <h2 class="nome-usuario">Nome do Usuário</h2>
+                    <span class="nivel-texto">Nível 5</span>
+
+                    <div class="xp-container">
+                        <div class="barra-xp-fundo">
+                            <div class="barra-xp-progresso" style="width: 65%;"></div>
+                        </div>
+                        <span class="xp-quantia"><span class="xp-atual">6500</span><span class="xp-total">/10000
+                                XP</span></span>
+                    </div>
+
+                    <p class="xp-faltante">Faltam 3500 XP para o próximo nível</p>
+                </div>
+            </div>
+
+            <div class="painel-status">
+                <div class="status-card">
+                    <i class="fas fa-star icone-status"></i>
+                    <span class="status-valor">6500</span>
+                    <span class="status-texto">XP Total</span>
+                </div>
+                <div class="status-card">
+                    <i class="fas fa-chart-line icone-status"></i>
+                    <span class="status-valor">5</span>
+                    <span class="status-texto">Nível Atual</span>
+                </div>
+                <div class="status-card">
+                    <i class="fas fa-bullseye icone-status"></i>
+                    <span class="status-valor">12</span>
+                    <span class="status-texto">Missões Concluídas</span>
+                </div>
+                <div class="status-card">
+                    <i class="fas fa-award icone-status"></i>
+                    <span class="status-valor">4</span>
+                    <span class="status-texto">Conquistas</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="paineis-inferiores">
+            <!-- Painel de Missões -->
+            <section class="painel-missoes painel-card">
+                <header class="painel-header">
+                    <div class="painel-titulo-wrapper">
+                        <i class="fas fa-bullseye icone-painel"></i>
+                        <h2>Missões</h2>
+                    </div>
+                    <a href="#" class="link-ver-todos">Ver todas</a>
+                </header>
+
+                <div class="abas-missoes">
+                    <button class="aba ativa">Diárias</button>
+                    <button class="aba">Semanais</button>
+                </div>
+
+                <div class="lista-missoes">
+                    <div class="missao-card">
+                        <i class="fas fa-comments icone-missao"></i>
+                        <div class="missao-info">
+                            <span class="nome-missao">Faça 3 comentários</span>
+                            <div class="missao-progresso-container">
+                                <div class="barra-missao-fundo">
+                                    <div class="barra-missao-progresso" style="width: 66%;"></div>
+                                </div>
+                                <span class="missao-texto-progresso">2/3</span>
+                                <span class="xp-ganho">+50 XP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="missao-card">
+                        <i class="fas fa-box-open icone-missao"></i>
+                        <div class="missao-info">
+                            <span class="nome-missao">Publique 1 item</span>
+                            <div class="missao-progresso-container">
+                                <div class="barra-missao-fundo">
+                                    <div class="barra-missao-progresso" style="width: 0%;"></div>
+                                </div>
+                                <span class="missao-texto-progresso">0/1</span>
+                                <span class="xp-ganho">+100 XP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="missao-card">
+                        <i class="fas fa-handshake icone-missao"></i>
+                        <div class="missao-info">
+                            <span class="nome-missao">Conclua 1 troca</span>
+                            <div class="missao-progresso-container">
+                                <div class="barra-missao-fundo">
+                                    <div class="barra-missao-progresso" style="width: 100%;"></div>
+                                </div>
+                                <span class="missao-texto-progresso">1/1</span>
+                                <span class="xp-ganho">+200 XP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Painel do Ranking -->
+            <section class="painel-ranking painel-card">
+                <header class="painel-header">
+                    <div class="painel-titulo-wrapper">
+                        <i class="fas fa-trophy icone-painel"></i>
+                        <h2>Ranking dos Colecionadores</h2>
+                    </div>
+                    <a href="#" class="link-ver-todos">Ver ranking completo</a>
+                </header>
+
+                <div class="lista-ranking">
+                    <div class="ranking-card">
+                        <span class="posicao-1-lugar">1</span>
+                        <img src="https://placehold.co/40x40" alt="Foto usuário 1">
+                        <span class="nome-ranking">João Silva</span>
+                        <span class="xp-ranking">12000 XP</span>
+                    </div>
+                    <div class="ranking-card">
+                        <span class="posicao-2-lugar">2</span>
+                        <img src="https://placehold.co/40x40" alt="Foto usuário 2">
+                        <span class="nome-ranking">Maria Oliveira</span>
+                        <span class="xp-ranking">11500 XP</span>
+                    </div>
+                    <div class="ranking-card">
+                        <span class="posicao-3-lugar">3</span>
+                        <img src="https://placehold.co/40x40" alt="Foto usuário 3">
+                        <span class="nome-ranking">Carlos Santos</span>
+                        <span class="xp-ranking">10200 XP</span>
+                    </div>
+                    <div class="ranking-card">
+                        <span class="posicao">4</span>
+                        <img src="https://placehold.co/40x40" alt="Foto usuário 4">
+                        <span class="nome-ranking">Ana Souza</span>
+                        <span class="xp-ranking">9800 XP</span>
+                    </div>
+                    <div class="ranking-card">
+                        <span class="posicao">5</span>
+                        <img src="https://placehold.co/40x40" alt="Foto usuário 5">
+                        <span class="nome-ranking">Pedro Costa</span>
+                        <span class="xp-ranking">8500 XP</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Painel de Medalhas -->
+            <section class="painel-medalhas painel-card">
+                <header class="painel-header">
+                    <div class="painel-titulo-wrapper">
+                        <i class="fas fa-star icone-painel"></i>
+                        <h2>Medalhas</h2>
+                    </div>
+                    <a href="#" class="link-ver-todos">Ver todas</a>
+                </header>
+
+                <div class="lista-medalhas">
+                    <div class="medalha-card">
+                        <i class="fas fa-medal icone-medalha-bronze"></i>
+                        <div class="medalha-info">
+                            <span class="nome-medalha">Iniciante</span>
+                            <div class="progresso-medalha">
+                                <span class="desc-medalha">Faça sua primeira troca</span>
+                                <div class="barra-medalha-fundo">
+                                    <div class="barra-medalha-progresso" style="width: 20%;"></div>
+                                </div>
+                                <span class="medalha-texto-progresso">1/5</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="medalha-card">
+                        <i class="fas fa-medal icone-medalha-prata"></i>
+                        <div class="medalha-info">
+                            <span class="nome-medalha">Colecionador Ávido</span>
+                            <div class="progresso-medalha">
+                                <span class="desc-medalha">Publique 10 itens</span>
+                                <div class="barra-medalha-fundo">
+                                    <div class="barra-medalha-progresso" style="width: 40%;"></div>
+                                </div>
+                                <span class="medalha-texto-progresso">4/10</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="medalha-card">
+                        <i class="fas fa-medal icone-medalha-prata"></i>
+                        <div class="medalha-info">
+                            <span class="nome-medalha">Sociável</span>
+                            <div class="progresso-medalha">
+                                <span class="desc-medalha">Adicione 5 amigos</span>
+                                <div class="barra-medalha-fundo">
+                                    <div class="barra-medalha-progresso" style="width: 80%;"></div>
+                                </div>
+                                <span class="medalha-texto-progresso">4/5</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="medalha-card">
+                        <i class="fas fa-medal icone-medalha-ouro"></i>
+                        <div class="medalha-info">
+                            <span class="nome-medalha">Ambicioso</span>
+                            <div class="progresso-medalha">
+                                <span class="desc-medalha">Adicione 10 itens na lista de desejos</span>
+                                <div class="barra-medalha-fundo">
+                                    <div class="barra-medalha-progresso" style="width: 80%;"></div>
+                                </div>
+                                <span class="medalha-texto-progresso">6/10</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="rodape">
+        <div class="rodape-conteudo">
+            <span class="ano-criacao">© 2026</span>
+            <span class="logo-rodape">Colecionáveis</span>
+        </div>
+    </footer>
+</body>
+
+</html>
