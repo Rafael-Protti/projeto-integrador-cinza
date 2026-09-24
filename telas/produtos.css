@@ -1,421 +1,84 @@
-/* ==========================================================================
-   ESTILOS DA PÁGINA DE PRODUTOS (PROJETO)
-   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Hammersmith+One&display=swap');
 
-/* 1. VARIÁVEIS DE CORES E RESET BÁSICO */
 :root {
-  --cor-topo-escuro: #121212;
-  --cor-fundo-geral: #f5f7fa;
-  --cor-cards: #ffffff;
-  --cor-subnav: #ffffff;
-  --cor-azul-destaque: #0d6efd;
-  --cor-azul-hover: #0b5ed7;
-  --cor-texto-escuro: #1a1a1a;
-  --cor-texto-cinza: #6c757d;
-  --cor-texto-branco: #ffffff;
-  --cor-borda: #e0e0e0;
-  --cor-cinza-claro: #e9ecef;
+  --blue: #1b4986;
+  --gray: #d9d9d9;
+  --white: #ffffff;
+  --ink: #17253a;
+  --muted: #647184;
+  --headline: 'Tan Headline', 'Hammersmith One', sans-serif;
+  --body: 'Hammersmith One', sans-serif;
+  font-family: var(--body);
+  color: var(--ink);
+  background: var(--gray);
+  font-synthesis: none;
 }
 
-/* Reset CSS */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--cor-fundo-geral);
-  color: var(--cor-texto-escuro);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* ==========================================================================
-   A. BARRA SUPERIOR (HEADER ESCURO / TOPBAR)
-   ========================================================================== */
-.topbar {
-  background-color: var(--cor-topo-escuro);
-  color: var(--cor-texto-branco);
-  padding: 14px 24px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.topbar-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-/* 1. Logo / Título */
-.logo {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--cor-texto-branco);
-  white-space: nowrap;
-}
-
-/* 2. Barra de Pesquisa */
-.caixa-pesquisa {
-  position: relative;
-  flex: 1;
-  max-width: 450px;
-  display: flex;
-  align-items: center;
-}
-
-.input-pesquisa {
-  width: 100%;
-  padding: 10px 45px 10px 18px;
-  border-radius: 50px;
-  border: 1px solid var(--cor-borda);
-  background-color: #ffffff;
-  font-size: 14px;
-  outline: none;
-}
-
-.input-pesquisa:focus {
-  border-color: var(--cor-azul-destaque);
-}
-
-.btn-lupa {
-  position: absolute;
-  right: 12px;
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-/* 3 e 4. Ícones de Notificação e Login */
-.acoes-usuario {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.btn-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
-  background-color: #ffffff;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, background-color 0.2s;
-}
-
-.btn-icon:hover {
-  transform: translateY(-2px);
-  background-color: var(--cor-cinza-claro);
-}
-
-.btn-login {
-  background-color: var(--cor-azul-destaque);
-  color: var(--cor-texto-branco);
-  border: none;
-  border-radius: 50px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: background-color 0.2s;
-}
-
-.btn-login:hover {
-  background-color: var(--cor-azul-hover);
-}
-
-/* ==========================================================================
-   B. MENU DE NAVEGAÇÃO SECUNDÁRIO (TABS / SUB-HEADER)
-   ========================================================================== */
-.subnav {
-  background-color: var(--cor-subnav);
-  border-bottom: 1px solid var(--cor-borda);
-}
-
-.subnav-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-.menu-lista {
-  display: flex;
-  list-style: none;
-  gap: 24px;
-  overflow-x: auto;
-}
-
-.menu-link {
-  display: block;
-  padding: 16px 4px;
-  color: var(--cor-texto-cinza);
-  text-decoration: none;
-  font-size: 15px;
-  font-weight: 500;
-  border-bottom: 3px solid transparent;
-  white-space: nowrap;
-  transition: color 0.2s, border-color 0.2s;
-}
-
-.menu-link:hover {
-  color: var(--cor-azul-destaque);
-}
-
-.menu-link.active {
-  color: var(--cor-azul-destaque);
-  font-weight: 600;
-  border-bottom-color: var(--cor-azul-destaque);
-}
-
-/* ==========================================================================
-   CONTEÚDO PRINCIPAL
-   ========================================================================== */
-.conteudo-principal {
-  flex: 1;
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 30px 24px;
-}
-
-/* ==========================================================================
-   C. CARROSSEL DE IMAGENS (HERO SECTION)
-   ========================================================================== */
-.secao-carrossel {
-  margin-bottom: 40px;
-}
-
-.carrossel-box {
-  background-color: var(--cor-cinza-claro);
-  border-radius: 12px;
-  padding: 40px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-.btn-seta {
-  background-color: var(--cor-azul-destaque);
-  color: var(--cor-texto-branco);
-  border: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s, transform 0.2s;
-}
-
-.btn-seta:hover {
-  background-color: var(--cor-azul-hover);
-  transform: scale(1.05);
-}
-
-.carrossel-centro {
-  text-align: center;
-  color: var(--cor-texto-cinza);
-}
-
-.icone-carrossel {
-  font-size: 48px;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.carrossel-centro h2 {
-  font-size: 20px;
-  font-weight: 500;
-  color: var(--cor-texto-cinza);
-}
-
-.carrossel-dots {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 16px;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #ced4da;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.dot.active {
-  background-color: var(--cor-azul-destaque);
-}
-
-/* ==========================================================================
-   D. SEÇÃO DO CATÁLOGO ("CARDS DOS PRODUTOS")
-   ========================================================================== */
-.secao-catalogo {
-  margin-bottom: 40px;
-}
-
-.titulo-secao {
-  text-align: center;
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  color: var(--cor-texto-escuro);
-}
-
-/* Grid de 4 Colunas */
-.grid-produtos {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-}
-
-/* Card individual */
-.card-produto {
-  background-color: var(--cor-cards);
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card-produto:hover {
-  transform: translateY(-4px);
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.12);
-}
-
-.imagem-box {
-  background-color: var(--cor-cinza-claro);
-  width: 100%;
-  height: 160px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
-}
-
-.icone-imagem {
-  font-size: 40px;
-  opacity: 0.6;
-}
-
-.nome-produto {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.categoria-produto {
-  font-size: 14px;
-  color: var(--cor-texto-cinza);
-  margin-bottom: 8px;
-}
-
-.preco-produto {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--cor-azul-destaque);
-  margin-bottom: 16px;
-}
-
-.btn-comprar {
-  width: 100%;
-  background-color: var(--cor-azul-destaque);
-  color: var(--cor-texto-branco);
-  border: none;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: background-color 0.2s;
-}
-
-.btn-comprar:hover {
-  background-color: var(--cor-azul-hover);
-}
-
-/* ==========================================================================
-   E. RODAPÉ (FOOTER)
-   ========================================================================== */
-.rodape {
-  background-color: var(--cor-azul-destaque);
-  color: var(--cor-texto-branco);
-  padding: 30px 24px;
-  text-align: center;
-  margin-top: auto;
-}
-
-.caixa-tag-rodape {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 12px;
-}
-
-.tag-rodape {
-  background-color: #ffffff;
-  color: var(--cor-texto-escuro);
-  padding: 6px 20px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.copyright {
-  font-size: 14px;
-  color: var(--cor-texto-branco);
-}
-
-/* ==========================================================================
-   RESPONSIVIDADE (PARA DISPOSITIVOS MENORES)
-   ========================================================================== */
-@media (max-width: 992px) {
-  .grid-produtos {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 576px) {
-  .grid-produtos {
-    grid-template-columns: 1fr;
-  }
-  
-  .topbar-container {
-    flex-direction: column;
-  }
-  
-  .caixa-pesquisa {
-    max-width: 100%;
-    width: 100%;
-  }
-}
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+.app { min-height: 100vh; }
+.header { height: 82px; padding: 0 max(24px, calc((100% - 1180px) / 2)); display: flex; align-items: center; gap: 28px; background: var(--blue); border-bottom: 1px solid #123664; }
+.brand { display: flex; align-items: center; gap: 11px; color: var(--white); font: 700 27px var(--headline); letter-spacing: .03em; text-decoration: none; white-space: nowrap; }
+.brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--white); }
+.search { display: flex; align-items: center; gap: 10px; max-width: 430px; flex: 1; padding: 11px 15px; color: var(--blue); background: var(--white); border: 1px solid var(--white); border-radius: 4px; }
+.search input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--ink); }
+.cart-button, .primary { border: 0; border-radius: 4px; padding: 12px 18px; color: var(--blue); background: var(--white); font-weight: 700; }
+.cart-button { margin-left: auto; white-space: nowrap; }
+.cart-button b { margin-left: 7px; color: var(--blue); }
+.categories { display: flex; gap: 24px; padding: 16px max(24px, calc((100% - 1180px) / 2)); background: var(--white); border-bottom: 1px solid var(--gray); overflow-x: auto; }
+.categories button { padding: 0 0 5px; border: 0; border-bottom: 2px solid transparent; color: var(--muted); background: transparent; white-space: nowrap; }
+.categories button.active { color: var(--blue); border-color: var(--blue); }
+main { max-width: 1180px; margin: auto; padding: 42px 24px 80px; }
+.hero { position: relative; display: flex; align-items: center; min-height: 390px; padding: 52px 8%; overflow: hidden; background: var(--blue); color: var(--white); }
+.hero-copy { position: relative; z-index: 1; max-width: 530px; }
+.eyebrow { color: var(--gray); font-size: 11px; font-weight: 700; letter-spacing: .14em; }
+h1, h2, h3 { font-family: var(--headline); }
+h1 { max-width: 560px; margin: 14px 0; font-size: clamp(36px, 5vw, 64px); line-height: 1; }
+.hero p { max-width: 410px; color: var(--gray); line-height: 1.6; }
+.hero .primary { display: inline-block; margin-top: 22px; color: var(--blue); background: var(--white); text-decoration: none; }
+.hero > img { position: absolute; right: 0; width: 43%; height: 100%; object-fit: cover; opacity: .52; mix-blend-mode: screen; }
+.hero-controls { position: absolute; bottom: 20px; left: 8%; display: flex; align-items: center; gap: 9px; z-index: 2; }
+.hero-controls button { width: 28px; height: 28px; padding: 0; color: var(--white); background: transparent; border: 1px solid var(--gray); border-radius: 50%; }
+.hero-controls button.selected { background: var(--white); border-color: var(--white); color: var(--blue); }
+.catalog { padding-top: 72px; }
+.section-heading { display: flex; justify-content: space-between; align-items: end; margin-bottom: 25px; }
+.section-heading h2 { margin: 8px 0 0; font-size: 32px; }
+.section-heading > span { color: var(--muted); font-size: 14px; }
+.product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.product { overflow: hidden; background: var(--white); border: 1px solid #c4cbd3; }
+.product > img { width: 100%; height: 220px; display: block; object-fit: cover; }
+.product-body { padding: 19px; }
+.product small { color: var(--blue); font-weight: 700; }
+.product h3 { margin: 10px 0 7px; font-size: 20px; }
+.product p { min-height: 44px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.product-footer { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 20px; }
+.product-footer strong { margin-right: auto; font-size: 19px; }
+.product-footer button { padding: 9px 12px; color: var(--white); background: var(--blue); border: 0; border-radius: 3px; font-weight: 700; }
+.product-footer .details { color: var(--blue); background: var(--gray); }
+.empty { padding: 50px; text-align: center; background: var(--white); border: 1px solid #c4cbd3; color: var(--muted); }
+footer { display: flex; justify-content: space-between; gap: 20px; padding: 28px max(24px, calc((100% - 1180px) / 2)); color: var(--muted); background: var(--white); font-size: 13px; }
+footer strong { color: var(--blue); font: 700 18px var(--headline); text-transform: uppercase; }
+.toast { position: fixed; right: 24px; bottom: 24px; z-index: 5; padding: 14px 18px; color: var(--white); background: var(--blue); box-shadow: 0 8px 30px #1b498633; }
+.overlay { position: fixed; inset: 0; z-index: 4; display: grid; place-items: center; padding: 20px; background: #17253acc; }
+.modal, .drawer { position: relative; background: var(--white); box-shadow: 0 20px 60px #17253a55; }
+.modal { display: grid; grid-template-columns: 1fr 1fr; max-width: 760px; }
+.modal > img { width: 100%; height: 100%; min-height: 390px; object-fit: cover; }
+.modal > div { padding: 42px 32px; }
+.modal h2 { font-size: 32px; }
+.modal p { color: var(--muted); line-height: 1.6; margin-bottom: 28px; }
+.modal strong { display: block; margin-bottom: 22px; font-size: 25px; }
+.close { position: absolute; top: 14px; right: 14px; z-index: 1; width: 32px; height: 32px; border: 0; border-radius: 50%; background: var(--gray); color: var(--blue); font-size: 22px; }
+.drawer { align-self: stretch; justify-self: end; width: min(430px, 100%); padding: 28px; overflow-y: auto; }
+.drawer-heading { display: flex; justify-content: space-between; align-items: center; }
+.drawer-heading h2 { margin: 0; }
+.cart-item { display: flex; gap: 14px; padding: 18px 0; border-bottom: 1px solid var(--gray); }
+.cart-item img { width: 65px; height: 65px; object-fit: cover; }
+.cart-item strong, .cart-item small { display: block; }
+.cart-item small { margin: 5px 0 10px; color: var(--blue); }
+.cart-item button { width: 25px; height: 25px; border: 1px solid var(--gray); background: var(--white); color: var(--blue); }
+.cart-item span { display: inline-block; width: 30px; text-align: center; }
+.cart-total { display: grid; grid-template-columns: 1fr auto; gap: 18px; padding-top: 25px; }
+.cart-total .primary { grid-column: 1 / -1; color: var(--white); background: var(--blue); }
+@media (max-width: 720px) { .header { height: auto; padding: 18px 20px; flex-wrap: wrap; gap: 15px; } .search { order: 3; max-width: none; flex-basis: 100%; } main { padding: 24px 20px 60px; } .hero { min-height: 480px; padding: 35px 25px; align-items: start; } .hero > img { right: 0; bottom: 0; width: 100%; height: 45%; opacity: .4; } .product-grid { grid-template-columns: 1fr; } .section-heading { align-items: start; gap: 10px; flex-direction: column; } footer { flex-direction: column; } .modal { grid-template-columns: 1fr; max-height: 90vh; overflow-y: auto; } .modal > img { min-height: 210px; max-height: 250px; } }
