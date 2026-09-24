@@ -1,0 +1,545 @@
+@charset "UTF-8";
+
+/* Estilos Globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f0f0f0;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Cores e Variáveis (usadas no código) */
+:root {
+    --cor-fundo: #f0f0f0;
+    --cor-navbar: #002a57;
+    --cor-rodape: #007bff;
+    --cor-azul: #007bff;
+    --cor-branco: #fff;
+    --cor-preto: #000;
+    --cor-cinza-escuro: #555;
+    --cor-cinza-claro: #ccc;
+    --cor-bronze: #cd7f32;
+    --cor-prata: #c0c0c0;
+    --cor-ouro: #ffd700;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--cor-navbar);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    height: 70px;
+}
+
+.logo {
+    color: var(--cor-branco);
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.search-bar {
+    background-color: #55555580;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    width: 500px;
+}
+
+.search-text {
+    color: var(--cor-branco);
+    font-size: 14px;
+}
+
+.search-icon {
+    color: var(--cor-branco);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-notification, .btn-messages {
+    background-color: #55555580; /* Cinza escuro transparente */
+    color: var(--cor-branco);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+}
+
+.btn-login {
+    background-color: var(--cor-azul);
+    color: var(--cor-branco);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+/* Conteúdo Principal */
+.conteudo {
+    flex: 1;
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Cabeçalho / Título */
+.titulo-pagina {
+    margin-bottom: 10px;
+}
+
+.titulo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icone-titulo {
+    color: var(--cor-azul);
+    font-size: 28px;
+}
+
+.titulo-pagina h1 {
+    font-size: 32px;
+    color: var(--cor-preto);
+}
+
+.desc-titulo {
+    color: var(--cor-cinza-escuro);
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Painel de Perfil */
+.painel-perfil {
+    background-color: var(--cor-branco);
+    border-radius: 12px;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.perfil-esquerdo {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    width: 50%;
+}
+
+.foto-usuario {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.info-usuario {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.nome-usuario {
+    font-size: 28px;
+    color: var(--cor-preto);
+    margin-bottom: 5px;
+}
+
+.nivel-texto {
+    color: var(--cor-azul);
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.xp-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.barra-xp-fundo {
+    background-color: var(--cor-cinza-claro);
+    height: 12px;
+    border-radius: 10px;
+    width: 22vw; /* Aproximadamente 22% da tela */
+    max-width: 300px;
+    overflow: hidden;
+}
+
+.barra-xp-progresso {
+    background-color: var(--cor-azul);
+    height: 100%;
+    border-radius: 10px;
+}
+
+.xp-quantia {
+    font-size: 14px;
+}
+
+.xp-atual {
+    color: var(--cor-preto);
+    font-weight: bold;
+}
+
+.xp-total {
+    color: var(--cor-cinza-escuro);
+}
+
+.xp-faltante {
+    color: var(--cor-cinza-escuro);
+    font-size: 12px;
+}
+
+.painel-status {
+    display: flex;
+    width: 50%;
+    justify-content: space-around;
+}
+
+.status-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px;
+    border-color: #ccc;
+    border-style: solid;
+    border-radius: 4px;
+    padding: 10px;
+    width: 150px;
+    height: 130px;
+    
+}
+
+.icone-status {
+    color: var(--cor-azul);
+    font-size: 24px;
+}
+
+.status-valor {
+    color: var(--cor-preto);
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.status-texto {
+    color: var(--cor-cinza-escuro);
+    font-size: 14px;
+}
+
+/* Painéis Inferiores */
+.paineis-inferiores {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.painel-card {
+    background-color: var(--cor-branco);
+    border-radius: 12px;
+    padding: 20px;
+    flex: 1;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.painel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.painel-titulo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icone-painel {
+    color: var(--cor-azul);
+    font-size: 18px;
+}
+
+.painel-titulo-wrapper h2 {
+    color: var(--cor-preto);
+    font-size: 16px;
+}
+
+.link-ver-todos {
+    color: var(--cor-azul);
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* Missões */
+.abas-missoes {
+    display: flex;
+    width: 80%;
+    margin: 0 auto 20px auto;
+    border-radius: 8px;
+    background-color: var(--cor-fundo);
+    overflow: hidden;
+}
+
+.aba {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--cor-cinza-escuro);
+}
+
+.aba.ativa {
+    background-color: var(--cor-azul);
+    color: var(--cor-branco);
+}
+
+.lista-missoes, .lista-ranking, .lista-medalhas {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.missao-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.icone-missao {
+    color: var(--cor-azul);
+    font-size: 20px;
+}
+
+.missao-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nome-missao {
+    color: var(--cor-preto);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.missao-progresso-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.barra-missao-fundo {
+    background-color: var(--cor-cinza-claro);
+    height: 8px;
+    border-radius: 5px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.barra-missao-progresso {
+    background-color: var(--cor-azul);
+    height: 100%;
+}
+
+.missao-texto-progresso {
+    color: var(--cor-cinza-escuro);
+    font-size: 12px;
+}
+
+.xp-ganho {
+    color: var(--cor-azul);
+    font-weight: bold;
+    font-size: 13px;
+}
+
+/* Ranking */
+.ranking-card {
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 10px 15px;
+    border-radius: 8px;
+    gap: 15px;
+}
+
+.posicao, .posicao-1-lugar, .posicao-2-lugar, .posicao-3-lugar {
+    font-weight: bold;
+    color: var(--cor-azul);
+    height: 35px;
+    width: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.posicao-1-lugar, .posicao-2-lugar, .posicao-3-lugar {
+    border-radius: 100%;
+}
+
+.posicao-1-lugar{
+    color: #FFD700;
+    background-color: #ffd90033;
+}
+.posicao-2-lugar{
+    color: #949494;
+    background-color: #afafaf33;
+}
+.posicao-3-lugar{
+    color: #d97b00;
+    background-color: #d97b0033;
+}
+
+.ranking-card img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.nome-ranking {
+    color: var(--cor-preto);
+    font-size: 14px;
+    flex: 1;
+}
+
+.xp-ranking {
+    color: var(--cor-azul);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Medalhas */
+.medalha-card {
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    gap: 15px;
+}
+
+.icone-medalha-bronze, .icone-medalha-prata, .icone-medalha-ouro {
+    font-size: 24px;
+}
+.icone-medalha-bronze {
+    color: var(--cor-bronze);
+}
+.icone-medalha-prata {
+    color: var(--cor-prata);
+}
+.icone-medalha-ouro {
+    color: var(--cor-ouro);
+}
+
+.medalha-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.nome-medalha {
+    color: var(--cor-preto);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.desc-medalha {
+    color: var(--cor-cinza-escuro);
+    font-size: 12px;
+    margin-bottom: 5px;
+    width: 40%;
+}
+
+.progresso-medalha {
+    display: flex;
+    align-items: center; 
+    gap: 50px;
+}
+
+.barra-medalha-fundo {
+    background-color: var(--cor-cinza-claro);
+    height: 8px;
+    border-radius: 5px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.barra-medalha-progresso {
+    background-color: var(--cor-azul);
+    height: 100%;
+}
+
+.medalha-texto-progresso {
+    color: var(--cor-azul);
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* Rodapé */
+.rodape {
+    background-color: var(--cor-rodape);
+    color: var(--cor-branco);
+    padding: 20px;
+    margin-top: auto;
+}
+
+.rodape-conteudo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-direction: column;
+}
+
+.logo-rodape {
+    font-weight: bold;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+
+.ano-criacao {
+    font-size: 14px;
+}
