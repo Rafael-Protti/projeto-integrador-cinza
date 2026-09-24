@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import "./React_perfil.css" 
+import "./Perfil.css" 
 
 
   function Perfil(){

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './React_login.css'; 
+import './Login.css'; 
 
-   function login() {
+   function Login() {
   
   const [cadastroEmail, setCadastroEmail] = useState('');
   const [cadastroSenha, setCadastroSenha] = useState('');
@@ -249,4 +249,4 @@ import './React_login.css';
   );
 }
  
-export default login;
+export default Login;

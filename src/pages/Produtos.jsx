@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import './produtos.css'
+import './Produtos.css'
 
 const categories = ['Todos', 'Livros', 'CDs', 'Cartinhas', 'Planos']
 const products = [
@@ -17,7 +17,7 @@ const banners = [
 ]
 const money = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
-export default function App() {
+function Produtos() {
   const [category, setCategory] = useState('Todos')
   const [query, setQuery] = useState('')
   const [slide, setSlide] = useState(0)
@@ -77,3 +77,5 @@ export default function App() {
     </div>
   )
 }
+
+export default Produtos;
