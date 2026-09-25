@@ -1,31 +1,39 @@
+import { useState } from "react";
 import "./Gameficacao.css"
 
 function Gameficacao() {
+
+    const [rankingVisivel, alteraRankingVisivel] = useState(false);
+    const todasMissoesVisivel = false;
+    const todasMedalhasVisivel = false;
+
+    function alteraVisualizacaoRanking() {
+        alteraRankingVisivel(!rankingVisivel)
+    }
+
+
+
     return (
         <div>
-            {/* <nav className="navbar">
-                <a href="#" className="logo">Colecionáveis</a>
-
-                <div className="search-bar">
-                    <span className="search-text">Digite para pesquisa</span>
-                    <i className="fas fa-search search-icon"></i>
-                </div>
-
-                <div className="nav-actions">
-                    <a href="#" className="btn-notification">
-                        <i className="fas fa-bell"></i>
-                    </a>
-                    <a href="#" className="btn-messages">
-                        <i className="fas fa-envelope"></i>
-                    </a>
-                    <a href="#" className="btn-login">
-                        <i className="fas fa-user"></i>
-                        <span>Login/Cadastro</span>
-                    </a>
-                </div>
-            </nav> */}
-
             <main className="conteudo">
+
+                {
+                    rankingVisivel == true ? 
+                    <div className="rankingCompletoFlutuante">
+                    <div className="rankingCompleto">
+                        <h2> <i className="fas fa-trophy icone-painel"></i> Ranking dos Colecionadores <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoRanking()}></i></h2>
+                        <p>Usuario 1 <strong>1000XP</strong></p>
+                        <p>Usuario 1 <strong>1000XP</strong></p>
+                        <p>Usuario 1 <strong>1000XP</strong></p>
+                        <p>Usuario 1 <strong>1000XP</strong></p>
+                        <p>Usuario 1 <strong>1000XP</strong></p>
+                        <p>Usuario 1 <strong>1000XP</strong></p>
+                        <p>Usuario 1 <strong>1000XP</strong></p>
+                    </div>
+                </div> 
+                : <></>
+                }
+
                 <header className="titulo-pagina">
                     <div className="titulo-wrapper">
                         <i className="fas fa-trophy icone-titulo"></i>
@@ -36,21 +44,21 @@ function Gameficacao() {
 
                 <section className="painel-perfil">
                     <div className="perfil-esquerdo">
-                        <img src="https://placehold.co/100x100" alt="Foto do usuário" className="foto-usuario"/>
-                            <div className="info-usuario">
-                                <h2 className="nome-usuario">Nome do Usuário</h2>
-                                <span className="nivel-texto">Nível 5</span>
+                        <img src="https://placehold.co/100x100" alt="Foto do usuário" className="foto-usuario" />
+                        <div className="info-usuario">
+                            <h2 className="nome-usuario">Nome do Usuário</h2>
+                            <span className="nivel-texto">Nível 5</span>
 
-                                <div className="xp-container">
-                                    <div className="barra-xp-fundo">
-                                        <div className="barra-xp-progresso" style={{width: "65%"}}></div>
-                                    </div>
-                                    <span className="xp-quantia"><span className="xp-atual">6500</span><span className="xp-total">/10000
-                                        XP</span></span>
+                            <div className="xp-container">
+                                <div className="barra-xp-fundo">
+                                    <div className="barra-xp-progresso" style={{ width: "65%" }}></div>
                                 </div>
-
-                                <p className="xp-faltante">Faltam 3500 XP para o próximo nível</p>
+                                <span className="xp-quantia"><span className="xp-atual">6500</span><span className="xp-total">/10000
+                                    XP</span></span>
                             </div>
+
+                            <p className="xp-faltante">Faltam 3500 XP para o próximo nível</p>
+                        </div>
                     </div>
 
                     <div className="painel-status">
@@ -100,7 +108,7 @@ function Gameficacao() {
                                     <span className="nome-missao">Faça 3 comentários</span>
                                     <div className="missao-progresso-container">
                                         <div className="barra-missao-fundo">
-                                            <div className="barra-missao-progresso" style={{width: "66%"}}></div>
+                                            <div className="barra-missao-progresso" style={{ width: "66%" }}></div>
                                         </div>
                                         <span className="missao-texto-progresso">2/3</span>
                                         <span className="xp-ganho">+50 XP</span>
@@ -113,7 +121,7 @@ function Gameficacao() {
                                     <span className="nome-missao">Publique 1 item</span>
                                     <div className="missao-progresso-container">
                                         <div className="barra-missao-fundo">
-                                            <div className="barra-missao-progresso" style={{width: "0%"}}></div>
+                                            <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
                                         </div>
                                         <span className="missao-texto-progresso">0/1</span>
                                         <span className="xp-ganho">+100 XP</span>
@@ -126,7 +134,7 @@ function Gameficacao() {
                                     <span className="nome-missao">Conclua 1 troca</span>
                                     <div className="missao-progresso-container">
                                         <div className="barra-missao-fundo">
-                                            <div className="barra-missao-progresso" style={{width: "100%"}}></div>
+                                            <div className="barra-missao-progresso" style={{ width: "100%" }}></div>
                                         </div>
                                         <span className="missao-texto-progresso">1/1</span>
                                         <span className="xp-ganho">+200 XP</span>
@@ -143,39 +151,39 @@ function Gameficacao() {
                                 <i className="fas fa-trophy icone-painel"></i>
                                 <h2>Ranking dos Colecionadores</h2>
                             </div>
-                            <a href="#" className="link-ver-todos">Ver ranking completo</a>
+                            <a href="#" onClick={() => alteraVisualizacaoRanking()} className="link-ver-todos">Ver ranking completo</a>
                         </header>
 
                         <div className="lista-ranking">
                             <div className="ranking-card">
                                 <span className="posicao-1-lugar">1</span>
-                                <img src="https://placehold.co/40x40" alt="Foto usuário 1"/>
-                                    <span className="nome-ranking">João Silva</span>
-                                    <span className="xp-ranking">12000 XP</span>
+                                <img src="https://placehold.co/40x40" alt="Foto usuário 1" />
+                                <span className="nome-ranking">João Silva</span>
+                                <span className="xp-ranking">12000 XP</span>
                             </div>
                             <div className="ranking-card">
                                 <span className="posicao-2-lugar">2</span>
-                                <img src="https://placehold.co/40x40" alt="Foto usuário 2"/>
-                                    <span className="nome-ranking">Maria Oliveira</span>
-                                    <span className="xp-ranking">11500 XP</span>
+                                <img src="https://placehold.co/40x40" alt="Foto usuário 2" />
+                                <span className="nome-ranking">Maria Oliveira</span>
+                                <span className="xp-ranking">11500 XP</span>
                             </div>
                             <div className="ranking-card">
                                 <span className="posicao-3-lugar">3</span>
-                                <img src="https://placehold.co/40x40" alt="Foto usuário 3"/>
-                                    <span className="nome-ranking">Carlos Santos</span>
-                                    <span className="xp-ranking">10200 XP</span>
+                                <img src="https://placehold.co/40x40" alt="Foto usuário 3" />
+                                <span className="nome-ranking">Carlos Santos</span>
+                                <span className="xp-ranking">10200 XP</span>
                             </div>
                             <div className="ranking-card">
                                 <span className="posicao">4</span>
-                                <img src="https://placehold.co/40x40" alt="Foto usuário 4"/>
-                                    <span className="nome-ranking">Ana Souza</span>
-                                    <span className="xp-ranking">9800 XP</span>
+                                <img src="https://placehold.co/40x40" alt="Foto usuário 4" />
+                                <span className="nome-ranking">Ana Souza</span>
+                                <span className="xp-ranking">9800 XP</span>
                             </div>
                             <div className="ranking-card">
                                 <span className="posicao">5</span>
-                                <img src="https://placehold.co/40x40" alt="Foto usuário 5"/>
-                                    <span className="nome-ranking">Pedro Costa</span>
-                                    <span className="xp-ranking">8500 XP</span>
+                                <img src="https://placehold.co/40x40" alt="Foto usuário 5" />
+                                <span className="nome-ranking">Pedro Costa</span>
+                                <span className="xp-ranking">8500 XP</span>
                             </div>
                         </div>
                     </section>
@@ -198,7 +206,7 @@ function Gameficacao() {
                                     <div className="progresso-medalha">
                                         <span className="desc-medalha">Faça sua primeira troca</span>
                                         <div className="barra-medalha-fundo">
-                                            <div className="barra-medalha-progresso" style={{width: "20%"}}></div>
+                                            <div className="barra-medalha-progresso" style={{ width: "20%" }}></div>
                                         </div>
                                         <span className="medalha-texto-progresso">1/5</span>
                                     </div>
@@ -211,7 +219,7 @@ function Gameficacao() {
                                     <div className="progresso-medalha">
                                         <span className="desc-medalha">Publique 10 itens</span>
                                         <div className="barra-medalha-fundo">
-                                            <div className="barra-medalha-progresso" style={{width: "40%"}}></div>
+                                            <div className="barra-medalha-progresso" style={{ width: "40%" }}></div>
                                         </div>
                                         <span className="medalha-texto-progresso">4/10</span>
                                     </div>
@@ -224,7 +232,7 @@ function Gameficacao() {
                                     <div className="progresso-medalha">
                                         <span className="desc-medalha">Adicione 5 amigos</span>
                                         <div className="barra-medalha-fundo">
-                                            <div className="barra-medalha-progresso" style={{width: "80%"}}></div>
+                                            <div className="barra-medalha-progresso" style={{ width: "80%" }}></div>
                                         </div>
                                         <span className="medalha-texto-progresso">4/5</span>
                                     </div>
@@ -237,7 +245,7 @@ function Gameficacao() {
                                     <div className="progresso-medalha">
                                         <span className="desc-medalha">Adicione 10 itens na lista de desejos</span>
                                         <div className="barra-medalha-fundo">
-                                            <div className="barra-medalha-progresso" style={{width: "80%"}}></div>
+                                            <div className="barra-medalha-progresso" style={{ width: "80%" }}></div>
                                         </div>
                                         <span className="medalha-texto-progresso">6/10</span>
                                     </div>
@@ -247,13 +255,6 @@ function Gameficacao() {
                     </section>
                 </div>
             </main>
-
-            {/* <footer className="rodape">
-                <div className="rodape-conteudo">
-                    <span className="ano-criacao">© 2026</span>
-                    <span className="logo-rodape">Colecionáveis</span>
-                </div>
-            </footer> */}
         </div>
     );
 }
