@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { SupabaseClient } from '@supabase/supabase-js';
 import './Login.css'; 
 
    function Login() {
-  
+
+   /*const [login,alteraLogin]= useState([])*/
+
   const [cadastroEmail, setCadastroEmail] = useState('');
   const [cadastroSenha, setCadastroSenha] = useState('');
 
@@ -26,6 +29,18 @@ import './Login.css';
     console.log('Login:', { email: loginEmail, senha: loginSenha });
   };
 
+  /* async funcion Inserir(){}
+  const obj = {}
+  const {data, error} = await supabaseClient.from('Login').inserir(obj)
+    alert("Login cadastrado com sucesso!")
+    document.location.reload()
+
+
+     async function buscarTodos(){ 
+    const { data, error } = await supabaseClient.from('Login').select().order('id',{ascending:false})
+    console.log(data)
+    alteraLogin(data)
+  }*/ 
   return (
     <>
       
