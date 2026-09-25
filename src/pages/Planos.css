@@ -1,12 +1,12 @@
 :root {
-    --bg-body: #f8f9fa;
+    --bg-body: #00162b;
     --text-main: #1a1a2e;
     --text-secondary: #6c757d;
-    --color-blue: #0047b3;
+    --color-blue: #005fee;
     --color-blue-light: #e6f0ff;
-    --color-purple: #6a1b9a;
+    --color-purple: #a10bff;
     --color-purple-light: #f3e5f5;
-    --color-orange: #f57c00;
+    --color-orange: #ff8000;
     --color-orange-light: #cecece;
     --header-bg: #0b1a3d;
     --white: #dfdbdb;
