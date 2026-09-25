@@ -3,7 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import "./Perfil.css" 
 
 
-  function Perfil(){
+  function Perfil(){ 
 
     /* const [perfil,alteraPerfil]= useState([])*/ 
    
@@ -20,18 +20,38 @@ import "./Perfil.css"
   const [modalOpen, setModalOpen] = useState(false);
   const [tempFotoUrl, setTempFotoUrl] = useState('');
 
-     /*async funcion Inserir(){}
+     /*async funcion Inserir(){
+          id        
+          nome      
+          telefone       
+          email      
+          senha        
+          foto       
+          trocas        
+          nascimento       
+    }
+
      const obj = {} 
      const {data, error} = await supabaseClient.from('Perfil').inserir(obj)
-    alert("Perfil cadastrado com sucesso!")
-    document.location.reload()
+     alert("Perfil cadastrado com sucesso!")
+     document.location.reload()
 
 
      async function buscarTodos(){ 
-    const { data, error } = await supabase.from('Perfil').select().order('id',{ascending:false})
-    console.log(data)
-    alteraPerfil(data)
+     const { data, error } = await supabase.from('Perfil').select().order('id',{ascending:false})
+     console.log(data)
+     alteraPerfil(data)
   }*/ 
+
+      /* useEffect( () => {
+        buscaTodosNome()
+        buscaTodosTelefone()
+        buscaTodosEmail()
+        buscaTodasSenha()
+        buscaTodasFoto()
+        buscaTodasTrocas()
+        buscaTodasNascimento() 
+    }, [] ) */
 
   const fileInputRef = useRef(null);
 

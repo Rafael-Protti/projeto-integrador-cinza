@@ -30,17 +30,23 @@ import './Login.css';
   };
 
   /* async funcion Inserir(){}
-  const obj = {}
-  const {data, error} = await supabaseClient.from('Login').inserir(obj)
+    const obj = {
+          id
+          nome
+          email
+          senha
+    }
+    const {data, error} = await supabaseClient.from('Login').inserir(obj)
     alert("Login cadastrado com sucesso!")
     document.location.reload()
 
 
      async function buscarTodos(){ 
-    const { data, error } = await supabaseClient.from('Login').select().order('id',{ascending:false})
-    console.log(data)
-    alteraLogin(data)
+     const { data, error } = await supabaseClient.from('Login').select().order('id',{ascending:false})
+     console.log(data)
+     alteraLogin(data)
   }*/ 
+
   return (
     <>
       
