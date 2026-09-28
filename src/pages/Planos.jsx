@@ -143,7 +143,7 @@ function Planos() {
             </main>
 
             {modalInfo !== null && (
-                <div className="modal-overlay" onClick={closeModal}>
+                <div className="modal-overlay2" onClick={closeModal}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <h2>Plano {modalInfo.title}</h2>
                         <p>{modalInfo.desc}</p>
