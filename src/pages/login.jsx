@@ -1,273 +1,377 @@
-import { useState } from 'react';
-import { SupabaseClient } from '@supabase/supabase-js';
-import './Login.css'; 
+CREATE DATABASE galeria_atemporal;
 
-   function Login() {
+USE galeria_atemporal;
 
-   /*const [login,alteraLogin]= useState([])*/
+-- ==========================================
+-- TABELA DE USUÁRIOS
+-- ==========================================
 
-  const [cadastroEmail, setCadastroEmail] = useState('');
-  const [cadastroSenha, setCadastroSenha] = useState('');
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    telefone VARCHAR(20),
+    email VARCHAR(150) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    foto VARCHAR(255),
+    numero_trocas INT DEFAULT 0,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
- 
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginSenha, setLoginSenha] = useState('');
 
-  
-  const [mostrarSenha, setMostrarSenha] = useState(false);
+-- ==========================================
+-- TABELA DE CATEGORIAS
+-- ==========================================
 
-  
-  const handleCadastroSubmit = (e) => {
-    e.preventDefault();
-    
-    console.log('Cadastro:', { email: cadastroEmail, senha: cadastroSenha });
-  };
+CREATE TABLE categorias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL
+);
 
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-   
-    console.log('Login:', { email: loginEmail, senha: loginSenha });
-  };
 
-  /* async funcion Inserir(){}
-    const obj = {
-          id
-          nome
-          email
-          senha
+-- ==========================================
+-- TABELA DE PRODUTOS
+-- ==========================================
+
+CREATE TABLE produtos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    descricao TEXT,
+    imagem VARCHAR(255),
+    usuario_id INT,
+    categoria_id INT,
+
+    FOREIGN KEY (usuario_id)
+        REFERENCES usuarios(id),
+
+    FOREIGN KEY (categoria_id)
+        REFERENCES categorias(id)
+);
+
+
+-- ==========================================
+-- TABELA DE TROCAS
+-- ==========================================
+
+CREATE TABLE trocas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    usuario_id INT NOT NULL,
+
+    produto_oferecido_id INT,
+    produto_recebido_id INT,
+
+    data_troca TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (usuario_id)
+        REFERENCES usuarios(id),
+
+    FOREIGN KEY (produto_oferecido_id)
+        REFERENCES produtos(id),
+
+    FOREIGN KEY (produto_recebido_id)
+        REFERENCES produtos(id)
+);
+
+
+-- ==========================================
+-- CATEGORIAS INICIAIS
+-- ==========================================
+
+INSERT INTO categorias (nome)
+VALUES
+('Discos de Vinil'),
+('Livros'),
+('Cartinhas'),
+('Jogos');
+
+npm init -y
+npm install express mysql2 cors dotenv
+const mysql = require("mysql2");
+
+const banco = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "SUA_SENHA",
+    database: "galeria_atemporal"
+});
+
+banco.connect((erro) => {
+
+    if (erro) {
+        console.log("Erro ao conectar ao banco:", erro);
+        return;
     }
-    const {data, error} = await supabaseClient.from('Login').inserir(obj)
-    alert("Login cadastrado com sucesso!")
-    document.location.reload()
+
+    console.log("Banco de dados conectado!");
+});
+
+module.exports = banco;
+
+password: "SUA_SENHA"
+const express = require("express");
+const cors = require("cors");
+
+const banco = require("./db");
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
 
 
-     async function buscarTodos(){ 
-     const { data, error } = await supabaseClient.from('Login').select().order('id',{ascending:false})
-     console.log(data)
-     alteraLogin(data)
-  }*/ 
+// ==========================================
+// TESTE DO SERVIDOR
+// ==========================================
 
-  return (
-    <>
-      
-      <header>
-        <div>
-          
-          <a>
-            <i></i>
-            <span></span>
-          </a>
+app.get("/", (req, res) => {
 
-        
-          <div>
-            <a>
-              <i></i>
-            </a>
-            <a>
-              <i></i>
-            </a>
-            <a>
-              <i></i>
-            </a>
-          </div>
-        </div>
-      </header>
+    res.json({
+        mensagem: "API da Galeria Atemporal funcionando!"
+    });
 
-      
-      <main className="conteudo-principal">
-        <section className="painel-autenticacao">
-          
-          
-          <div className="coluna-cadastro">
-            <header className="header-cadastro">
-              <div className="avatar-contato-box">
-                <i className="fas fa-user-plus"></i>
-              </div>
-              <h2 className="titulo-criar-conta">Quero criar uma conta</h2>
-            </header>
+});
 
-       
-            <form className="form-autenticacao" onSubmit={handleCadastroSubmit}>
-        
-              <div className="campo-grupo">
-                <label htmlFor="cadastro-email" className="campo-rotulo">
-                  <i className="fas fa-envelope"></i> Email
-                </label>
-                <div className="input-wrapper">
-                  <i className="fas fa-envelope input-icon-prefix"></i>
-                  <input
-                    type="email"
-                    id="cadastro-email"
-                    name="email"
-                    className="campo-input-retangulo"
-                    placeholder="Digite seu e-mail"
-                    autoComplete="email"
-                    value={cadastroEmail}
-                    onChange={(e) => setCadastroEmail(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
 
-              
-              <div className="campo-grupo">
-                <label htmlFor="cadastro-senha" className="campo-rotulo">
-                  <i className="fas fa-lock"></i> Senha
-                </label>
-                <div className="input-wrapper">
-                  <i className="fas fa-lock input-icon-prefix"></i>
-                  <input
-                    type="password"
-                    id="cadastro-senha"
-                    name="senha"
-                    className="campo-input-retangulo"
-                    placeholder="Digite sua senha"
-                    autoComplete="new-password"
-                    minLength={8}
-                    value={cadastroSenha}
-                    onChange={(e) => setCadastroSenha(e.target.value)}
-                    required
-                  />
-                </div>
-                <p className="texto-ajuda-senha">
-                  <i className="fas fa-info-circle"></i> A senha deve conter pelo menos 8 caracteres, incluindo letras e números.
-                </p>
-              </div>
+// ==========================================
+// CADASTRAR USUÁRIO
+// ==========================================
 
-           
-              <div className="espacamento-botao-2cm">
-                <button type="submit" className="btn-continuar">
-                  <span>Continuar</span>
-                  <i className="fas fa-chevron-right setinha"></i>
-                </button>
-              </div>
+app.post("/usuarios", (req, res) => {
 
-             
-              <div className="divisor-social">Ou crie sua conta com</div>
-              <div className="botoes-social">
-                <button type="button" className="btn-social" title="Criar com Google">
-                  <i className="fab fa-google"></i> Google
-                </button>
-                <button type="button" className="btn-social" title="Criar com Apple">
-                  <i className="fab fa-apple"></i> Apple
-                </button>
-                <button type="button" className="btn-social" title="Criar com Facebook">
-                  <i className="fab fa-facebook-f"></i> Facebook
-                </button>
-              </div>
-            </form>
-          </div>
+    const {
+        nome,
+        telefone,
+        email,
+        senha
+    } = req.body;
 
-          
-          <div className="divisor-central-ou">
-            <div className="linha-vertical"></div>
-            <div className="circulo-ou">Ou</div>
-          </div>
+    const sql = `
+        INSERT INTO usuarios
+        (nome, telefone, email, senha)
+        VALUES (?, ?, ?, ?)
+    `;
 
-         
-          <div className="coluna-login">
-            <header className="header-login">
-              <div className="cadeado-topo-box">
-                <i className="fas fa-lock"></i>
-              </div>
-              <h2 className="titulo-ja-tenho-conta">Já tenho conta</h2>
-            </header>
+    banco.query(
+        sql,
+        [nome, telefone, email, senha],
+        (erro, resultado) => {
 
-           
-            <form className="form-autenticacao" onSubmit={handleLoginSubmit}>
-             
-              <div className="campo-grupo">
-                <label htmlFor="login-email" className="campo-rotulo">
-                  <i className="fas fa-envelope"></i> Email
-                </label>
-                <div className="input-wrapper">
-                  <i className="fas fa-envelope input-icon-prefix"></i>
-                  <input
-                    type="email"
-                    id="login-email"
-                    name="email"
-                    className="campo-input-retangulo"
-                    placeholder="Digite seu email"
-                    autoComplete="username"
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
+            if (erro) {
 
-             
-              <div className="campo-grupo">
-                <label htmlFor="login-senha" className="campo-rotulo">
-                  <i className="fas fa-lock"></i> Senha
-                </label>
-                <div className="input-wrapper">
-                  <i className="fas fa-lock input-icon-prefix"></i>
-                  <input
-                    type={mostrarSenha ? 'text' : 'password'}
-                    id="login-senha"
-                    name="senha"
-                    className="campo-input-retangulo"
-                    placeholder="digite sua senha"
-                    autoComplete="current-password"
-                    value={loginSenha}
-                    onChange={(e) => setLoginSenha(e.target.value)}
-                    required
-                  />
-                  
-                 
-                  <button
-                    type="button"
-                    className="btn-olho-toggle"
-                    title={mostrarSenha ? 'Ocultar senha' : 'Exibir senha'}
-                    onClick={() => setMostrarSenha(!mostrarSenha)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                  >
-                    <i className={`fas ${mostrarSenha ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-                  </button>
-                </div>
-              </div>
+                console.log(erro);
 
-              
-              <div className="caixa-acoes-login">
-                <button type="submit" className="btn-continuar">
-                  <span>Continuar</span>
-                  <i className="fas fa-chevron-right setinha"></i>
-                </button>
-              </div>
+                return res.status(500).json({
+                    erro: "Erro ao cadastrar usuário"
+                });
 
-              
-              <button type="button" className="btn-entrar-sem-senha">
-                <i className="fas fa-envelope"></i>
-                <span>entrar sem senha</span>
-              </button>
+            }
 
-              
-              <div className="caixa-esqueci-senha">
-                <a href="#esqueci-senha" className="link-esqueci-senha">
-                  esqueci a senha
-                </a>
-              </div>
+            res.json({
+                mensagem: "Usuário cadastrado com sucesso!",
+                id: resultado.insertId
+            });
 
-             
-              <div className="dica-seguranca">
-                <i className="fas fa-shield-halved"></i>
-                <span>Autenticação de dois fatores (2FA) e proteção contra acessos não autorizados ativada.</span>
-              </div>
-            </form>
-          </div>
+        }
+    );
 
-        </section>
-      </main>
+});
 
-     
-      <footer >
-        <div >
-        <p></p> 
-        </div>
-      </footer>
-    </>
-  );
-}
- 
-export default Login;
+
+// ==========================================
+// BUSCAR USUÁRIOS
+// ==========================================
+
+app.get("/usuarios", (req, res) => {
+
+    const sql = "SELECT * FROM usuarios";
+
+    banco.query(sql, (erro, resultados) => {
+
+        if (erro) {
+
+            return res.status(500).json({
+                erro: "Erro ao buscar usuários"
+            });
+
+        }
+
+        res.json(resultados);
+
+    });
+
+});
+
+
+app.listen(3001, () => {
+
+    console.log(
+        "Servidor funcionando em http://localhost:3001"
+    );
+
+});
+
+node server.js
+const handleCadastroSubmit = (e) => {
+    e.preventDefault();
+
+    console.log('Cadastro:', {
+        email: cadastroEmail,
+        senha: cadastroSenha
+    });
+};
+const handleCadastroSubmit = async (e) => {
+
+    e.preventDefault();
+
+    try {
+
+        const resposta = await fetch(
+            "http://localhost:3001/usuarios",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    nome: "Novo Usuário",
+                    email: cadastroEmail,
+                    senha: cadastroSenha
+                })
+            }
+        );
+
+        const dados = await resposta.json();
+
+        console.log(dados);
+
+        alert("Conta criada com sucesso!");
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        alert("Erro ao cadastrar!");
+
+    }
+
+};
+import './Login.css';
+SELECT *
+FROM usuarios
+WHERE email = ?
+AND senha = ?;
+app.post("/login", (req, res) => {
+
+    const { email, senha } = req.body;
+
+    const sql = `
+        SELECT id, nome, email
+        FROM usuarios
+        WHERE email = ?
+        AND senha = ?
+    `;
+
+    banco.query(
+        sql,
+        [email, senha],
+        (erro, resultados) => {
+
+            if (erro) {
+
+                return res.status(500).json({
+                    erro: "Erro no login"
+                });
+
+            }
+
+            if (resultados.length === 0) {
+
+                return res.status(401).json({
+                    erro: "Email ou senha incorretos"
+                });
+
+            }
+
+            res.json({
+                mensagem: "Login realizado!",
+                usuario: resultados[0]
+            });
+
+        }
+    );
+
+});
+const handleLoginSubmit = async (e) => {
+
+    e.preventDefault();
+
+    const resposta = await fetch(
+        "http://localhost:3001/login",
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                email: loginEmail,
+                senha: loginSenha
+            })
+        }
+    );
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+
+        alert(dados.erro);
+    }
+
+    alert("Login realizado com sucesso!");
+
+    console.log(dados.usuario);
+
+};
+        return;
+SELECT
+    categorias.id,
+    categorias.nome,
+    COUNT(produtos.id) AS quantidade
+FROM categorias
+
+LEFT JOIN produtos
+ON produtos.categoria_id = categorias.id
+
+GROUP BY categorias.id;
+[
+    {
+        id: 1,
+        nome: "Discos de Vinil",
+        quantidade: 12
+    },
+
+    {
+        id: 2,
+        nome: "Livros",
+        quantidade: 20
+    },
+
+    {
+        id: 3,
+        nome: "Cartinhas",
+        quantidade: 36
+    },
+
+    {
+        id: 4,
+        nome: "Jogos",
+        quantidade: 9
+    }
+]
+UPDATE usuarios
+SET numero_trocas = numero_trocas + 1
+WHERE id = 1;
+
