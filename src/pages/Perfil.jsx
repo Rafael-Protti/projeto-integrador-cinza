@@ -1,8 +1,11 @@
-import React, { useState, useRef } from 'react';
+import  { useState, useRef } from 'react';
+import { SupabaseClient } from '@supabase/supabase-js';
 import "./Perfil.css" 
 
 
-  function Perfil(){
+  function Perfil(){ 
+
+    /* const [perfil,alteraPerfil]= useState([])*/ 
    
   const [nome, setNome] = useState('Maria Souza');
   const [telefone, setTelefone] = useState('(11) 98765-4321');
@@ -16,6 +19,39 @@ import "./Perfil.css"
   const [feedback, setFeedback] = useState({ show: false, message: '', isError: false });
   const [modalOpen, setModalOpen] = useState(false);
   const [tempFotoUrl, setTempFotoUrl] = useState('');
+
+     /*async funcion Inserir(){
+          id        
+          nome      
+          telefone       
+          email      
+          senha        
+          foto       
+          trocas        
+          nascimento       
+    }
+
+     const obj = {} 
+     const {data, error} = await supabaseClient.from('Perfil').inserir(obj)
+     alert("Perfil cadastrado com sucesso!")
+     document.location.reload()
+
+
+     async function buscarTodos(){ 
+     const { data, error } = await supabase.from('Perfil').select().order('id',{ascending:false})
+     console.log(data)
+     alteraPerfil(data)
+  }*/ 
+
+      /* useEffect( () => {
+        buscaTodosNome()
+        buscaTodosTelefone()
+        buscaTodosEmail()
+        buscaTodasSenha()
+        buscaTodasFoto()
+        buscaTodasTrocas()
+        buscaTodasNascimento() 
+    }, [] ) */
 
   const fileInputRef = useRef(null);
 
@@ -47,16 +83,16 @@ import "./Perfil.css"
 
    /* {
       id: 'filmes',
-      titulo: 'Jogo',
+      titulo: 'filmes',
       qtd: '10 itens disponíveis',
-      img: 'https://images.unsplash.com/photo-1606167668584-78701c57f13d?auto=format&fit=crop&w=600&q=80'
+      img: 'https://www.oficinadanet.com.br/netflix/65308-filmes-de-suspense-na-netflix'
     } 
 
     {
       id: 'acessórios', 
-      titulo: 'Jogo',
+      titulo: 'acessórios',
       qtd: '30 itens disponíveis',
-      img: 'https://images.unsplash.com/photo-1606167668584-78701c57f13d?auto=format&fit=crop&w=600&q=80'
+      img: 'https://www.infostore.com.br/acessorio-sony-playstation-5-portal-remote/p?srsltid=AU7gw4UXfwevku6ZwXWy9eCaP2Y2auujWDmJ0hxTFViKmUtedjHkvOqT'
     }
    */   
   ]; 
