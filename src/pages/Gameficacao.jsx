@@ -4,11 +4,20 @@ import "./Gameficacao.css"
 function Gameficacao() {
 
     const [rankingVisivel, alteraRankingVisivel] = useState(false);
-    const todasMissoesVisivel = false;
-    const todasMedalhasVisivel = false;
+    const [medalhasVisivel, alteraMedalhasVisivel] = useState(false);
+    const [missoesVisivel, alteraMissoesVisivel] = useState(false);
+    const [abaMissoes, alteraAbaMissoes] = useState("diarias");
 
     function alteraVisualizacaoRanking() {
         alteraRankingVisivel(!rankingVisivel)
+    }
+
+    function alteraVisualizacaoMedalhas() {
+        alteraMedalhasVisivel(!medalhasVisivel)
+    }
+
+    function alteraVisualizacaoMissoes() {
+        alteraMissoesVisivel(!missoesVisivel)
     }
 
 
@@ -18,20 +27,52 @@ function Gameficacao() {
             <main className="conteudo">
 
                 {
-                    rankingVisivel == true ? 
-                    <div className="rankingCompletoFlutuante">
-                    <div className="rankingCompleto">
-                        <h2> <i className="fas fa-trophy icone-painel"></i> Ranking dos Colecionadores <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoRanking()}></i></h2>
-                        <p>Usuario 1 <strong>1000XP</strong></p>
-                        <p>Usuario 1 <strong>1000XP</strong></p>
-                        <p>Usuario 1 <strong>1000XP</strong></p>
-                        <p>Usuario 1 <strong>1000XP</strong></p>
-                        <p>Usuario 1 <strong>1000XP</strong></p>
-                        <p>Usuario 1 <strong>1000XP</strong></p>
-                        <p>Usuario 1 <strong>1000XP</strong></p>
-                    </div>
-                </div> 
-                : <></>
+                    rankingVisivel == true ?
+                        <div className="janelaFlutuanteFundo">
+                            <div className="janelaFlutuante">
+                                <h2> <i className="fas fa-trophy icone-painel"></i> Ranking dos Colecionadores <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoRanking()}></i></h2>
+                                <p>Usuario 1 <strong>1000XP</strong></p>
+                                <p>Usuario 1 <strong>1000XP</strong></p>
+                                <p>Usuario 1 <strong>1000XP</strong></p>
+                                <p>Usuario 1 <strong>1000XP</strong></p>
+                                <p>Usuario 1 <strong>1000XP</strong></p>
+                                <p>Usuario 1 <strong>1000XP</strong></p>
+                                <p>Usuario 1 <strong>1000XP</strong></p>
+                            </div>
+                        </div>
+                        : <></>
+                }
+
+                {
+                    medalhasVisivel == true ?
+                        <div className="janelaFlutuanteFundo">
+                            <div className="janelaFlutuante">
+                                <h2> <i className="fas fa-medal icone-painel"></i> Todas as Medalhas <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoMedalhas()}></i></h2>
+                                <p>Medalha 1</p>
+                                <p>Medalha 1</p>
+                                <p>Medalha 1</p>
+                                <p>Medalha 1</p>
+                                <p>Medalha 1</p>
+                                <p>Medalha 1</p>
+                            </div>
+                        </div>
+                        : <></>
+                }
+
+                {
+                    missoesVisivel == true ?
+                        <div className="janelaFlutuanteFundo">
+                            <div className="janelaFlutuante">
+                                <h2> <i className="fas fa-bullseye icone-missao"></i> Todas as Missões <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoMissoes()}></i></h2>
+                                <p>Missão 1</p>
+                                <p>Missão 1</p>
+                                <p>Missão 1</p>
+                                <p>Missão 1</p>
+                                <p>Missão 1</p>
+                                <p>Missão 1</p>
+                            </div>
+                        </div>
+                        : <></>
                 }
 
                 <header className="titulo-pagina">
@@ -93,54 +134,100 @@ function Gameficacao() {
                                 <i className="fas fa-bullseye icone-painel"></i>
                                 <h2>Missões</h2>
                             </div>
-                            <a href="#" className="link-ver-todos">Ver todas</a>
+                            <a href="#" onClick={() => alteraVisualizacaoMissoes()} className="link-ver-todos">Ver todas</a>
                         </header>
 
                         <div className="abas-missoes">
-                            <button className="aba ativa">Diárias</button>
-                            <button className="aba">Semanais</button>
+                            <button className={`aba ${abaMissoes === 'diarias' ? 'ativa' : ''}`} onClick={() => alteraAbaMissoes('diarias')}>Diárias</button>
+                            <button className={`aba ${abaMissoes === 'semanais' ? 'ativa' : ''}`} onClick={() => alteraAbaMissoes('semanais')}>Semanais</button>
                         </div>
 
                         <div className="lista-missoes">
-                            <div className="missao-card">
-                                <i className="fas fa-comments icone-missao"></i>
-                                <div className="missao-info">
-                                    <span className="nome-missao">Faça 3 comentários</span>
-                                    <div className="missao-progresso-container">
-                                        <div className="barra-missao-fundo">
-                                            <div className="barra-missao-progresso" style={{ width: "66%" }}></div>
+                            {abaMissoes === 'diarias' ? (
+                                <>
+                                    <div className="missao-card">
+                                        <i className="fas fa-comments icone-missao"></i>
+                                        <div className="missao-info">
+                                            <span className="nome-missao">Faça 3 comentários</span>
+                                            <div className="missao-progresso-container">
+                                                <div className="barra-missao-fundo">
+                                                    <div className="barra-missao-progresso" style={{ width: "66%" }}></div>
+                                                </div>
+                                                <span className="missao-texto-progresso">2/3</span>
+                                                <span className="xp-ganho">+50 XP</span>
+                                            </div>
                                         </div>
-                                        <span className="missao-texto-progresso">2/3</span>
-                                        <span className="xp-ganho">+50 XP</span>
                                     </div>
-                                </div>
-                            </div>
-                            <div className="missao-card">
-                                <i className="fas fa-box-open icone-missao"></i>
-                                <div className="missao-info">
-                                    <span className="nome-missao">Publique 1 item</span>
-                                    <div className="missao-progresso-container">
-                                        <div className="barra-missao-fundo">
-                                            <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
+                                    <div className="missao-card">
+                                        <i className="fas fa-box-open icone-missao"></i>
+                                        <div className="missao-info">
+                                            <span className="nome-missao">Publique 1 item</span>
+                                            <div className="missao-progresso-container">
+                                                <div className="barra-missao-fundo">
+                                                    <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
+                                                </div>
+                                                <span className="missao-texto-progresso">0/1</span>
+                                                <span className="xp-ganho">+100 XP</span>
+                                            </div>
                                         </div>
-                                        <span className="missao-texto-progresso">0/1</span>
-                                        <span className="xp-ganho">+100 XP</span>
                                     </div>
-                                </div>
-                            </div>
-                            <div className="missao-card">
-                                <i className="fas fa-handshake icone-missao"></i>
-                                <div className="missao-info">
-                                    <span className="nome-missao">Conclua 1 troca</span>
-                                    <div className="missao-progresso-container">
-                                        <div className="barra-missao-fundo">
-                                            <div className="barra-missao-progresso" style={{ width: "100%" }}></div>
+                                    <div className="missao-card">
+                                        <i className="fas fa-handshake icone-missao"></i>
+                                        <div className="missao-info">
+                                            <span className="nome-missao">Conclua 1 troca</span>
+                                            <div className="missao-progresso-container">
+                                                <div className="barra-missao-fundo">
+                                                    <div className="barra-missao-progresso" style={{ width: "100%" }}></div>
+                                                </div>
+                                                <span className="missao-texto-progresso">1/1</span>
+                                                <span className="xp-ganho">+200 XP</span>
+                                            </div>
                                         </div>
-                                        <span className="missao-texto-progresso">1/1</span>
-                                        <span className="xp-ganho">+200 XP</span>
                                     </div>
-                                </div>
-                            </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="missao-card">
+                                        <i className="fas fa-comments icone-missao"></i>
+                                        <div className="missao-info">
+                                            <span className="nome-missao">Faça 10 comentários</span>
+                                            <div className="missao-progresso-container">
+                                                <div className="barra-missao-fundo">
+                                                    <div className="barra-missao-progresso" style={{ width: "50%" }}></div>
+                                                </div>
+                                                <span className="missao-texto-progresso">5/10</span>
+                                                <span className="xp-ganho">+150 XP</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="missao-card">
+                                        <i className="fas fa-box-open icone-missao"></i>
+                                        <div className="missao-info">
+                                            <span className="nome-missao">Publique 5 itens</span>
+                                            <div className="missao-progresso-container">
+                                                <div className="barra-missao-fundo">
+                                                    <div className="barra-missao-progresso" style={{ width: "20%" }}></div>
+                                                </div>
+                                                <span className="missao-texto-progresso">1/5</span>
+                                                <span className="xp-ganho">+300 XP</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="missao-card">
+                                        <i className="fas fa-handshake icone-missao"></i>
+                                        <div className="missao-info">
+                                            <span className="nome-missao">Conclua 3 trocas</span>
+                                            <div className="missao-progresso-container">
+                                                <div className="barra-missao-fundo">
+                                                    <div className="barra-missao-progresso" style={{ width: "66%" }}></div>
+                                                </div>
+                                                <span className="missao-texto-progresso">2/3</span>
+                                                <span className="xp-ganho">+500 XP</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </section>
 
@@ -192,10 +279,10 @@ function Gameficacao() {
                     <section className="painel-medalhas painel-card">
                         <header className="painel-header">
                             <div className="painel-titulo-wrapper">
-                                <i className="fas fa-star icone-painel"></i>
+                                <i className="fas fa-medal icone-painel"></i>
                                 <h2>Medalhas</h2>
                             </div>
-                            <a href="#" className="link-ver-todos">Ver todas</a>
+                            <a href="#" onClick={() => alteraVisualizacaoMedalhas()} className="link-ver-todos">Ver todas</a>
                         </header>
 
                         <div className="lista-medalhas">
