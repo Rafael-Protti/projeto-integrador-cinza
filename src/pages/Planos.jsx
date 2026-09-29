@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import "./Planos.css";
+import Navbar from '../navbar'
+import Rodape from '../rodape'
 
 function Planos() {
+    const navigate = useNavigate();
+    const handleNavigate = (path) => navigate(`/${path}`);
     const [modalInfo, setModalInfo] = useState(null);
 
     const openModal = (plan) => {
@@ -14,6 +19,7 @@ function Planos() {
 
     return (
         <div>
+            <Navbar onNavigate={handleNavigate} />
 
             <main className="main-content">
                 <section className="title-section">
@@ -152,6 +158,7 @@ function Planos() {
                     </div>
                 </div>
             )}
+            <Rodape onNavigate={handleNavigate} />
         </div>
     );
 }

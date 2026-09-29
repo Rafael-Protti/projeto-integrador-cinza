@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Produtos.css'
 import { supabase } from '../supabase'
+import Navbar from '../navbar'
+import Rodape from '../rodape'
 
 const initialProducts = [
   { id: 1, name: 'O Mistério das Galáxias', category: 'Livros', price: 49.9, rating: 4.8, image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600', description: 'Uma jornada ilustrada pelos segredos mais profundos do universo.' },
@@ -19,6 +22,7 @@ const money = (value) => value.toLocaleString('pt-BR', { style: 'currency', curr
 const formatProductValue = (product) => product.price == null ? `${product.xp ?? 0} XP` : money(product.price)
 
 function Produtos() {
+  const navigate = useNavigate()
   const [category, setCategory] = useState('Todos')
   const [query, setQuery] = useState('')
   const [slide, setSlide] = useState(0)
@@ -101,9 +105,11 @@ function Produtos() {
     notify(`${product.name} foi adicionado ao carrinho.`)
   }
   const changeQuantity = (id, amount) => setCart((current) => current.map((item) => item.id === id ? { ...item, quantity: item.quantity + amount } : item).filter((item) => item.quantity > 0))
+  const handleNavigate = (path) => navigate(`/${path}`)
 
   return (
     <div className="app">
+      <Navbar onNavigate={handleNavigate} />
       <nav className="categories" aria-label="Categorias">{categories.map((item) => <button key={item} className={category === item ? 'active' : ''} onClick={() => setCategory(item)}>{item}</button>)}</nav>
       <main id="inicio">
         <section className="hero">
@@ -121,6 +127,7 @@ function Produtos() {
       {message && <div className="toast">✓ {message}</div>}
       {selected && <div className="overlay" onClick={() => setSelected(null)}><div className="modal" onClick={(event) => event.stopPropagation()}><button className="close" onClick={() => setSelected(null)}>×</button><img src={selected.image} alt={selected.name} /><div><span className="eyebrow">{selected.category}</span><h2>{selected.name}</h2><p>{selected.description}</p><strong>{formatProductValue(selected)}</strong><button className="primary" onClick={() => { addToCart(selected); setSelected(null) }}>Adicionar ao carrinho</button></div></div></div>}
       {cartOpen && <div className="overlay" onClick={() => setCartOpen(false)}><aside className="drawer" onClick={(event) => event.stopPropagation()}><div className="drawer-heading"><h2>Seu carrinho</h2><button className="close" onClick={() => setCartOpen(false)}>×</button></div>{cart.length === 0 ? <div className="empty">Seu carrinho está vazio.</div> : <>{cart.map((item) => <div className="cart-item" key={item.id}><img src={item.image} alt="" /><div><strong>{item.name}</strong><small>{formatProductValue(item)}</small><div><button onClick={() => changeQuantity(item.id, -1)}>-</button><span>{item.quantity}</span><button onClick={() => changeQuantity(item.id, 1)}>+</button></div></div></div>)}<div className="cart-total"><span>Total</span><strong>{cartUsesXp ? `${total.toLocaleString('pt-BR')} XP` : money(total)}</strong><button className="primary" onClick={() => { setCart([]); setCartOpen(false); notify('Pedido finalizado com sucesso.') }}>Finalizar compra</button></div></>}</aside></div>}
+      <Rodape onNavigate={handleNavigate} />
     </div>
   )
 }

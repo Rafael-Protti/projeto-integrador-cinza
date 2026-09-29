@@ -52,8 +52,6 @@ h1 { max-width: 560px; margin: 14px 0; font-size: clamp(36px, 5vw, 64px); line-h
 .product-footer button { padding: 9px 12px; color: var(--white); background: var(--blue); border: 0; border-radius: 3px; font-weight: 700; }
 .product-footer .details { color: var(--blue); background: var(--gray); }
 .empty { padding: 50px; text-align: center; background: var(--white); border: 1px solid #c4cbd3; color: var(--muted); }
-footer { display: flex; justify-content: space-between; gap: 20px; padding: 28px max(24px, calc((100% - 1180px) / 2)); color: var(--muted); background: var(--white); font-size: 13px; }
-footer strong { color: var(--blue); font: 700 18px var(--headline); text-transform: uppercase; }
 .toast { position: fixed; right: 24px; bottom: 24px; z-index: 5; padding: 14px 18px; color: var(--white); background: var(--blue); box-shadow: 0 8px 30px #1b498633; }
 .overlay { position: fixed; inset: 0; z-index: 4; display: grid; place-items: center; padding: 20px; background: #17253acc; }
 .modal, .drawer { position: relative; background: var(--white); box-shadow: 0 20px 60px #17253a55; }

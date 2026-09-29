@@ -1,7 +1,12 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./login.css";
+import Navbar from '../navbar'
+import Rodape from '../rodape'
 
 function Login() {
+  const navigate = useNavigate();
+  const handleNavigate = (path) => navigate(`/${path}`);
   const [nome, setNome] = useState("Maria Souza");
   const [telefone, setTelefone] = useState("(11) 98765-4321");
   const [email, setEmail] = useState("Maria.souza@email.com");
@@ -121,60 +126,7 @@ function Login() {
 
   return (
     <>
-      {/* HEADER */}
-      <header>
-        <div>
-          <a href="#inicio" aria-label="Página inicial">
-            Logo
-          </a>
-
-          <div>
-            <input
-              type="search"
-              placeholder="Pesquisar..."
-              aria-label="Pesquisar"
-            />
-
-            <button type="button" aria-label="Pesquisar">
-              <i className="fas fa-search"></i>
-            </button>
-          </div>
-
-          <div>
-            <button type="button" aria-label="Notificações">
-              <i className="fas fa-bell"></i>
-            </button>
-
-            <button type="button" aria-label="Mensagens">
-              <i className="fas fa-envelope"></i>
-            </button>
-
-            <a href="#perfil">
-              <i className="fas fa-user"></i>
-              <span>Maria</span>
-            </a>
-          </div>
-        </div>
-      </header>
-
-      {/* NAVEGAÇÃO */}
-      <nav className="subnav" aria-label="Navegação secundária">
-        <div className="subnav-container">
-          <div className="botoes-topo">
-            <a href="#inicio" className="btn-retangulo active">
-              Início
-            </a>
-
-            <a href="/mensagens" className="btn-retangulo">
-              Mensagens
-            </a>
-
-            <a href="/configuracoes" className="btn-retangulo">
-              Configurações
-            </a>
-          </div>
-        </div>
-      </nav>
+      <Navbar onNavigate={handleNavigate} />
 
       {/* CONTEÚDO PRINCIPAL */}
       <main className="conteudo-principal">
@@ -414,12 +366,7 @@ function Login() {
         </div>
       )}
 
-      {/* FOOTER */}
-      <footer>
-        <div>
-          <p>© 2026 - Sistema de Trocas</p>
-        </div>
-      </footer>
+      <Rodape onNavigate={handleNavigate} />
     </>
   );
 }

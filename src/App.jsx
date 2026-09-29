@@ -3,15 +3,15 @@ import Produtos from './pages/Produtos';
 import Planos from './pages/Planos';
 import Perfil from './pages/Perfil';
 import Login from "./pages/login";
-import Login from "./pages/Cadastro";
+import Cadastro from "./pages/Cadastro";
 import Gameficacao from './pages/Gameficacao';
 
 function App() {
   return ( 
     <BrowserRouter>
       <Routes>
-        <Route path="" element={<Produtos/>}/>
-        <Route path="" element={<Cadastro/>}/>
+        <Route path="/" element={<Produtos/>}/>
+        <Route path="cadastro" element={<Cadastro/>}/>
         <Route path="planos" element={<Planos/>}/>
         <Route path="perfil" element={<Perfil/>}/>
         <Route path="login" element={<Login/>}/>
