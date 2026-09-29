@@ -626,110 +626,15 @@ function Login() {
 
   return (
     <>
-      {/* ======================================
-          HEADER
-      ======================================= */}
+      
 
-      <header className="header-principal">
-
-        <div className="header-container">
-
-          <a
-            href="#inicio"
-            className="logo"
-          >
-            Galeria Atemporal
-          </a>
-
-          <div className="barra-pesquisa">
-
-            <input
-              type="text"
-              placeholder="Pesquisar..."
-              aria-label="Pesquisar"
-            />
-
-            <button
-              type="button"
-              aria-label="Pesquisar"
-            >
-              <i className="fas fa-search"></i>
-            </button>
-
-          </div>
-
-          <div className="acoes-header">
-
-            <button
-              type="button"
-              aria-label="Notificações"
-            >
-              <i className="fas fa-bell"></i>
-            </button>
-
-            <button
-              type="button"
-              aria-label="Mensagens"
-            >
-              <i className="fas fa-envelope"></i>
-            </button>
-
-            <a
-              href="#perfil"
-              className="link-perfil"
-            >
-              <i className="fas fa-user"></i>
-
-              <span>
-                Perfil
-              </span>
-            </a>
-
-          </div>
-
-        </div>
-
-      </header>
+      
 
       {/* ======================================
           NAVEGAÇÃO
       ======================================= */}
 
-      <nav
-        className="subnav"
-        aria-label="Navegação secundária"
-      >
-
-        <div className="subnav-container">
-
-          <div className="botoes-topo">
-
-            <a
-              href="#inicio"
-              className="btn-retangulo active"
-            >
-              Início
-            </a>
-
-            <a
-              href="#mensagens"
-              className="btn-retangulo"
-            >
-              Mensagens
-            </a>
-
-            <a
-              href="#configuracoes"
-              className="btn-retangulo"
-            >
-              Configurações
-            </a>
-
-          </div>
-
-        </div>
-
-      </nav>
+      
 
       {/* ======================================
           CONTEÚDO
@@ -1155,9 +1060,7 @@ function Login() {
         <div className="footer-container">
 
           <p>
-            © {new Date().getFullYear()}{" "}
-            Galeria Atemporal.
-            Todos os direitos reservados.
+            
           </p>
 
         </div>
