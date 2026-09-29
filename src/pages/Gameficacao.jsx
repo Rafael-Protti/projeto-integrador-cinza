@@ -1,17 +1,20 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "./Gameficacao.css"
-import Navbar from '../navbar'
-import Rodape from '../rodape'
+import { supabase } from "../supabase.js";
+import Navbar from '../Navbar.jsx'
+import Rodape from '../Rodape.jsx'
+import { useNavigate } from 'react-router-dom';
 
 function Gameficacao() {
-    const navigate = useNavigate();
-    const handleNavigate = (path) => navigate(`/${path}`);
 
     const [rankingVisivel, alteraRankingVisivel] = useState(false);
     const [medalhasVisivel, alteraMedalhasVisivel] = useState(false);
     const [missoesVisivel, alteraMissoesVisivel] = useState(false);
     const [abaMissoes, alteraAbaMissoes] = useState("diarias");
+
+    const [usuarioGameficacao, alteraUsuarioGameficacao] = useState([]) /*copiar*/
+    const [carregando, alteraCarregando] = useState(true)
+    const usuarioAtual = 1;
 
     function alteraVisualizacaoRanking() {
         alteraRankingVisivel(!rankingVisivel)
@@ -25,12 +28,42 @@ function Gameficacao() {
         alteraMissoesVisivel(!missoesVisivel)
     }
 
+    const navigate = useNavigate();
+    const handleNavigate = (path) => navigate(`/${path}`);
 
+    async function buscarUsuarios() { /*copiar*/
+
+        alteraCarregando(true)
+
+        const { error, data } = await supabase.from('gamificacao').select("*, id_usuario(nome, foto)").eq("id_usuario", usuarioAtual).single()
+        alteraUsuarioGameficacao(data)
+        console.log(data)
+
+        alteraCarregando(false)
+    }
+
+    useEffect(() => { /*copiar*/
+        buscarUsuarios()
+    }, [])
+
+    useEffect(() => {
+        console.log(usuarioGameficacao)
+    }, [usuarioGameficacao])
+
+
+    const xpAtual = 0
+    const nivelAtual = 1
+    const xpProxNivel = 500
+
+    function calcularNivel(xp) {
+        nivel = xp / xpProxNivel
+        inivelAtual = parseInt(nivel)
+
+    }
 
     return (
         <div>
-            <Navbar onNavigate={handleNavigate} />
-            <main className="conteudo">
+            {carregando == false ? <main className="conteudo">
 
                 {
                     rankingVisivel == true ?
@@ -81,6 +114,8 @@ function Gameficacao() {
                         : <></>
                 }
 
+                <Navbar onNavigate={handleNavigate} />
+
                 <header className="titulo-pagina">
                     <div className="titulo-wrapper">
                         <i className="fas fa-trophy icone-titulo"></i>
@@ -91,9 +126,9 @@ function Gameficacao() {
 
                 <section className="painel-perfil">
                     <div className="perfil-esquerdo">
-                        <img src="https://placehold.co/100x100" alt="Foto do usuário" className="foto-usuario" />
+                        <img src={usuarioGameficacao.id_usuario?.foto} alt="Foto do usuário" className="foto-usuario" />
                         <div className="info-usuario">
-                            <h2 className="nome-usuario">Nome do Usuário</h2>
+                            <h2 className="nome-usuario">{usuarioGameficacao.id_usuario?.nome}</h2>
                             <span className="nivel-texto">Nível 5</span>
 
                             <div className="xp-container">
@@ -347,8 +382,12 @@ function Gameficacao() {
                         </div>
                     </section>
                 </div>
+
+                <Rodape onNavigate={handleNavigate} />
+
             </main>
-            <Rodape onNavigate={handleNavigate} />
+                : <></>
+            }
         </div>
     );
 }
