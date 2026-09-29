@@ -27,6 +27,7 @@ body {
     --cor-cinza-escuro: #555;
     --cor-cinza-claro: #ccc;
     --cor-bronze: #cd7f32;
+    --cor-vermelho: #cd3232;
     --cor-prata: #c0c0c0;
     --cor-ouro: #ffd700;
 }
@@ -34,6 +35,37 @@ body {
 a {
     text-decoration: none;
 }
+
+/* Ranking Completo */
+
+.janelaFlutuanteFundo {
+    background-color: rgba(0, 0, 0, 0.185);
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.janelaFlutuante {
+    background-color: var(--cor-branco);
+    border-radius: 12px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    width: fit-content;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 
 /* Navbar */
 .navbar {
@@ -152,7 +184,7 @@ a {
 
 .perfil-esquerdo {
     display: flex;
-    align-items: center;
+    flex-direction: row;
     gap: 25px;
     width: 50%;
 }
@@ -471,6 +503,10 @@ a {
 }
 .icone-medalha-ouro {
     color: var(--cor-ouro);
+}
+
+.icone-x {
+    color: var(--cor-vermelho);
 }
 
 .medalha-info {
