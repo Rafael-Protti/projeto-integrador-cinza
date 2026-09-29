@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import " ./Perfil.css";
+import "./Perfil.css";
 
 function Perfil() {
   const [nome, setNome] = useState("Maria Souza");

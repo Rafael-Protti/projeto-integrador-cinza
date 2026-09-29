@@ -293,7 +293,7 @@ function Login() {
 
     if (file.size > 2 * 1024 * 1024) {
       mostrarFeedback(
-        "A imagem deve ter no máximo 2MB.",
+        "A imagem deve ter no máximo 5MB.",
         true
       );
 
@@ -303,7 +303,7 @@ function Login() {
     }
 
     /*
-     * Formatos permitidos
+     * Formatos permitidos 
      */
 
     const tiposPermitidos = [
