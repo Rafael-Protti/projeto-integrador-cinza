@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+/*<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -238,4 +238,119 @@
   <!-- Script JS Interativo -->
   <script src="Cadastro.js"></script>
 </body>
-</html>
+</html>*/
+
+/*import { useState } from "react";
+import "./Cadastro.css";
+
+function Cadastro() {
+  const [form, setForm] = useState({
+    nome: "",
+    email: "",
+    senha: "",
+    confirmarSenha: "",
+  });
+
+  const [mensagem, setMensagem] = useState("");
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    if (
+      !form.nome ||
+      !form.email ||
+      !form.senha ||
+      !form.confirmarSenha
+    ) {
+      setMensagem("Preencha todos os campos.");
+      return;
+    }
+
+    if (form.senha !== form.confirmarSenha) {
+      setMensagem("As senhas não coincidem.");
+      return;
+    }
+
+    setMensagem("Cadastro realizado com sucesso!");
+
+    console.log("Dados cadastrados:", form);
+  }
+
+  return (
+    <div className="cadastro-container">
+      <div className="cadastro-card">
+        <h1>Criar conta</h1>
+        <p className="subtitle">Preencha os dados para se cadastrar</p>
+
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label htmlFor="nome">Nome</label>
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              placeholder="Digite seu nome"
+              value={form.nome}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="email">E-mail</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Digite seu e-mail"
+              value={form.email}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="senha">Senha</label>
+            <input
+              type="password"
+              id="senha"
+              name="senha"
+              placeholder="Digite sua senha"
+              value={form.senha}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="confirmarSenha">Confirmar senha</label>
+            <input
+              type="password"
+              id="confirmarSenha"
+              name="confirmarSenha"
+              placeholder="Confirme sua senha"
+              value={form.confirmarSenha}
+              onChange={handleChange}
+            />
+          </div>
+
+          <button type="submit">Cadastrar</button>
+        </form>
+
+        {mensagem && <p className="mensagem">{mensagem}</p>}
+
+        <p className="login">
+          Já possui uma conta? <a href="#">Entrar</a>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default Cadastro;*/

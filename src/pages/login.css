@@ -1,610 +1,700 @@
-```css
-/* =========================================================
-   CONFIGURAÇÕES GERAIS
-========================================================= */
+.css
+/* ==========================================================================
+   ESTILOS DA PÁGINA DE CADASTRO E PERFIL (PROJETO CINZA)
+   ========================================================================== */
 
+/* 1. VARIÁVEIS DE CORES E RESET BÁSICO */
+:root {
+  --cor-topo-escuro: #121212;
+  --cor-fundo-geral: #f5f7fa;
+  --cor-cards: #ffffff;
+  --cor-subnav: #1e1e1e;
+  --cor-azul-destaque: #0d6efd;
+  --cor-azul-hover: #0b5ed7;
+  --cor-texto-escuro: #1a1a1a;
+  --cor-texto-cinza: #6c757d;
+  --cor-texto-branco: #ffffff;
+  --cor-borda: #e0e0e0;
+  --cor-cinza-claro: #e9ecef;
+  --cor-sucesso: #198754;
+  --cor-erro: #dc3545;
+  --sombra-card: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --sombra-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --raio-borda: 14px;
+}
+
+/* Reset CSS */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f4f5f7;
-    color: #222;
-    min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--cor-fundo-geral);
+  color: var(--cor-texto-escuro);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  line-height: 1.5;
 }
 
-/* =========================================================
-   HEADER
-========================================================= */
-
-header {
-    width: 100%;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-body > header {
-    background: #ffffff;
-    border-bottom: 1px solid #e5e5e5;
-    height: 70px;
-    display: flex;
-    align-items: center;
+/* ==========================================================================
+   A. BARRA SUPERIOR (HEADER ESCURO / TOPBAR)
+   ========================================================================== */
+.topbar {
+  background-color: var(--cor-topo-escuro);
+  color: var(--cor-texto-branco);
+  padding: 14px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-body > header > div {
-    width: 90%;
-    max-width: 1200px;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.topbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-body > header a {
-    text-decoration: none;
-    color: #333;
+/* Logo */
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cor-texto-branco);
+  white-space: nowrap;
+  letter-spacing: -0.5px;
 }
 
-/* =========================================================
-   CONTEÚDO PRINCIPAL
-========================================================= */
+.logo:hover {
+  opacity: 0.9;
+}
 
+/* Barra de Pesquisa com Bordas Arredondadas */
+.caixa-pesquisa {
+  position: relative;
+  flex: 1;
+  max-width: 480px;
+  display: flex;
+  align-items: center;
+}
+
+.input-pesquisa {
+  width: 100%;
+  padding: 11px 45px 11px 20px;
+  border-radius: 50px;
+  border: 1px solid var(--cor-borda);
+  background-color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input-pesquisa:focus {
+  border-color: var(--cor-azul-destaque);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+}
+
+.btn-lupa {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: var(--cor-texto-cinza);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-lupa:hover {
+  color: var(--cor-azul-destaque);
+}
+
+/* Ações do Usuário (Ícones P&B) */
+.acoes-usuario {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-icon {
+  background-color: #2a2a2a;
+  color: var(--cor-texto-branco);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-icon:hover {
+  background-color: #3a3a3a;
+  transform: translateY(-2px);
+}
+
+.btn-login {
+  background-color: var(--cor-azul-destaque);
+  color: var(--cor-texto-branco);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-login:hover {
+  background-color: var(--cor-azul-hover);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   B. SUBNAV (RETÂNGULOS ESCUROS NO TOPO)
+   ========================================================================== */
+.subnav {
+  background-color: var(--cor-subnav);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 12px 24px;
+}
+
+.subnav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.botoes-topo {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-retangulo {
+  background-color: #2b2b2b;
+  color: var(--cor-texto-branco);
+  padding: 8px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #3d3d3d;
+  transition: all 0.2s ease;
+}
+
+.btn-retangulo:hover, .btn-retangulo.active {
+  background-color: var(--cor-azul-destaque);
+  border-color: var(--cor-azul-destaque);
+}
+
+/* ==========================================================================
+   C. CONTEÚDO PRINCIPAL
+   ========================================================================== */
 .conteudo-principal {
-    min-height: calc(100vh - 140px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 50px 20px;
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 0 24px;
+  flex: 1;
+  width: 100%;
 }
 
-/* =========================================================
-   PAINEL DE AUTENTICAÇÃO
-========================================================= */
-
-.painel-autenticacao {
-    width: 100%;
-    max-width: 1050px;
-    min-height: 620px;
-    background: #ffffff;
-    border-radius: 18px;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.10);
-
-    display: grid;
-    grid-template-columns: 1fr 70px 1fr;
-
-    padding: 45px;
+/* ==========================================================================
+   D. PAINEL DE PERFIL DO USUÁRIO
+   ========================================================================== */
+.painel-perfil {
+  background-color: var(--cor-cards);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  box-shadow: var(--sombra-card);
+  padding: 36px 40px;
+  display: flex;
+  gap: 50px;
+  align-items: flex-start;
+  margin-bottom: 40px;
 }
 
-/* =========================================================
-   COLUNAS
-========================================================= */
-
-.coluna-cadastro,
-.coluna-login {
-    width: 100%;
-    padding: 10px 30px;
+/* Lado Esquerdo: Foto */
+.perfil-esquerdo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  min-width: 200px;
 }
 
-/* =========================================================
-   CABEÇALHOS DAS COLUNAS
-========================================================= */
-
-.header-cadastro,
-.header-login {
-    text-align: center;
-    margin-bottom: 35px;
+.moldura-foto {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  padding: 5px;
+  background: linear-gradient(135deg, #e0e0e0, #ffffff);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.avatar-contato-box,
-.cadeado-topo-box {
-    width: 65px;
-    height: 65px;
-
-    margin: 0 auto 15px;
-
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 25px;
+.foto-usuario {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
 }
 
-/* Ícone cadastro */
-
-.avatar-contato-box {
-    background: #eaf2ff;
-    color: #2563eb;
+.legenda-foto {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cor-texto-cinza);
 }
 
-/* Ícone login */
-
-.cadeado-topo-box {
-    background: #f1f1f1;
-    color: #333;
+.btn-trocar-foto {
+  background-color: var(--cor-cinza-claro);
+  color: var(--cor-texto-escuro);
+  border: 1px solid var(--cor-borda);
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
 }
 
-/* =========================================================
-   TÍTULOS
-========================================================= */
-
-.titulo-criar-conta,
-.titulo-ja-tenho-conta {
-    font-size: 25px;
-    font-weight: 700;
-    color: #222;
+.btn-trocar-foto:hover {
+  background-color: #dee2e6;
+  border-color: #ced4da;
+  transform: translateY(-1px);
 }
 
-.titulo-criar-conta {
-    color: #2563eb;
+/* Lado Direito: Formulário */
+.perfil-direito {
+  flex: 1;
 }
 
-.titulo-ja-tenho-conta {
-    color: #333;
+.titulo-painel {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--cor-texto-escuro);
+  border-bottom: 2px solid var(--cor-cinza-claro);
+  padding-bottom: 10px;
 }
 
-/* =========================================================
-   FORMULÁRIOS
-========================================================= */
-
-.form-autenticacao {
-    width: 100%;
+.form-perfil {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 .campo-grupo {
-    margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
-
-/* =========================================================
-   LABEL
-========================================================= */
 
 .campo-rotulo {
-    display: block;
-    margin-bottom: 8px;
-
-    font-size: 14px;
-    font-weight: 600;
-
-    color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.campo-rotulo i {
-    margin-right: 7px;
-    color: #2563eb;
+.icone-pb {
+  color: #444444;
+  font-size: 14px;
 }
 
-/* =========================================================
-   INPUT
-========================================================= */
-
-.input-wrapper {
-    position: relative;
-    width: 100%;
+.campo-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--cor-borda);
+  font-size: 14px;
+  color: var(--cor-texto-escuro);
+  background-color: #fafafa;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
-.campo-input-retangulo {
-    width: 100%;
-    height: 50px;
-
-    padding: 0 45px;
-
-    border: 1px solid #d5d7dc;
-    border-radius: 8px;
-
-    background: #fff;
-
-    font-size: 15px;
-    color: #222;
-
-    outline: none;
-
-    transition: 0.25s;
+.campo-input:focus {
+  background-color: #ffffff;
+  border-color: var(--cor-azul-destaque);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
 }
 
-.campo-input-retangulo::placeholder {
-    color: #999;
+/* Caixa de Número de Trocas */
+.caixa-trocas {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.campo-input-retangulo:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
-}
+.badge-trocas {
+  background-color: var(--cor-cinza-claro);
+  border: 1px solid var(--cor-borda);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cor-texto-escuro);
 
-/* =========================================================
-   ÍCONE DENTRO DO INPUT
-========================================================= */
-
-.input-icon-prefix {
-    position: absolute;
-
-    left: 15px;
-    top: 50%;
-
-    transform: translateY(-50%);
-
-    color: #777;
-
-    font-size: 15px;
-
-    z-index: 2;
-}
-
-/* =========================================================
-   BOTÃO OLHO
-========================================================= */
-
-.btn-olho-toggle {
-    position: absolute;
-
-    right: 12px;
-    top: 50%;
-
-    transform: translateY(-50%);
-
-    color: #777;
-
+  span {
+    color: var(--cor-azul-destaque);
     font-size: 16px;
+    font-weight: 700;
+  }
 }
 
-.btn-olho-toggle:hover {
-    color: #2563eb;
+.btn-add-ponto {
+  background-color: #212529;
+  color: var(--cor-texto-branco);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s ease;
 }
 
-/* =========================================================
-   TEXTO DE AJUDA DA SENHA
-========================================================= */
-
-.texto-ajuda-senha {
-    margin-top: 8px;
-
-    font-size: 12px;
-    line-height: 1.5;
-
-    color: #777;
+.btn-add-ponto:hover {
+  background-color: #343a40;
 }
 
-.texto-ajuda-senha i {
-    margin-right: 5px;
-    color: #2563eb;
+/* Botão Salvar Alterações */
+.caixa-acoes-form {
+  margin-top: 10px;
 }
 
-/* =========================================================
-   BOTÃO CONTINUAR
-========================================================= */
-
-.espacamento-botao-2cm,
-.caixa-acoes-login {
-    margin-top: 30px;
+.btn-salvar {
+  background-color: var(--cor-azul-destaque);
+  color: var(--cor-texto-branco);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
 }
 
-.btn-continuar {
+.btn-salvar:hover {
+  background-color: var(--cor-azul-hover);
+  transform: translateY(-1px);
+}
+
+.btn-salvar.oculto {
+  display: none !important;
+}
+
+/* Mensagens de Feedback */
+.msg-feedback {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.msg-feedback.sucesso {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #badbcc;
+}
+
+.msg-feedback.erro {
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+}
+
+/* ==========================================================================
+   E. SEÇÃO DE COLEÇÕES (CARDS DOS PRODUTOS)
+   ========================================================================== */
+.secao-colecoes {
+  background-color: var(--cor-cards);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  box-shadow: var(--sombra-card);
+  padding: 32px 40px;
+}
+
+.header-colecoes {
+  border-bottom: 2px solid var(--cor-cinza-claro);
+  padding-bottom: 16px;
+  margin-bottom: 28px;
+}
+
+.titulo-estrela-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cor-texto-escuro);
+  }
+}
+
+.icone-estrela-pb {
+  font-size: 20px;
+  color: #1a1a1a;
+  background-color: var(--cor-cinza-claro);
+  padding: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--cor-borda);
+}
+
+/* Grid de Cards Proporcionais (15cm x 10cm ~ Proporção 300px x 200px) */
+.grid-colecoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.card-colecao {
+  background-color: #ffffff;
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-colecao:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-hover);
+}
+
+.imagem-colecao-box {
+  width: 100%;
+  height: 180px;
+  background-color: #f0f0f0;
+  overflow: hidden;
+}
+
+.img-colecao {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card-colecao:hover .img-colecao {
+  transform: scale(1.05);
+}
+
+.info-card-colecao {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.nome-colecao {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--cor-texto-escuro);
+}
+
+.qtd-itens {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cor-texto-cinza);
+}
+
+.btn-ver-colecao {
+  margin-top: auto;
+  background-color: var(--cor-azul-destaque);
+  color: var(--cor-texto-branco);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  text-align: center;
+}
+
+.btn-ver-colecao:hover {
+  background-color: var(--cor-azul-hover);
+}
+
+/* ==========================================================================
+   F. MODAL VISUAL DE UPLOAD / CORTE DE FOTO
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.ativo {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-conteudo {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.subtitulo-modal {
+  font-size: 13px;
+  color: var(--cor-texto-cinza);
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+
+.cropper-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.cropper-mask-circular {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--cor-azul-destaque);
+  box-shadow: 0 0 0 6px rgba(13, 110, 253, 0.1);
+
+  img {
     width: 100%;
-    height: 50px;
+    height: 100%;
+    object-fit: cover;
+  }
+}
 
-    border: none;
-    border-radius: 8px;
+.modal-botoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
 
-    background: #2563eb;
-    color: white;
+.btn-modal-secundario {
+  background-color: var(--cor-cinza-claro);
+  color: var(--cor-texto-escuro);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
 
-    font-size: 15px;
-    font-weight: 600;
+.btn-modal-primario {
+  background-color: var(--cor-azul-destaque);
+  color: var(--cor-texto-branco);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
 
-    cursor: pointer;
+.btn-modal-primario:hover {
+  background-color: var(--cor-azul-hover);
+}
 
-    display: flex;
+/* ==========================================================================
+   G. RODAPÉ (FOOTER - COMPRIDO DE PONTA A PONTA)
+   ========================================================================== */
+.rodape {
+  background-color: var(--cor-topo-escuro);
+  color: var(--cor-texto-branco);
+  padding: 20px 24px;
+  width: 100%;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rodape-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.copyright {
+  font-size: 14px;
+  color: #a0a0a0;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+  .topbar-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .painel-perfil {
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
+    padding: 24px;
+  }
 
-    transition: all 0.25s ease;
-}
-
-.btn-continuar:hover {
-    background: #1d4ed8;
-    transform: translateY(-1px);
-
-    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.25);
-}
-
-.btn-continuar:active {
-    transform: translateY(0);
-}
-
-.setinha {
-    font-size: 12px;
-}
-
-/* =========================================================
-   DIVISOR SOCIAL
-========================================================= */
-
-.divisor-social {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    margin: 28px 0 18px;
-
-    color: #888;
-
-    font-size: 13px;
-}
-
-.divisor-social::before,
-.divisor-social::after {
-    content: "";
-
-    height: 1px;
-    background: #ddd;
-
-    flex: 1;
-
-    margin: 0 12px;
-}
-
-/* =========================================================
-   BOTÕES SOCIAIS
-========================================================= */
-
-.botoes-social {
-    display: flex;
-    gap: 10px;
-}
-
-.btn-social {
-    flex: 1;
-
-    height: 45px;
-
-    border: 1px solid #ddd;
-    border-radius: 8px;
-
-    background: #fff;
-
-    color: #333;
-
-    cursor: pointer;
-
-    font-size: 13px;
-    font-weight: 600;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 7px;
-
-    transition: 0.25s;
-}
-
-.btn-social:hover {
-    background: #f6f6f6;
-    border-color: #bbb;
-    transform: translateY(-1px);
-}
-
-.btn-social i {
-    font-size: 15px;
-}
-
-/* =========================================================
-   DIVISOR CENTRAL
-========================================================= */
-
-.divisor-central-ou {
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    position: relative;
-}
-
-.linha-vertical {
-    width: 1px;
-    height: 80%;
-
-    background: #ddd;
-}
-
-.circulo-ou {
-    position: absolute;
-
-    width: 45px;
-    height: 45px;
-
-    border-radius: 50%;
-
-    background: #fff;
-    border: 1px solid #ddd;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 13px;
-    font-weight: 600;
-
-    color: #777;
-}
-
-/* =========================================================
-   ENTRAR SEM SENHA
-========================================================= */
-
-.btn-entrar-sem-senha {
+  .perfil-direito {
     width: 100%;
+  }
 
-    height: 48px;
-
-    margin-top: 15px;
-
-    border: 1px solid #2563eb;
-    border-radius: 8px;
-
-    background: #fff;
-
-    color: #2563eb;
-
-    font-size: 14px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 8px;
-
-    transition: 0.25s;
+  .grid-colecoes {
+    grid-template-columns: 1fr;
+  }
 }
 
-.btn-entrar-sem-senha:hover {
-    background: #eff6ff;
-}
-
-/* =========================================================
-   ESQUECI A SENHA
-========================================================= */
-
-.caixa-esqueci-senha {
-    text-align: center;
-
-    margin-top: 20px;
-}
-
-.link-esqueci-senha {
-    color: #2563eb;
-
-    font-size: 13px;
-    font-weight: 600;
-
-    text-decoration: none;
-}
-
-.link-esqueci-senha:hover {
-    text-decoration: underline;
-}
-
-/* =========================================================
-   DICA DE SEGURANÇA
-========================================================= */
-
-.dica-seguranca {
-    margin-top: 30px;
-
-    padding: 14px;
-
-    border-radius: 8px;
-
-    background: #f5f7fa;
-
-    color: #666;
-
-    font-size: 12px;
-
-    line-height: 1.5;
-
-    display: flex;
-    align-items: flex-start;
-
-    gap: 10px;
-}
-
-.dica-seguranca i {
-    color: #16a34a;
-
-    font-size: 16px;
-
-    margin-top: 2px;
-}
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-footer {
-    width: 100%;
-    min-height: 70px;
-
-    background: #ffffff;
-
-    border-top: 1px solid #e5e5e5;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* =========================================================
-   RESPONSIVIDADE
-========================================================= */
-
-@media (max-width: 850px) {
-
-    .painel-autenticacao {
-        grid-template-columns: 1fr;
-
-        padding: 30px 20px;
-    }
-
-    .coluna-cadastro,
-    .coluna-login {
-        padding: 20px 10px;
-    }
-
-    .divisor-central-ou {
-        height: 70px;
-    }
-
-    .linha-vertical {
-        width: 80%;
-        height: 1px;
-    }
-
-    .circulo-ou {
-        position: absolute;
-    }
-
-    .botoes-social {
-        flex-direction: column;
-    }
-}
-
-@media (max-width: 500px) {
-
-    .conteudo-principal {
-        padding: 25px 10px;
-    }
-
-    .painel-autenticacao {
-        border-radius: 10px;
-        padding: 20px 15px;
-    }
-
-    .titulo-criar-conta,
-    .titulo-ja-tenho-conta {
-        font-size: 21px;
-    }
-
-    .avatar-contato-box,
-    .cadeado-topo-box {
-        width: 55px;
-        height: 55px;
-        font-size: 21px;
-    }
-
-    .campo-input-retangulo {
-        height: 48px;
-    }
-
-    .btn-continuar {
-        height: 48px;
-    }
-}
-```
