@@ -104,11 +104,6 @@ function Produtos() {
 
   return (
     <div className="app">
-      <header className="header">
-        <a className="brand" href="#inicio"><img src="/Logo.jfif" alt="XP SHOP" /><span>XP SHOP</span></a>
-        <label className="search"><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar no catálogo" /></label>
-        <button className="cart-button" onClick={() => setCartOpen(true)}>Carrinho <b>{itemCount}</b></button>
-      </header>
       <nav className="categories" aria-label="Categorias">{categories.map((item) => <button key={item} className={category === item ? 'active' : ''} onClick={() => setCategory(item)}>{item}</button>)}</nav>
       <main id="inicio">
         <section className="hero">
