@@ -1,7 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Gameficacao.css"
+import Navbar from '../navbar'
+import Rodape from '../rodape'
 
 function Gameficacao() {
+    const navigate = useNavigate();
+    const handleNavigate = (path) => navigate(`/${path}`);
 
     const [rankingVisivel, alteraRankingVisivel] = useState(false);
     const [medalhasVisivel, alteraMedalhasVisivel] = useState(false);
@@ -24,6 +29,7 @@ function Gameficacao() {
 
     return (
         <div>
+            <Navbar onNavigate={handleNavigate} />
             <main className="conteudo">
 
                 {
@@ -342,6 +348,7 @@ function Gameficacao() {
                     </section>
                 </div>
             </main>
+            <Rodape onNavigate={handleNavigate} />
         </div>
     );
 }

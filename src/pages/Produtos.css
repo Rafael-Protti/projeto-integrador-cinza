@@ -19,14 +19,7 @@ body { margin: 0; }
 button, input { font: inherit; }
 button { cursor: pointer; }
 .app { min-height: 100vh; }
-.header { height: 82px; padding: 0 max(24px, calc((100% - 1180px) / 2)); display: flex; align-items: center; gap: 28px; background: var(--blue); border-bottom: 1px solid #123664; }
-.brand { display: flex; align-items: center; gap: 11px; color: var(--white); font: 700 27px var(--headline); letter-spacing: .03em; text-decoration: none; white-space: nowrap; }
-.brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--white); }
-.search { display: flex; align-items: center; gap: 10px; max-width: 430px; flex: 1; padding: 11px 15px; color: var(--blue); background: var(--white); border: 1px solid var(--white); border-radius: 4px; }
-.search input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--ink); }
-.cart-button, .primary { border: 0; border-radius: 4px; padding: 12px 18px; color: var(--blue); background: var(--white); font-weight: 700; }
-.cart-button { margin-left: auto; white-space: nowrap; }
-.cart-button b { margin-left: 7px; color: var(--blue); }
+.primary { border: 0; border-radius: 4px; padding: 12px 18px; color: var(--blue); background: var(--white); font-weight: 700; }
 .categories { display: flex; gap: 24px; padding: 16px max(24px, calc((100% - 1180px) / 2)); background: var(--white); border-bottom: 1px solid var(--gray); overflow-x: auto; }
 .categories button { padding: 0 0 5px; border: 0; border-bottom: 2px solid transparent; color: var(--muted); background: transparent; white-space: nowrap; }
 .categories button.active { color: var(--blue); border-color: var(--blue); }
@@ -59,8 +52,6 @@ h1 { max-width: 560px; margin: 14px 0; font-size: clamp(36px, 5vw, 64px); line-h
 .product-footer button { padding: 9px 12px; color: var(--white); background: var(--blue); border: 0; border-radius: 3px; font-weight: 700; }
 .product-footer .details { color: var(--blue); background: var(--gray); }
 .empty { padding: 50px; text-align: center; background: var(--white); border: 1px solid #c4cbd3; color: var(--muted); }
-footer { display: flex; justify-content: space-between; gap: 20px; padding: 28px max(24px, calc((100% - 1180px) / 2)); color: var(--muted); background: var(--white); font-size: 13px; }
-footer strong { color: var(--blue); font: 700 18px var(--headline); text-transform: uppercase; }
 .toast { position: fixed; right: 24px; bottom: 24px; z-index: 5; padding: 14px 18px; color: var(--white); background: var(--blue); box-shadow: 0 8px 30px #1b498633; }
 .overlay { position: fixed; inset: 0; z-index: 4; display: grid; place-items: center; padding: 20px; background: #17253acc; }
 .modal, .drawer { position: relative; background: var(--white); box-shadow: 0 20px 60px #17253a55; }
@@ -82,4 +73,4 @@ footer strong { color: var(--blue); font: 700 18px var(--headline); text-transfo
 .cart-item span { display: inline-block; width: 30px; text-align: center; }
 .cart-total { display: grid; grid-template-columns: 1fr auto; gap: 18px; padding-top: 25px; }
 .cart-total .primary { grid-column: 1 / -1; color: var(--white); background: var(--blue); }
-@media (max-width: 720px) { .header { height: auto; padding: 18px 20px; flex-wrap: wrap; gap: 15px; } .search { order: 3; max-width: none; flex-basis: 100%; } main { padding: 24px 20px 60px; } .hero { min-height: 480px; padding: 35px 25px; align-items: start; } .hero > img { right: 0; bottom: 0; width: 100%; height: 45%; opacity: .4; } .product-grid { grid-template-columns: 1fr; } .section-heading { align-items: start; gap: 10px; flex-direction: column; } footer { flex-direction: column; } .modal { grid-template-columns: 1fr; max-height: 90vh; overflow-y: auto; } .modal > img { min-height: 210px; max-height: 250px; } }
+@media (max-width: 720px) { main { padding: 24px 20px 60px; } .hero { min-height: 480px; padding: 35px 25px; align-items: start; } .hero > img { right: 0; bottom: 0; width: 100%; height: 45%; opacity: .4; } .product-grid { grid-template-columns: 1fr; } .section-heading { align-items: start; gap: 10px; flex-direction: column; } footer { flex-direction: column; } .modal { grid-template-columns: 1fr; max-height: 90vh; overflow-y: auto; } .modal > img { min-height: 210px; max-height: 250px; } }
