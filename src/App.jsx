@@ -2,8 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Produtos from './pages/Produtos';
 import Planos from './pages/Planos';
 import Perfil from './pages/Perfil';
-import Login from "./pages/login";
 import Gameficacao from './pages/Gameficacao';
+import Login from "./pages/login";
 
 function App() {
   return ( 
