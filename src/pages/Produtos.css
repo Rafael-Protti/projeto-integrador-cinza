@@ -43,6 +43,7 @@ h1 { max-width: 560px; margin: 14px 0; font-size: clamp(36px, 5vw, 64px); line-h
 .hero-controls button { width: 28px; height: 28px; padding: 0; color: var(--white); background: transparent; border: 1px solid var(--gray); border-radius: 50%; }
 .hero-controls button.selected { background: var(--white); border-color: var(--white); color: var(--blue); }
 .catalog { padding-top: 72px; }
+.catalog-message { margin: 0 0 18px; color: var(--muted); }
 .section-heading { display: flex; justify-content: space-between; align-items: end; margin-bottom: 25px; }
 .section-heading h2 { margin: 8px 0 0; font-size: 32px; }
 .section-heading > span { color: var(--muted); font-size: 14px; }
