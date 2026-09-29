@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import "./login.css";
+import " ./Perfil.css";
 
-function Login() {
+function Perfil() {
   const [nome, setNome] = useState("Maria Souza");
   const [telefone, setTelefone] = useState("(11) 98765-4321");
   const [email, setEmail] = useState("Maria.souza@email.com");
@@ -424,4 +424,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Perfil;

@@ -3,7 +3,7 @@ import Produtos from './pages/Produtos';
 import Planos from './pages/Planos';
 import Perfil from './pages/Perfil';
 import Login from "./pages/login";
-import Login from "./pages/Cadastro";
+import Cadastro from "./pages/Cadastro";
 import Gameficacao from './pages/Gameficacao';
 
 function App() {
