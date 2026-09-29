@@ -1,5 +1,5 @@
 import React from 'react';
-import './Rodape.css';
+import './rodape.css';
 
 function Rodape({ onNavigate }) {
   return (
