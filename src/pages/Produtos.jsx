@@ -27,6 +27,7 @@ function Produtos() {
   const [query, setQuery] = useState('')
   const [slide, setSlide] = useState(0)
   const [products, setProducts] = useState(initialProducts)
+  const [categories, setCategories] = useState(() => [...new Set(initialProducts.map((product) => product.category))])
   const [cart, setCart] = useState([])
   const [selected, setSelected] = useState(null)
   const [cartOpen, setCartOpen] = useState(false)
@@ -42,13 +43,31 @@ function Produtos() {
   useEffect(() => {
     let isCurrent = true
 
-    const loadProducts = async () => {
-      if (!supabase) {
-        setFetchError('Configure as variáveis do Supabase no arquivo .env.')
-        setLoading(false)
+    if (!supabase) {
+      setFetchError('Configure as variáveis do Supabase no arquivo .env.')
+      setLoading(false)
+      return () => { isCurrent = false }
+    }
+
+    const loadCategories = async (fallback = []) => {
+      const { data, error } = await supabase
+        .from('categorias')
+        .select('nome')
+        .order('nome')
+
+      if (!isCurrent) return
+
+      if (error) {
+        setCategories(fallback)
         return
       }
 
+      const names = [...new Set((data ?? []).map((item) => item.nome).filter(Boolean))]
+      setCategories(names)
+      setCategory((current) => names.includes(current) ? current : 'Todos')
+    }
+
+    const loadProducts = async () => {
       const { data, error } = await supabase
         .from('produtos')
         .select('*, categorias(nome)')
@@ -63,7 +82,7 @@ function Produtos() {
         return
       }
 
-      setProducts(data.map((product, index) => ({
+      const loadedProducts = data.map((product, index) => ({
         id: product.id,
         name: product.nome,
         category: product.categorias?.nome ?? 'Outros',
@@ -73,17 +92,26 @@ function Produtos() {
         rating: product.avaliacao == null ? null : Number(product.avaliacao),
         image: product.imagem || initialProducts[index % initialProducts.length].image,
         description: product.descricao,
-      })))
-      setCategory('Todos')
+      }))
+
+      setProducts(loadedProducts)
+      await loadCategories([...new Set(loadedProducts.map((product) => product.category))])
       setFetchError('')
       setLoading(false)
     }
 
     loadProducts()
-    return () => { isCurrent = false }
-  }, [])
 
-  const categories = useMemo(() => ['Todos', ...new Set(products.map((product) => product.category))], [products])
+    const categoryChannel = supabase
+      .channel('catalogo-categorias')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'categorias' }, () => loadCategories())
+      .subscribe()
+
+    return () => {
+      isCurrent = false
+      supabase.removeChannel(categoryChannel)
+    }
+  }, [])
 
   const filteredProducts = useMemo(() => products.filter((product) => {
     const matchesCategory = category === 'Todos' || product.category === category
@@ -110,7 +138,7 @@ function Produtos() {
   return (
     <div className="app">
       <Navbar onNavigate={handleNavigate} />
-      <nav className="categories" aria-label="Categorias">{categories.map((item) => <button key={item} className={category === item ? 'active' : ''} onClick={() => setCategory(item)}>{item}</button>)}</nav>
+      <nav className="categories" aria-label="Categorias">{['Todos', ...categories].map((item) => <button key={item} className={category === item ? 'active' : ''} onClick={() => setCategory(item)}>{item}</button>)}</nav>
       <main id="inicio">
         <section className="hero">
           <div className="hero-copy"><span className="eyebrow">CATÁLOGO OFICIAL</span><h1>{banners[slide].title}</h1><p>{banners[slide].text}</p><a className="primary" href="#catalogo">Explorar coleção</a></div>
