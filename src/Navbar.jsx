@@ -5,9 +5,15 @@ function Navbar({ onNavigate }) {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="navbar-logo" onClick={() => onNavigate('perfil')}>
-          Colecionáveis
-        </div>
+        <button type="button" className="navbar-logo" onClick={() => onNavigate('perfil')}>
+          <img
+            src="/Logo.jfif"
+            alt=""
+            className="navbar-logo-imagem"
+            onError={(event) => { event.currentTarget.hidden = true; }}
+          />
+          <span>Colecionáveis</span>
+        </button>
 
         <div className="navbar-pesquisa">
           <input type="text" placeholder="Digite para pesquisa..." className="navbar-input" />
