@@ -1,7 +1,15 @@
 import { useRef, useState } from "react";
 import "./Perfil.css";
+import Navbar from '../navbar'
+import Rodape from "../rodape";
+import { useNavigate } from "react-router-dom";
 
 function Perfil() {
+
+  const navigate = useNavigate();
+  const handleNavigate = (path) => navigate(`/${path}`);
+
+
   const [nome, setNome] = useState("Maria Souza");
   const [telefone, setTelefone] = useState("(11) 98765-4321");
   const [email, setEmail] = useState("Maria.souza@email.com");
@@ -120,7 +128,9 @@ function Perfil() {
   };
 
   return (
-    <>
+      <div>
+      <Navbar onNavigate={handleNavigate} />
+
       
 
      
@@ -363,9 +373,10 @@ function Perfil() {
         </div>
       )}
 
-      
-    </>
-  );
-}
+      <Rodape onNavigate={handleNavigate} /> 
+      </div>
+
+    );
+  }
 
 export default Perfil;
