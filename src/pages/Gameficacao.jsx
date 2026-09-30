@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import "./Gameficacao.css"
+import { useNavigate } from 'react-router-dom';
 import { supabase } from "../supabase.js";
 import Navbar from '../Navbar.jsx'
 import Rodape from '../Rodape.jsx'
-import { useNavigate } from 'react-router-dom';
+import "./Gameficacao.css"
 
 function Gameficacao() {
+
+    const navigate = useNavigate();
+    const handleNavigate = (path) => navigate(`/${path}`);
 
     const [rankingVisivel, alteraRankingVisivel] = useState(false);
     const [medalhasVisivel, alteraMedalhasVisivel] = useState(false);
@@ -13,9 +16,14 @@ function Gameficacao() {
     const [abaMissoes, alteraAbaMissoes] = useState("diarias");
 
     const [usuarioGameficacao, alteraUsuarioGameficacao] = useState([]) /*copiar*/
+    const [rankingGameficacao, alteraRankingGameficacao] = useState([])
     const [carregando, alteraCarregando] = useState(true)
     const usuarioAtual = 1;
+    const num = 0;
 
+    const [nivelAtual, alteraNivelAtual] = useState(1.0)
+    const [xpAtual, alteraXpAtual] = useState(0)
+    const [xpProxNivel, alteraXpProxNivel] = useState(500.0)
     function alteraVisualizacaoRanking() {
         alteraRankingVisivel(!rankingVisivel)
     }
@@ -28,10 +36,7 @@ function Gameficacao() {
         alteraMissoesVisivel(!missoesVisivel)
     }
 
-    const navigate = useNavigate();
-    const handleNavigate = (path) => navigate(`/${path}`);
-
-    async function buscarUsuarios() { /*copiar*/
+    async function buscarUsuarioAutenticado() { /*copiar*/
 
         alteraCarregando(true)
 
@@ -40,29 +45,48 @@ function Gameficacao() {
         console.log(data)
 
         alteraCarregando(false)
+
+        calcularNivel(data?.xp)
+    }
+
+    async function buscarUsuariosRanking(todosUsuarios = false) { // Se true, busca a lista inteira da tabela de Gamificação, se false, apenas o top5.
+
+        const { error, data } = await supabase.from('gamificacao').select("*, id_usuario(nome, foto)").order("xp", { ascending: false }).limit(5)
+        alteraRankingGameficacao(data)
+        console.log(data)
+
     }
 
     useEffect(() => { /*copiar*/
-        buscarUsuarios()
+        buscarUsuariosRanking()
+        buscarUsuarioAutenticado()
     }, [])
 
-    useEffect(() => {
-        console.log(usuarioGameficacao)
-    }, [usuarioGameficacao])
 
+    function calcularNivel(xpRecebido) {
+        let novoXp = xpAtual + xpRecebido;
+        novoXp = Math.floor(novoXp / 50) * 50
+        let novoNivel = nivelAtual;
+        let novoXpProxNivel = xpProxNivel;
 
-    const xpAtual = 0
-    const nivelAtual = 1
-    const xpProxNivel = 500
+        while (novoXp >= novoXpProxNivel) {
+            novoXp -= novoXpProxNivel;
+            novoNivel += 1;
 
-    function calcularNivel(xp) {
-        nivel = xp / xpProxNivel
-        inivelAtual = parseInt(nivel)
+            novoXpProxNivel = Math.floor(novoXpProxNivel * 1.1);
+            novoXpProxNivel = Math.floor(novoXpProxNivel / 50) * 50
+        }
 
-    }
+        alteraXpAtual(novoXp);
+        alteraNivelAtual(novoNivel);
+        alteraXpProxNivel(novoXpProxNivel);
+    };
+
 
     return (
         <div>
+            <Navbar onNavigate={handleNavigate} />
+
             {carregando == false ? <main className="conteudo">
 
                 {
@@ -114,7 +138,6 @@ function Gameficacao() {
                         : <></>
                 }
 
-                <Navbar onNavigate={handleNavigate} />
 
                 <header className="titulo-pagina">
                     <div className="titulo-wrapper">
@@ -129,39 +152,39 @@ function Gameficacao() {
                         <img src={usuarioGameficacao.id_usuario?.foto} alt="Foto do usuário" className="foto-usuario" />
                         <div className="info-usuario">
                             <h2 className="nome-usuario">{usuarioGameficacao.id_usuario?.nome}</h2>
-                            <span className="nivel-texto">Nível 5</span>
+                            <span className="nivel-texto">Nível {nivelAtual}</span>
 
                             <div className="xp-container">
                                 <div className="barra-xp-fundo">
-                                    <div className="barra-xp-progresso" style={{ width: "65%" }}></div>
+                                    <div className="barra-xp-progresso" style={{ width: (xpAtual * 100) / xpProxNivel + "%" }}></div>
                                 </div>
-                                <span className="xp-quantia"><span className="xp-atual">6500</span><span className="xp-total">/10000
+                                <span className="xp-quantia"><span className="xp-atual">{xpAtual} XP</span><span className="xp-total">/{xpProxNivel}
                                     XP</span></span>
                             </div>
 
-                            <p className="xp-faltante">Faltam 3500 XP para o próximo nível</p>
+                            <p className="xp-faltante">Faltam {xpProxNivel - xpAtual} XP para o próximo nível</p>
                         </div>
                     </div>
 
                     <div className="painel-status">
                         <div className="status-card">
                             <i className="fas fa-star icone-status"></i>
-                            <span className="status-valor">6500</span>
+                            <span className="status-valor">{xpAtual}</span>
                             <span className="status-texto">XP Total</span>
                         </div>
                         <div className="status-card">
                             <i className="fas fa-chart-line icone-status"></i>
-                            <span className="status-valor">5</span>
+                            <span className="status-valor">{nivelAtual}</span>
                             <span className="status-texto">Nível Atual</span>
                         </div>
                         <div className="status-card">
                             <i className="fas fa-bullseye icone-status"></i>
-                            <span className="status-valor">12</span>
+                            <span className="status-valor">Adicionar..</span>
                             <span className="status-texto">Missões Concluídas</span>
                         </div>
                         <div className="status-card">
                             <i className="fas fa-award icone-status"></i>
-                            <span className="status-valor">4</span>
+                            <span className="status-valor">Adicionar..</span>
                             <span className="status-texto">Conquistas</span>
                         </div>
                     </div>
@@ -283,36 +306,16 @@ function Gameficacao() {
                         </header>
 
                         <div className="lista-ranking">
-                            <div className="ranking-card">
-                                <span className="posicao-1-lugar">1</span>
-                                <img src="https://placehold.co/40x40" alt="Foto usuário 1" />
-                                <span className="nome-ranking">João Silva</span>
-                                <span className="xp-ranking">12000 XP</span>
-                            </div>
-                            <div className="ranking-card">
-                                <span className="posicao-2-lugar">2</span>
-                                <img src="https://placehold.co/40x40" alt="Foto usuário 2" />
-                                <span className="nome-ranking">Maria Oliveira</span>
-                                <span className="xp-ranking">11500 XP</span>
-                            </div>
-                            <div className="ranking-card">
-                                <span className="posicao-3-lugar">3</span>
-                                <img src="https://placehold.co/40x40" alt="Foto usuário 3" />
-                                <span className="nome-ranking">Carlos Santos</span>
-                                <span className="xp-ranking">10200 XP</span>
-                            </div>
-                            <div className="ranking-card">
-                                <span className="posicao">4</span>
-                                <img src="https://placehold.co/40x40" alt="Foto usuário 4" />
-                                <span className="nome-ranking">Ana Souza</span>
-                                <span className="xp-ranking">9800 XP</span>
-                            </div>
-                            <div className="ranking-card">
-                                <span className="posicao">5</span>
-                                <img src="https://placehold.co/40x40" alt="Foto usuário 5" />
-                                <span className="nome-ranking">Pedro Costa</span>
-                                <span className="xp-ranking">8500 XP</span>
-                            </div>
+                            {
+                                rankingGameficacao?.map(i =>
+                                    <div className="ranking-card">
+                                        <span className={"posicao-" + num + "-lugar"}>1</span>
+                                        <img src={i.id_usuario?.foto} alt="Foto usuário 1" />
+                                        <span className="nome-ranking">{i.id_usuario.nome}</span>
+                                        <span className="xp-ranking">{i.xp} XP</span>
+                                    </div>
+                                )
+                            }
                         </div>
                     </section>
 
@@ -383,11 +386,11 @@ function Gameficacao() {
                     </section>
                 </div>
 
-                <Rodape onNavigate={handleNavigate} />
 
             </main>
                 : <></>
             }
+            <Rodape onNavigate={handleNavigate} />
         </div>
     );
 }
