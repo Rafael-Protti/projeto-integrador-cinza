@@ -1,13 +1,19 @@
 import React from 'react';
 import './navbar.css';
+import logo from '../docs/docs_antigos/Logo.png';
 
 function Navbar({ onNavigate }) {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="navbar-logo" onClick={() => onNavigate('perfil')}>
-          Colecionáveis
-        </div>
+        <button type="button" className="navbar-logo" onClick={() => onNavigate('perfil')}>
+          <img
+            src={logo}
+            alt="Logo XP Shop"
+            className="navbar-logo-imagem"
+          />
+          <span>XP SHOP</span>
+        </button>
 
         <div className="navbar-pesquisa">
           <input type="text" placeholder="Digite para pesquisa..." className="navbar-input" />

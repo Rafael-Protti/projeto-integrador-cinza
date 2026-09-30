@@ -140,6 +140,26 @@ a {
   position: relative;
 }
 
+.mensagem-autenticacao {
+  grid-column: 1 / -1;
+  padding: 12px 16px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.mensagem-autenticacao.erro {
+  color: #842029;
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+}
+
+.mensagem-autenticacao.sucesso {
+  color: #0f5132;
+  background-color: #d1e7dd;
+  border-color: #badbcc;
+}
+
 /* ==========================================================================
    C. LADO ESQUERDO: QUERO CRIAR UMA CONTA
    ========================================================================== */
@@ -275,6 +295,12 @@ a {
 .btn-continuar:hover {
   background-color: var(--cor-azul-hover);
   transform: translateY(-1px);
+}
+
+.btn-continuar:disabled {
+  cursor: wait;
+  opacity: 0.7;
+  transform: none;
 }
 
 .btn-continuar .setinha {
