@@ -3,6 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import './Login.css';
 import Navbar from '../navbar'
 import Rodape from '../rodape'
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
 
