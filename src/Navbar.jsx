@@ -1,5 +1,6 @@
 import React from 'react';
 import './navbar.css';
+import logo from '../docs/docs_antigos/Logo.png';
 
 function Navbar({ onNavigate }) {
   return (
@@ -7,12 +8,11 @@ function Navbar({ onNavigate }) {
       <div className="navbar-container">
         <button type="button" className="navbar-logo" onClick={() => onNavigate('perfil')}>
           <img
-            src="/Logo.jfif"
-            alt=""
+            src={logo}
+            alt="Logo XP Shop"
             className="navbar-logo-imagem"
-            onError={(event) => { event.currentTarget.hidden = true; }}
           />
-          <span>Colecionáveis</span>
+          <span>XP SHOP</span>
         </button>
 
         <div className="navbar-pesquisa">
