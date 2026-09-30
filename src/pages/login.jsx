@@ -1,54 +1,103 @@
 import { useState } from 'react';
-import { SupabaseClient } from '@supabase/supabase-js';
-import './Login.css';
+import './login.css';
 import Navbar from '../navbar'
 import Rodape from '../rodape'
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabase';
 
 function Login() {
 
   const navigate = useNavigate();
   const handleNavigate = (path) => navigate(`/${path}`);
-  /*const [login,alteraLogin]= useState([])*/
-
+  const [cadastroNome, setCadastroNome] = useState('');
   const [cadastroEmail, setCadastroEmail] = useState('');
   const [cadastroSenha, setCadastroSenha] = useState('');
   const [loginEmail, setLoginEmail] = useState('');
   const [loginSenha, setLoginSenha] = useState('');
-
   const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [authMessage, setAuthMessage] = useState('');
+  const [authError, setAuthError] = useState(false);
+  const [carregando, setCarregando] = useState(false);
 
-  const handleCadastroSubmit = (e) => {
-
+  const handleCadastroSubmit = async (e) => {
     e.preventDefault();
+    setAuthMessage('');
+    setAuthError(false);
 
-    console.log('Cadastro:', { email: cadastroEmail, senha: cadastroSenha });
-  };
-
-  const handleLoginSubmit = (e) => {
-
-    e.preventDefault();
-
-    console.log('Login:', { email: loginEmail, senha: loginSenha });
-  };
-
-  /* async funcion Inserir(){}
-    const obj = {
-          id
-          nome
-          email
-          senha
+    if (!supabase) {
+      setAuthMessage('Supabase não configurado. Confira as variáveis VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.');
+      setAuthError(true);
+      return;
     }
-    const {data, error} = await supabaseClient.from('Login').inserir(obj)
-    alert("Login cadastrado com sucesso!")
-    document.location.reload()
 
+    setCarregando(true);
+    try {
+      const email = cadastroEmail.trim().toLowerCase();
+      const { data: usuarioExistente, error: erroBusca } = await supabase
+        .from('usuarios')
+        .select('id')
+        .eq('email', email)
+        .maybeSingle();
 
-     async function buscarTodos(){ 
-     const { data, error } = await supabaseClient.from('Login').select().order('id',{ascending:false})
-     console.log(data)
-     alteraLogin(data)
-  }*/
+      if (erroBusca) throw erroBusca;
+      if (usuarioExistente) {
+        setAuthMessage('Já existe um cadastro com este e-mail.');
+        setAuthError(true);
+        return;
+      }
+
+      const { error } = await supabase.from('usuarios').insert({
+        nome: cadastroNome.trim(),
+        email,
+        senha: cadastroSenha,
+      });
+
+      if (error) throw error;
+      setAuthMessage('Cadastro realizado. Agora você já pode fazer login.');
+    } catch (error) {
+      setAuthMessage(error.message || 'Não foi possível realizar o cadastro.');
+      setAuthError(true);
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    setAuthMessage('');
+    setAuthError(false);
+
+    if (!supabase) {
+      setAuthMessage('Supabase não configurado. Confira as variáveis VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.');
+      setAuthError(true);
+      return;
+    }
+
+    setCarregando(true);
+    try {
+      const { data: usuario, error } = await supabase
+        .from('usuarios')
+        .select('id')
+        .eq('email', loginEmail.trim().toLowerCase())
+        .eq('senha', loginSenha)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!usuario) {
+        setAuthMessage('E-mail ou senha inválidos.');
+        setAuthError(true);
+        return;
+      }
+
+      sessionStorage.setItem('usuarioId', usuario.id);
+      navigate('/perfil');
+    } catch (error) {
+      setAuthMessage(error.message || 'Não foi possível fazer login.');
+      setAuthError(true);
+    } finally {
+      setCarregando(false);
+    }
+  };
 
   return (
     <div>
@@ -56,7 +105,11 @@ function Login() {
 
       <main className="conteudo-principal">
         <section className="painel-autenticacao">
-
+          {authMessage && (
+            <p className={`mensagem-autenticacao ${authError ? 'erro' : 'sucesso'}`} role={authError ? 'alert' : 'status'}>
+              {authMessage}
+            </p>
+          )}
 
           <div className="coluna-cadastro">
             <header className="header-cadastro">
@@ -68,6 +121,26 @@ function Login() {
 
 
             <form className="form-autenticacao" onSubmit={handleCadastroSubmit}>
+
+              <div className="campo-grupo">
+                <label htmlFor="cadastro-nome" className="campo-rotulo">
+                  <i className="fas fa-user"></i> Nome
+                </label>
+                <div className="input-wrapper">
+                  <i className="fas fa-user input-icon-prefix"></i>
+                  <input
+                    type="text"
+                    id="cadastro-nome"
+                    name="nome"
+                    className="campo-input-retangulo"
+                    placeholder="Digite seu nome"
+                    autoComplete="name"
+                    value={cadastroNome}
+                    onChange={(e) => setCadastroNome(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
 
               <div className="campo-grupo">
                 <label htmlFor="cadastro-email" className="campo-rotulo">
@@ -116,8 +189,8 @@ function Login() {
 
 
               <div className="espacamento-botao-2cm">
-                <button type="submit" className="btn-continuar">
-                  <span>Continuar</span>
+                <button type="submit" className="btn-continuar" disabled={carregando}>
+                  <span>{carregando ? 'Aguarde...' : 'Continuar'}</span>
                   <i className="fas fa-chevron-right setinha"></i>
                 </button>
               </div>
@@ -210,8 +283,8 @@ function Login() {
 
 
               <div className="caixa-acoes-login">
-                <button type="submit" className="btn-continuar">
-                  <span>Continuar</span>
+                <button type="submit" className="btn-continuar" disabled={carregando}>
+                  <span>{carregando ? 'Aguarde...' : 'Continuar'}</span>
                   <i className="fas fa-chevron-right setinha"></i>
                 </button>
               </div>

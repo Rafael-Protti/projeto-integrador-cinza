@@ -1,8 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Perfil.css";
 import Navbar from '../navbar'
 import Rodape from "../rodape";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../supabase";
 
 function Perfil() {
 
@@ -10,10 +11,43 @@ function Perfil() {
   const handleNavigate = (path) => navigate(`/${path}`);
 
 
-  const [nome, setNome] = useState("Maria Souza");
-  const [telefone, setTelefone] = useState("(11) 98765-4321");
-  const [email, setEmail] = useState("Maria.souza@email.com");
-  const [trocas, setTrocas] = useState(12);
+  const [nome, setNome] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [email, setEmail] = useState("");
+  const [trocas, setTrocas] = useState(0);
+
+  useEffect(() => {
+    const usuarioId = sessionStorage.getItem("usuarioId");
+    if (!supabase || !usuarioId) return;
+
+    let componenteAtivo = true;
+    supabase
+      .from("usuarios")
+      .select("nome, telefone, email, foto, trocas")
+      .eq("id", usuarioId)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (!componenteAtivo) return;
+        if (error || !data) {
+          setFeedback({
+            show: true,
+            message: error?.message || "Não foi possível carregar os dados do usuário.",
+            isError: true,
+          });
+          return;
+        }
+
+        setNome(data.nome || "");
+        setTelefone(data.telefone || "");
+        setEmail(data.email || "");
+        setTrocas(data.trocas || 0);
+        if (data.foto) setFotoUrl(data.foto);
+      });
+
+    return () => {
+      componenteAtivo = false;
+    };
+  }, []);
 
   const [fotoUrl, setFotoUrl] = useState(
     "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"
