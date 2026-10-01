@@ -393,25 +393,6 @@ a {
   }
 }
 
-.btn-add-ponto {
-  background-color: #212529;
-  color: var(--cor-texto-branco);
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: background-color 0.2s ease;
-}
-
-.btn-add-ponto:hover {
-  background-color: #343a40;
-}
-
 /* Botão Salvar Alterações */
 .caixa-acoes-form {
   margin-top: 10px;

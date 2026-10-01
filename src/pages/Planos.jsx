@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./Planos.css";
-import Navbar from '../navbar'
-import Rodape from '../rodape'
+import Navbar from '../Navbar.jsx'
+import Rodape from '../Rodape.jsx'
 
 function Planos() {
     const navigate = useNavigate();

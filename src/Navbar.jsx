@@ -1,5 +1,5 @@
 import React from 'react';
-import './navbar.css';
+import './Navbar.css';
 import logo from '../docs/docs_antigos/Logo.png';
 
 function Navbar({ onNavigate }) {

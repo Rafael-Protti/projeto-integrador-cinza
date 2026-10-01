@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./Perfil.css";
-import Navbar from '../navbar'
-import Rodape from "../rodape";
+import Navbar from '../Navbar.jsx'
+import Rodape from "../Rodape.jsx";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
 
@@ -20,40 +20,6 @@ function Perfil() {
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [trocas, setTrocas] = useState(0);
-
-  useEffect(() => {
-    const usuarioId = localStorage.getItem("usuarioId") || sessionStorage.getItem("usuarioId");
-    if (!supabase || !usuarioId) return;
-
-    let componenteAtivo = true;
-    supabase
-      .from("usuarios")
-      .select("nome, telefone, email, foto, trocas")
-      .eq("id", usuarioId)
-      .maybeSingle()
-      .then(({ data, error }) => {
-        if (!componenteAtivo) return;
-        if (error || !data) {
-          setFeedback({
-            show: true,
-            message: error?.message || "Não foi possível carregar os dados do usuário.",
-            isError: true,
-          });
-          return;
-        }
-
-        setNome(data.nome || "");
-        setTelefone(data.telefone || "");
-        setEmail(data.email || "");
-        setTrocas(data.trocas || 0);
-        if (data.foto) setFotoUrl(data.foto);
-      });
-
-    return () => {
-      componenteAtivo = false;
-    };
-  }, []);
-
   const [fotoUrl, setFotoUrl] = useState(
     "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"
   );
@@ -65,6 +31,77 @@ function Perfil() {
     message: "",
     isError: false,
   });
+
+  useEffect(() => {
+    const usuarioId = localStorage.getItem("usuarioId") || sessionStorage.getItem("usuarioId");
+    if (!supabase || !usuarioId) return;
+
+    let componenteAtivo = true;
+    const carregarTrocas = async () => {
+      const { count, error } = await supabase
+        .from("trocados")
+        .select("id", { count: "exact", head: true })
+        .eq("id_usuario", usuarioId)
+        .eq("status", true);
+
+      if (!componenteAtivo) return;
+      if (error) {
+        setFeedback({
+          show: true,
+          message: `Não foi possível carregar o número de trocas: ${error.message}`,
+          isError: true,
+        });
+        return;
+      }
+
+      setTrocas(count ?? 0);
+    };
+
+    const carregarPerfil = async () => {
+      const { data, error } = await supabase
+        .from("usuarios")
+        .select("nome, telefone, email, foto")
+        .eq("id", usuarioId)
+        .maybeSingle();
+
+      if (!componenteAtivo) return;
+      if (error || !data) {
+        setFeedback({
+          show: true,
+          message: error?.message || "Não foi possível carregar os dados do usuário.",
+          isError: true,
+        });
+        return;
+      }
+
+      setNome(data.nome || "");
+      setTelefone(data.telefone || "");
+      setEmail(data.email || "");
+      if (data.foto) setFotoUrl(data.foto);
+      await carregarTrocas();
+    };
+
+    const canalTrocas = supabase
+      .channel(`perfil-trocados-${usuarioId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "trocados",
+          filter: `id_usuario=eq.${usuarioId}`,
+        },
+        carregarTrocas
+      )
+      .subscribe();
+
+    carregarPerfil();
+
+    return () => {
+      componenteAtivo = false;
+      supabase.removeChannel(canalTrocas);
+    };
+  }, []);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [tempFotoUrl, setTempFotoUrl] = useState("");
@@ -100,11 +137,6 @@ function Perfil() {
 
   const handleInputChange = (setter) => (event) => {
     setter(event.target.value);
-    setIsFormModified(true);
-  };
-
-  const handleIncrementarTroca = () => {
-    setTrocas((prev) => prev + 1);
     setIsFormModified(true);
   };
 
@@ -291,16 +323,6 @@ function Perfil() {
                   <div className="badge-trocas">
                     <span>{trocas}</span> trocas realizadas
                   </div>
-
-                  <button
-                    type="button"
-                    className="btn-add-ponto"
-                    title="Adicionar +1 ponto de troca"
-                    onClick={handleIncrementarTroca}
-                  >
-                    <i className="fas fa-plus"></i>
-                    +1 Transação
-                  </button>
                 </div>
               </div>
 

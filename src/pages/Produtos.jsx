@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './Produtos.css'
 import { supabase } from '../supabase'
-import Navbar from '../navbar'
-import Rodape from '../rodape'
+import Navbar from '../Navbar.jsx'
+import Rodape from '../Rodape.jsx'
 
 const initialProducts = [
   { id: 1, name: 'O Mistério das Galáxias', category: 'Livros', price: 49.9, rating: 4.8, image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600', description: 'Uma jornada ilustrada pelos segredos mais profundos do universo.' },

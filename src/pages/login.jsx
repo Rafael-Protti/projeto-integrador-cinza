@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './login.css';
-import Navbar from '../navbar'
-import Rodape from '../rodape'
+import Navbar from '../Navbar.jsx'
+import Rodape from '../Rodape.jsx'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
 
