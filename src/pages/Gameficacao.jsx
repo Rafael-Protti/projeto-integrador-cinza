@@ -237,9 +237,9 @@ function Gameficacao() {
                             {abaMissoes === 'diarias' ? (
                                 <>
                                     {
-                                        missoes?.map(i => {
-                                            <div className="missao-card">
-                                                <i className={i.icone + "icone-missao"}></i>
+                                        missoes?.map(i => (
+                                            <div className="missao-card" key={i.id}>
+                                                <i className={i.icone + " icone-missao"}></i>
                                                 <div className="missao-info">
                                                     <span className="nome-missao">{i.nome}</span>
                                                     <div className="missao-progresso-container">
@@ -251,8 +251,7 @@ function Gameficacao() {
                                                     </div>
                                                 </div>
                                             </div>
-                                        }
-                                        )
+                                        ))
                                     }
                                 </>
                             ) : (
