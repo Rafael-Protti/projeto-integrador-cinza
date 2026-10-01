@@ -6,7 +6,7 @@ import Gameficacao from './pages/Gameficacao';
 import Login from "./pages/login";
 
 function RotaProtegida({ children }) {
-  return sessionStorage.getItem('usuarioId')
+  return localStorage.getItem('usuarioId') || sessionStorage.getItem('usuarioId')
     ? children
     : <Navigate to="/login" replace />;
 }

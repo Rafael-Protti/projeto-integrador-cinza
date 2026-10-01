@@ -13,7 +13,7 @@ function Rodape({ onNavigate }) {
         </div>
 
         <div className="rodape-links">
-          <button onClick={() => onNavigate('perfil')}>Início</button>
+          <button onClick={() => onNavigate('')}>Início</button>
           <button onClick={() => onNavigate('planos')}>Planos</button>
           <button onClick={() => onNavigate('gameficacao')}>Gameficação</button>
           <button onClick={() => onNavigate('perfil')}>Perfil</button>
