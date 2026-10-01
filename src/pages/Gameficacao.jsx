@@ -15,15 +15,18 @@ function Gameficacao() {
     const [missoesVisivel, alteraMissoesVisivel] = useState(false);
     const [abaMissoes, alteraAbaMissoes] = useState("diarias");
 
-    const [usuarioGameficacao, alteraUsuarioGameficacao] = useState([]) /*copiar*/
+    const [medalhas, alteraMedalhas] = useState([])
+    const [missoes, alteraMissoes] = useState([])
+
+    const [usuarioGameficacao, alteraUsuarioGameficacao] = useState([])
     const [rankingGameficacao, alteraRankingGameficacao] = useState([])
     const [carregando, alteraCarregando] = useState(true)
     const usuarioAtual = 1;
-    const num = 0;
 
     const [nivelAtual, alteraNivelAtual] = useState(1.0)
     const [xpAtual, alteraXpAtual] = useState(0)
     const [xpProxNivel, alteraXpProxNivel] = useState(500.0)
+
     function alteraVisualizacaoRanking() {
         alteraRankingVisivel(!rankingVisivel)
     }
@@ -36,7 +39,7 @@ function Gameficacao() {
         alteraMissoesVisivel(!missoesVisivel)
     }
 
-    async function buscarUsuarioAutenticado() { /*copiar*/
+    async function buscarUsuarioAutenticado() {
 
         alteraCarregando(true)
 
@@ -49,16 +52,30 @@ function Gameficacao() {
         calcularNivel(data?.xp)
     }
 
-    async function buscarUsuariosRanking(todosUsuarios = false) { // Se true, busca a lista inteira da tabela de Gamificação, se false, apenas o top5.
+    async function buscarUsuariosRanking() {
 
-        const { error, data } = await supabase.from('gamificacao').select("*, id_usuario(nome, foto)").order("xp", { ascending: false }).limit(5)
+        const { error, data } = await supabase.from('gamificacao').select("*, id_usuario(nome, foto)").order("xp", { ascending: false }).limit(20)
         alteraRankingGameficacao(data)
         console.log(data)
 
     }
 
+    async function buscarMissoes() {
+        const { error, data } = await supabase.from('missoes').select("*")
+        alteraMissoes(data)
+        console.log(data)
+    }
+    async function buscarMedalhas() {
+        const { error, data } = await supabase.from('medalhas').select("*")
+        alteraMedalhas(data)
+
+        console.log(data)
+    }
+
     useEffect(() => { /*copiar*/
         buscarUsuariosRanking()
+        buscarMissoes()
+        buscarMedalhas()
         buscarUsuarioAutenticado()
     }, [])
 
@@ -82,7 +99,6 @@ function Gameficacao() {
         alteraXpProxNivel(novoXpProxNivel);
     };
 
-
     return (
         <div>
             <Navbar onNavigate={handleNavigate} />
@@ -92,15 +108,26 @@ function Gameficacao() {
                 {
                     rankingVisivel == true ?
                         <div className="janelaFlutuanteFundo">
-                            <div className="janelaFlutuante">
+                            <div className="janelaFlutuante lista-ranking">
                                 <h2> <i className="fas fa-trophy icone-painel"></i> Ranking dos Colecionadores <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoRanking()}></i></h2>
-                                <p>Usuario 1 <strong>1000XP</strong></p>
-                                <p>Usuario 1 <strong>1000XP</strong></p>
-                                <p>Usuario 1 <strong>1000XP</strong></p>
-                                <p>Usuario 1 <strong>1000XP</strong></p>
-                                <p>Usuario 1 <strong>1000XP</strong></p>
-                                <p>Usuario 1 <strong>1000XP</strong></p>
-                                <p>Usuario 1 <strong>1000XP</strong></p>
+                                {
+                                    rankingGameficacao?.map(i => {
+                                        const posicao = rankingGameficacao.indexOf(i) + 1;
+                                        let classe;
+                                        if (posicao > 3) { classe = "posicao"; }
+                                        else { classe = "posicao-" + posicao + "-lugar"; }
+                                        return (
+                                            <div className="ranking-card" key={i.id}>
+                                                <span className={classe}>{posicao}</span>
+                                                <img src={i.id_usuario?.foto} alt="Foto usuário 1" />
+                                                <span className="nome-ranking">{i.id_usuario.nome}</span>
+                                                <span className="xp-ranking">{i.xp} XP</span>
+                                            </div>
+                                        )
+                                    }
+                                    )
+                                }
+
                             </div>
                         </div>
                         : <></>
@@ -209,45 +236,24 @@ function Gameficacao() {
                         <div className="lista-missoes">
                             {abaMissoes === 'diarias' ? (
                                 <>
-                                    <div className="missao-card">
-                                        <i className="fas fa-comments icone-missao"></i>
-                                        <div className="missao-info">
-                                            <span className="nome-missao">Faça 3 comentários</span>
-                                            <div className="missao-progresso-container">
-                                                <div className="barra-missao-fundo">
-                                                    <div className="barra-missao-progresso" style={{ width: "66%" }}></div>
+                                    {
+                                        missoes?.map(i => {
+                                            <div className="missao-card">
+                                                <i className={i.icone + "icone-missao"}></i>
+                                                <div className="missao-info">
+                                                    <span className="nome-missao">{i.nome}</span>
+                                                    <div className="missao-progresso-container">
+                                                        <div className="barra-missao-fundo">
+                                                            <div className="barra-missao-progresso" style={{ width: "66%" }}></div>
+                                                        </div>
+                                                        <span className="missao-texto-progresso">2/{i.acoes}</span>
+                                                        <span className="xp-ganho">{i.xp} XP</span>
+                                                    </div>
                                                 </div>
-                                                <span className="missao-texto-progresso">2/3</span>
-                                                <span className="xp-ganho">+50 XP</span>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="missao-card">
-                                        <i className="fas fa-box-open icone-missao"></i>
-                                        <div className="missao-info">
-                                            <span className="nome-missao">Publique 1 item</span>
-                                            <div className="missao-progresso-container">
-                                                <div className="barra-missao-fundo">
-                                                    <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
-                                                </div>
-                                                <span className="missao-texto-progresso">0/1</span>
-                                                <span className="xp-ganho">+100 XP</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="missao-card">
-                                        <i className="fas fa-handshake icone-missao"></i>
-                                        <div className="missao-info">
-                                            <span className="nome-missao">Conclua 1 troca</span>
-                                            <div className="missao-progresso-container">
-                                                <div className="barra-missao-fundo">
-                                                    <div className="barra-missao-progresso" style={{ width: "100%" }}></div>
-                                                </div>
-                                                <span className="missao-texto-progresso">1/1</span>
-                                                <span className="xp-ganho">+200 XP</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        }
+                                        )
+                                    }
                                 </>
                             ) : (
                                 <>
@@ -307,13 +313,21 @@ function Gameficacao() {
 
                         <div className="lista-ranking">
                             {
-                                rankingGameficacao?.map(i =>
-                                    <div className="ranking-card">
-                                        <span className={"posicao-" + num + "-lugar"}>1</span>
-                                        <img src={i.id_usuario?.foto} alt="Foto usuário 1" />
-                                        <span className="nome-ranking">{i.id_usuario.nome}</span>
-                                        <span className="xp-ranking">{i.xp} XP</span>
-                                    </div>
+                                rankingGameficacao?.map(i => {
+                                    const posicao = rankingGameficacao.indexOf(i) + 1;
+                                    let classe;
+                                    if (posicao > 3) { classe = "posicao"; }
+                                    else { classe = "posicao-" + posicao + "-lugar"; }
+                                    if (posicao > 5) return;
+                                    return (
+                                        <div className="ranking-card" key={i.id}>
+                                            <span className={classe}>{posicao}</span>
+                                            <img src={i.id_usuario?.foto} alt="Foto usuário 1" />
+                                            <span className="nome-ranking">{i.id_usuario.nome}</span>
+                                            <span className="xp-ranking">{i.xp} XP</span>
+                                        </div>
+                                    )
+                                }
                                 )
                             }
                         </div>
@@ -387,11 +401,11 @@ function Gameficacao() {
                 </div>
 
 
-            </main>
+            </main >
                 : <></>
             }
             <Rodape onNavigate={handleNavigate} />
-        </div>
+        </div >
     );
 }
 
