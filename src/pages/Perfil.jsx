@@ -20,6 +20,13 @@ function Perfil() {
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [trocas, setTrocas] = useState(0);
+  const [itensTrocados, setItensTrocados] = useState([]);
+  const [carregandoTrocados, setCarregandoTrocados] = useState(() =>
+    Boolean(
+      supabase &&
+        (localStorage.getItem("usuarioId") || sessionStorage.getItem("usuarioId"))
+    )
+  );
   const [fotoUrl, setFotoUrl] = useState(
     "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"
   );
@@ -37,24 +44,31 @@ function Perfil() {
     if (!supabase || !usuarioId) return;
 
     let componenteAtivo = true;
-    const carregarTrocas = async () => {
-      const { count, error } = await supabase
+    const carregarTrocados = async () => {
+      const { data, count, error } = await supabase
         .from("trocados")
-        .select("id", { count: "exact", head: true })
+        .select(
+          "id, created_at, produtos!trocados_id_produto_fkey(id, nome, imagem, categorias(nome))",
+          { count: "exact" }
+        )
         .eq("id_usuario", usuarioId)
-        .eq("status", true);
+        .eq("status", true)
+        .order("created_at", { ascending: false });
 
       if (!componenteAtivo) return;
       if (error) {
         setFeedback({
           show: true,
-          message: `Não foi possível carregar o número de trocas: ${error.message}`,
+          message: `Não foi possível carregar seus trocados: ${error.message}`,
           isError: true,
         });
+        setCarregandoTrocados(false);
         return;
       }
 
       setTrocas(count ?? 0);
+      setItensTrocados((data ?? []).filter((item) => item.produtos));
+      setCarregandoTrocados(false);
     };
 
     const carregarPerfil = async () => {
@@ -78,7 +92,6 @@ function Perfil() {
       setTelefone(data.telefone || "");
       setEmail(data.email || "");
       if (data.foto) setFotoUrl(data.foto);
-      await carregarTrocas();
     };
 
     const canalTrocas = supabase
@@ -91,11 +104,12 @@ function Perfil() {
           table: "trocados",
           filter: `id_usuario=eq.${usuarioId}`,
         },
-        carregarTrocas
+        carregarTrocados
       )
       .subscribe();
 
     carregarPerfil();
+    carregarTrocados();
 
     return () => {
       componenteAtivo = false;
@@ -107,33 +121,6 @@ function Perfil() {
   const [tempFotoUrl, setTempFotoUrl] = useState("");
 
   const fileInputRef = useRef(null);
-
-  const colecoesData = [
-    {
-      id: "vinil",
-      titulo: "Discos de Vinil",
-      qtd: "12 itens disponíveis",
-      img: "https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=600&q=80",
-    },
-    {
-      id: "livros",
-      titulo: "Livros",
-      qtd: "20 itens disponíveis",
-      img: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
-    },
-    {
-      id: "cartinhas",
-      titulo: "Cartinhas",
-      qtd: "36 itens disponíveis",
-      img: "https://images.unsplash.com/photo-1613771404721-1f92d799e49f?auto=format&fit=crop&w=600&q=80",
-    },
-    {
-      id: "jogos",
-      titulo: "Jogos",
-      qtd: "9 itens disponíveis",
-      img: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?auto=format&fit=crop&w=600&q=80",
-    },
-  ];
 
   const handleInputChange = (setter) => (event) => {
     setter(event.target.value);
@@ -348,40 +335,42 @@ function Perfil() {
           <header className="header-colecoes">
             <div className="titulo-estrela-wrapper">
               <i className="fas fa-star icone-estrela-pb"></i>
-              <h2>Coleções</h2>
+              <h2>Seus Trocados</h2>
             </div>
           </header>
 
           <div className="grid-colecoes">
-            {colecoesData.map((item) => (
+            {carregandoTrocados ? (
+              <p className="estado-trocados">Carregando seus itens trocados...</p>
+            ) : itensTrocados.length === 0 ? (
+              <p className="estado-trocados">Você ainda não tem itens trocados.</p>
+            ) : itensTrocados.map((item) => (
               <article
                 key={item.id}
                 className="card-colecao"
               >
                 <div className="imagem-colecao-box">
-                  <img
-                    src={item.img}
-                    alt={item.titulo}
-                    className="img-colecao"
-                  />
+                  {item.produtos.imagem ? (
+                    <img
+                      src={item.produtos.imagem}
+                      alt={item.produtos.nome}
+                      className="img-colecao"
+                    />
+                  ) : (
+                    <div className="imagem-trocado-sem-foto" aria-label="Item sem imagem">
+                      <i className="fas fa-box-open" aria-hidden="true"></i>
+                    </div>
+                  )}
                 </div>
 
                 <div className="info-card-colecao">
                   <h3 className="nome-colecao">
-                    {item.titulo}
+                    {item.produtos.nome}
                   </h3>
 
                   <p className="qtd-itens">
-                    {item.qtd}
+                    {item.produtos.categorias?.nome || "Item trocado"}
                   </p>
-
-                  <button
-                    type="button"
-                    className="btn-ver-colecao"
-                    data-categoria={item.id}
-                  >
-                    Ver coleção
-                  </button>
                 </div>
               </article>
             ))}
