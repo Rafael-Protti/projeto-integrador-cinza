@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "./Perfil.css";
 import Navbar from '../Navbar.jsx'
 import Rodape from "../Rodape.jsx";
@@ -19,6 +19,16 @@ function Perfil() {
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
+  const [categorias, setCategorias] = useState([]);
+  const [novoProduto, setNovoProduto] = useState({
+    nome: "",
+    descricao: "",
+    id_categoria: "",
+    imagem: "",
+    quantidade: "1",
+  });
+  const [salvandoProduto, setSalvandoProduto] = useState(false);
+  const [feedbackProduto, setFeedbackProduto] = useState({ message: "", isError: false });
   const [trocas, setTrocas] = useState(0);
   const [itensTrocados, setItensTrocados] = useState([]);
   const [carregandoTrocados, setCarregandoTrocados] = useState(() =>
@@ -27,9 +37,8 @@ function Perfil() {
         (localStorage.getItem("usuarioId") || sessionStorage.getItem("usuarioId"))
     )
   );
-  const [fotoUrl, setFotoUrl] = useState(
-    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"
-  );
+  const [fotoUrl, setFotoUrl] = useState("");
+  const [salvando, setSalvando] = useState(false);
 
   const [isFormModified, setIsFormModified] = useState(false);
 
@@ -44,6 +53,24 @@ function Perfil() {
     if (!supabase || !usuarioId) return;
 
     let componenteAtivo = true;
+    const carregarCategorias = async () => {
+      const { data, error } = await supabase
+        .from("categorias")
+        .select("id, nome")
+        .order("nome");
+
+      if (!componenteAtivo) return;
+      if (error) {
+        setFeedbackProduto({
+          message: `Não foi possível carregar as categorias: ${error.message}`,
+          isError: true,
+        });
+        return;
+      }
+
+      setCategorias(data ?? []);
+    };
+
     const carregarTrocados = async () => {
       const { data, count, error } = await supabase
         .from("trocados")
@@ -91,7 +118,7 @@ function Perfil() {
       setNome(data.nome || "");
       setTelefone(data.telefone || "");
       setEmail(data.email || "");
-      if (data.foto) setFotoUrl(data.foto);
+      setFotoUrl(data.foto || "");
     };
 
     const canalTrocas = supabase
@@ -110,6 +137,7 @@ function Perfil() {
 
     carregarPerfil();
     carregarTrocados();
+    carregarCategorias();
 
     return () => {
       componenteAtivo = false;
@@ -117,59 +145,86 @@ function Perfil() {
     };
   }, []);
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [tempFotoUrl, setTempFotoUrl] = useState("");
-
-  const fileInputRef = useRef(null);
-
   const handleInputChange = (setter) => (event) => {
     setter(event.target.value);
     setIsFormModified(true);
   };
 
-  const handleFileSelect = (event) => {
-    const file = event.target.files?.[0];
+  const handleProdutoChange = (event) => {
+    const { name, value } = event.target;
+    setNovoProduto((atual) => ({ ...atual, [name]: value }));
+  };
 
-    if (!file) return;
+  const handleCadastrarProduto = async (event) => {
+    event.preventDefault();
 
-    if (file.size > 2 * 1024 * 1024) {
-      setFeedback({
-        show: true,
-        message: "A imagem deve ter no máximo 2MB.",
-        isError: true,
-      });
-
+    const usuarioId = localStorage.getItem("usuarioId") || sessionStorage.getItem("usuarioId");
+    if (!supabase || !usuarioId) {
+      setFeedbackProduto({ message: "Entre na sua conta para cadastrar um item.", isError: true });
       return;
     }
 
-    const objectUrl = URL.createObjectURL(file);
+    setSalvandoProduto(true);
+    setFeedbackProduto({ message: "", isError: false });
+    const { error } = await supabase.from("produtos").insert({
+      id_usuario: usuarioId,
+      nome: novoProduto.nome.trim(),
+      descricao: novoProduto.descricao.trim(),
+      quantidade: Number(novoProduto.quantidade),
+      id_categoria: Number(novoProduto.id_categoria),
+      imagem: novoProduto.imagem.trim() || null,
+      xp: 0,
+      ativo: true,
+    });
 
-    setTempFotoUrl(objectUrl);
-    setModalOpen(true);
-  };
-
-  const handleConfirmarFoto = () => {
-    if (!tempFotoUrl) return;
-
-    setFotoUrl(tempFotoUrl);
-    setModalOpen(false);
-    setIsFormModified(true);
-  };
-
-  const handleCancelarFoto = () => {
-    setModalOpen(false);
-
-    if (tempFotoUrl) {
-      URL.revokeObjectURL(tempFotoUrl);
-      setTempFotoUrl("");
+    setSalvandoProduto(false);
+    if (error) {
+      setFeedbackProduto({
+        message: `Não foi possível cadastrar o item: ${error.message}`,
+        isError: true,
+      });
+      return;
     }
+
+    setNovoProduto({ nome: "", descricao: "", id_categoria: "", imagem: "", quantidade: "1" });
+    setFeedbackProduto({ message: "Item cadastrado com sucesso.", isError: false });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    setIsFormModified(false);
+    const usuarioId = localStorage.getItem("usuarioId") || sessionStorage.getItem("usuarioId");
+    if (!supabase || !usuarioId) {
+      setFeedback({
+        show: true,
+        message: "Não foi possível salvar: usuário ou Supabase não encontrado.",
+        isError: true,
+      });
+      return;
+    }
 
+    setSalvando(true);
+    const { error } = await supabase
+      .from("usuarios")
+      .update({
+        nome: nome.trim(),
+        telefone: telefone.trim(),
+        email: email.trim(),
+        foto: fotoUrl.trim() || null,
+      })
+      .eq("id", usuarioId);
+
+    setSalvando(false);
+    if (error) {
+      setFeedback({
+        show: true,
+        message: `Não foi possível salvar as alterações: ${error.message}`,
+        isError: true,
+      });
+      return;
+    }
+
+    setIsFormModified(false);
     setFeedback({
       show: true,
       message: "Alterações salvas com sucesso!",
@@ -194,13 +249,13 @@ function Perfil() {
      
 
       {/* CONTEÚDO PRINCIPAL */}
-      <main className="conteudo-principal">
+      <main id="pagina-perfil" className="conteudo-principal">
         {/* PERFIL */}
         <section className="painel-perfil">
           <div className="perfil-esquerdo">
             <div className="moldura-foto">
               <img
-                src={fotoUrl}
+                src={fotoUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"}
                 alt="Foto do usuário"
                 className="foto-usuario"
               />
@@ -208,30 +263,23 @@ function Perfil() {
               <span className="legenda-foto">Foto</span>
             </div>
 
-            <button
-              type="button"
-              className="btn-trocar-foto"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <i className="fas fa-camera"></i>
-              Trocar foto
-            </button>
-
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileSelect}
-              accept="image/jpeg,image/jpg,image/png"
-              style={{ display: "none" }}
-            />
+            <div className="foto-url-grupo">
+              <label htmlFor="input-foto-url" className="campo-rotulo">Link da foto</label>
+              <input
+                type="url"
+                id="input-foto-url"
+                form="form-perfil"
+                className="campo-input"
+                value={fotoUrl}
+                onChange={handleInputChange(setFotoUrl)}
+                placeholder="https://..."
+              />
+            </div>
           </div>
 
           <div className="perfil-direito">
             <div className="perfil-cabecalho">
               <h2 className="titulo-painel">Informações Cadastrais</h2>
-              <button type="button" className="btn-encerrar-sessao" onClick={handleLogout}>
-                Encerrar sessão
-              </button>
             </div>
 
             {feedback.show && (
@@ -244,7 +292,7 @@ function Perfil() {
               </div>
             )}
 
-            <form className="form-perfil" onSubmit={handleSubmit}>
+            <form id="form-perfil" className="form-perfil" onSubmit={handleSubmit}>
               {/* NOME */}
               <div className="campo-grupo">
                 <label htmlFor="input-nome" className="campo-rotulo">
@@ -310,6 +358,9 @@ function Perfil() {
                   <div className="badge-trocas">
                     <span>{trocas}</span> trocas realizadas
                   </div>
+                  <button type="button" className="btn-encerrar-sessao" onClick={handleLogout}>
+                    Encerrar sessão
+                  </button>
                 </div>
               </div>
 
@@ -320,14 +371,109 @@ function Perfil() {
                   className={`btn-salvar ${
                     !isFormModified ? "oculto" : ""
                   }`}
-                  disabled={!isFormModified}
+                  disabled={!isFormModified || salvando}
                 >
                   <i className="fas fa-save"></i>
-                  Salvar alterações
+                  {salvando ? "Salvando..." : "Salvar alterações"}
                 </button>
               </div>
             </form>
           </div>
+        </section>
+
+        <section className="secao-novos-itens">
+          <header className="header-novos-itens">
+            <h2>Seus Itens</h2>
+          </header>
+
+          {feedbackProduto.message && (
+            <p className={`feedback-produto ${feedbackProduto.isError ? "erro" : "sucesso"}`} role="status">
+              {feedbackProduto.message}
+            </p>
+          )}
+
+          <form className="form-novo-produto" onSubmit={handleCadastrarProduto}>
+            <div className="campo-grupo">
+              <label htmlFor="produto-nome" className="campo-rotulo">Nome do item</label>
+              <input
+                id="produto-nome"
+                name="nome"
+                className="campo-input"
+                value={novoProduto.nome}
+                onChange={handleProdutoChange}
+                maxLength={120}
+                required
+              />
+            </div>
+
+            <div className="campo-grupo">
+              <label htmlFor="produto-descricao" className="campo-rotulo">Descrição</label>
+              <textarea
+                id="produto-descricao"
+                name="descricao"
+                className="campo-input campo-descricao-produto"
+                value={novoProduto.descricao}
+                onChange={handleProdutoChange}
+                rows="3"
+                required
+              />
+            </div>
+
+            <div className="campo-grupo">
+              <label htmlFor="produto-categoria" className="campo-rotulo">Categoria</label>
+              <select
+                id="produto-categoria"
+                name="id_categoria"
+                className="campo-input"
+                value={novoProduto.id_categoria}
+                onChange={handleProdutoChange}
+                required
+              >
+                <option value="" disabled>Selecione uma categoria</option>
+                {categorias.map((categoria) => (
+                  <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
+                ))}
+              </select>
+              {categorias.length === 0 && (
+                <span className="ajuda-produto">Nenhuma categoria disponível para seleção.</span>
+              )}
+            </div>
+
+            <div className="campo-grupo">
+              <label htmlFor="produto-quantidade" className="campo-rotulo">Quantidade</label>
+              <input
+                id="produto-quantidade"
+                name="quantidade"
+                type="number"
+                className="campo-input"
+                value={novoProduto.quantidade}
+                onChange={handleProdutoChange}
+                min="1"
+                step="1"
+                required
+              />
+            </div>
+
+            <div className="campo-grupo campo-imagem-produto">
+              <label htmlFor="produto-imagem" className="campo-rotulo">Link da foto (opcional)</label>
+              <input
+                id="produto-imagem"
+                name="imagem"
+                type="url"
+                className="campo-input"
+                value={novoProduto.imagem}
+                onChange={handleProdutoChange}
+                placeholder="https://..."
+              />
+              {novoProduto.imagem && (
+                <img className="preview-imagem-produto" src={novoProduto.imagem} alt="Pré-visualização do item" />
+              )}
+            </div>
+
+            <button type="submit" className="btn-cadastrar-produto" disabled={salvandoProduto || categorias.length === 0}>
+              {salvandoProduto ? "Cadastrando..." : "Cadastrar item"}
+            </button>
+          </form>
         </section>
 
         {/* COLEÇÕES */}
@@ -377,54 +523,6 @@ function Perfil() {
           </div>
         </section>
       </main>
-
-      {/* MODAL DA FOTO */}
-      {modalOpen && (
-        <div className="modal-overlay">
-          <div
-            className="modal-conteudo"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="titulo-modal"
-          >
-            <h3 id="titulo-modal">
-              Ajustar Foto de Perfil
-            </h3>
-
-            <p className="subtitulo-modal">
-              Centralize ou confirme o corte circular da imagem
-              (Máx. 2MB)
-            </p>
-
-            <div className="cropper-container">
-              <div className="cropper-mask-circular">
-                <img
-                  src={tempFotoUrl}
-                  alt="Pré-visualização da foto"
-                />
-              </div>
-            </div>
-
-            <div className="modal-botoes">
-              <button
-                type="button"
-                className="btn-modal-secundario"
-                onClick={handleCancelarFoto}
-              >
-                Cancelar
-              </button>
-
-              <button
-                type="button"
-                className="btn-modal-primario"
-                onClick={handleConfirmarFoto}
-              >
-                Aplicar Foto
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <Rodape onNavigate={handleNavigate} /> 
       </div>
