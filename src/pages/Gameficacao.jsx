@@ -107,7 +107,7 @@ function Gameficacao() {
 
                 {
                     rankingVisivel == true ?
-                        <div className="janelaFlutuanteFundo">
+                        <div className="janelaFlutuanteFundo" onClick={(e) => { if(e.target === e.currentTarget) alteraVisualizacaoRanking(); }}>
                                 <div className="janelaFlutuante lista-ranking">
                                     <h2> <i className="fas fa-trophy icone-painel"></i> Ranking dos Colecionadores <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoRanking()}></i></h2>
                                 {
@@ -135,7 +135,7 @@ function Gameficacao() {
 
                 {
                     medalhasVisivel == true ?
-                        <div className="janelaFlutuanteFundo">
+                        <div className="janelaFlutuanteFundo" onClick={(e) => { if(e.target === e.currentTarget) alteraVisualizacaoMedalhas(); }}>
                             <div className="janelaFlutuante lista-medalhas">
                                  <h2> <i className="fas fa-medal icone-painel"></i> Todas as Medalhas <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoMedalhas()}></i></h2>
                                 {
@@ -163,7 +163,7 @@ function Gameficacao() {
 
                 {
                     missoesVisivel == true ?
-                        <div className="janelaFlutuanteFundo">
+                        <div className="janelaFlutuanteFundo" onClick={(e) => { if(e.target === e.currentTarget) alteraVisualizacaoMissoes(); }}>
                             <div className="janelaFlutuante lista-missoes   ">
                                 <h2> <i className="fas fa-bullseye icone-missao"></i> Todas as Missões <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoMissoes()}></i></h2>
                                 {
@@ -248,7 +248,7 @@ function Gameficacao() {
                                 <i className="fas fa-bullseye icone-painel"></i>
                                 <h2>Missões</h2>
                             </div>
-                            <a href="#" onClick={() => alteraVisualizacaoMissoes()} className="link-ver-todos">Ver todas</a>
+                            <a href="#" onClick={(e) => { e.preventDefault(); alteraVisualizacaoMissoes(); }} className="link-ver-todos">Ver todas</a>
                         </header>
 
                         <div className="abas-missoes">
@@ -308,7 +308,7 @@ function Gameficacao() {
                                 <i className="fas fa-trophy icone-painel"></i>
                                 <h2>Ranking dos Colecionadores</h2>
                             </div>
-                            <a href="#" onClick={() => alteraVisualizacaoRanking()} className="link-ver-todos">Ver ranking completo</a>
+                            <a href="#" onClick={(e) => { e.preventDefault(); alteraVisualizacaoRanking(); }} className="link-ver-todos">Ver ranking completo</a>
                         </header>
 
                         <div className="lista-ranking">
@@ -340,7 +340,7 @@ function Gameficacao() {
                                 <i className="fas fa-medal icone-painel"></i>
                                 <h2>Medalhas</h2>
                             </div>
-                            <a href="#" onClick={() => alteraVisualizacaoMedalhas()} className="link-ver-todos">Ver todas</a>
+                            <a href="#" onClick={(e) => { e.preventDefault(); alteraVisualizacaoMedalhas(); }} className="link-ver-todos">Ver todas</a>
                         </header>
                         <div className="lista-medalhas">
                             {
