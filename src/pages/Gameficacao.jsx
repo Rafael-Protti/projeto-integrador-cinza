@@ -54,7 +54,7 @@ function Gameficacao() {
 
     async function buscarUsuariosRanking() {
 
-        const { error, data } = await supabase.from('gamificacao').select("*, id_usuario(nome, foto)").order("xp", { ascending: false }).limit(20)
+        const { error, data } = await supabase.from('gamificacao').select("*, id_usuario(nome, foto)").order("xp", { ascending: false })
         alteraRankingGameficacao(data)
         console.log(data)
 
@@ -107,9 +107,9 @@ function Gameficacao() {
 
                 {
                     rankingVisivel == true ?
-                        <div className="janelaFlutuanteFundo">
-                            <div className="janelaFlutuante lista-ranking">
-                                <h2> <i className="fas fa-trophy icone-painel"></i> Ranking dos Colecionadores <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoRanking()}></i></h2>
+                        <div className="janelaFlutuanteFundo" onClick={(e) => { if(e.target === e.currentTarget) alteraVisualizacaoRanking(); }}>
+                                <div className="janelaFlutuante lista-ranking">
+                                    <h2> <i className="fas fa-trophy icone-painel"></i> Ranking dos Colecionadores <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoRanking()}></i></h2>
                                 {
                                     rankingGameficacao?.map(i => {
                                         const posicao = rankingGameficacao.indexOf(i) + 1;
@@ -135,15 +135,27 @@ function Gameficacao() {
 
                 {
                     medalhasVisivel == true ?
-                        <div className="janelaFlutuanteFundo">
-                            <div className="janelaFlutuante">
-                                <h2> <i className="fas fa-medal icone-painel"></i> Todas as Medalhas <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoMedalhas()}></i></h2>
-                                <p>Medalha 1</p>
-                                <p>Medalha 1</p>
-                                <p>Medalha 1</p>
-                                <p>Medalha 1</p>
-                                <p>Medalha 1</p>
-                                <p>Medalha 1</p>
+                        <div className="janelaFlutuanteFundo" onClick={(e) => { if(e.target === e.currentTarget) alteraVisualizacaoMedalhas(); }}>
+                            <div className="janelaFlutuante lista-medalhas">
+                                 <h2> <i className="fas fa-medal icone-painel"></i> Todas as Medalhas <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoMedalhas()}></i></h2>
+                                {
+                                    medalhas?.map(i => (
+
+                                        <div className="medalha-card" key={i.id}>
+                                            <i className={i.icone}></i>
+                                            <div className="medalha-info">
+                                                <span className="nome-medalha">{i.nome}</span>
+                                                <div className="progresso-medalha">
+                                                    <span className="desc-medalha">{i.descricao}</span>
+                                                    <div className="barra-medalha-fundo">
+                                                        <div className="barra-medalha-progresso" style={{ width: "0%" }}></div>
+                                                    </div>
+                                                    <span className="medalha-texto-progresso">0/{i.acoes}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                }
                             </div>
                         </div>
                         : <></>
@@ -151,15 +163,26 @@ function Gameficacao() {
 
                 {
                     missoesVisivel == true ?
-                        <div className="janelaFlutuanteFundo">
-                            <div className="janelaFlutuante">
+                        <div className="janelaFlutuanteFundo" onClick={(e) => { if(e.target === e.currentTarget) alteraVisualizacaoMissoes(); }}>
+                            <div className="janelaFlutuante lista-missoes   ">
                                 <h2> <i className="fas fa-bullseye icone-missao"></i> Todas as Missões <i className="fa-solid fa-x icone-x" onClick={() => alteraVisualizacaoMissoes()}></i></h2>
-                                <p>Missão 1</p>
-                                <p>Missão 1</p>
-                                <p>Missão 1</p>
-                                <p>Missão 1</p>
-                                <p>Missão 1</p>
-                                <p>Missão 1</p>
+                                {
+                                    missoes?.map(i => (
+                                        <div className="missao-card" key={i.id}>
+                                            <i className={i.icone + " icone-missao"}></i>
+                                            <div className="missao-info">
+                                                <span className="nome-missao">{i.nome}</span>
+                                                <div className="missao-progresso-container">
+                                                    <div className="barra-missao-fundo">
+                                                        <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
+                                                    </div>
+                                                    <span className="missao-texto-progresso">0/{i.acoes}</span>
+                                                    <span className="xp-ganho">{i.xp} XP</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                }
                             </div>
                         </div>
                         : <></>
@@ -206,12 +229,12 @@ function Gameficacao() {
                         </div>
                         <div className="status-card">
                             <i className="fas fa-bullseye icone-status"></i>
-                            <span className="status-valor">Adicionar..</span>
+                            <span className="status-valor">0</span>
                             <span className="status-texto">Missões Concluídas</span>
                         </div>
                         <div className="status-card">
                             <i className="fas fa-award icone-status"></i>
-                            <span className="status-valor">Adicionar..</span>
+                            <span className="status-valor">0</span>
                             <span className="status-texto">Conquistas</span>
                         </div>
                     </div>
@@ -225,7 +248,7 @@ function Gameficacao() {
                                 <i className="fas fa-bullseye icone-painel"></i>
                                 <h2>Missões</h2>
                             </div>
-                            <a href="#" onClick={() => alteraVisualizacaoMissoes()} className="link-ver-todos">Ver todas</a>
+                            <a href="#" onClick={(e) => { e.preventDefault(); alteraVisualizacaoMissoes(); }} className="link-ver-todos">Ver todas</a>
                         </header>
 
                         <div className="abas-missoes">
@@ -237,16 +260,16 @@ function Gameficacao() {
                             {abaMissoes === 'diarias' ? (
                                 <>
                                     {
-                                        missoes?.map(i => (
+                                        missoes?.filter(i => i.periodo === "diaria").map(i => (
                                             <div className="missao-card" key={i.id}>
                                                 <i className={i.icone + " icone-missao"}></i>
                                                 <div className="missao-info">
                                                     <span className="nome-missao">{i.nome}</span>
                                                     <div className="missao-progresso-container">
                                                         <div className="barra-missao-fundo">
-                                                            <div className="barra-missao-progresso" style={{ width: "66%" }}></div>
+                                                            <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
                                                         </div>
-                                                        <span className="missao-texto-progresso">2/{i.acoes}</span>
+                                                        <span className="missao-texto-progresso">0/{i.acoes}</span>
                                                         <span className="xp-ganho">{i.xp} XP</span>
                                                     </div>
                                                 </div>
@@ -256,45 +279,23 @@ function Gameficacao() {
                                 </>
                             ) : (
                                 <>
-                                    <div className="missao-card">
-                                        <i className="fas fa-comments icone-missao"></i>
-                                        <div className="missao-info">
-                                            <span className="nome-missao">Faça 10 comentários</span>
-                                            <div className="missao-progresso-container">
-                                                <div className="barra-missao-fundo">
-                                                    <div className="barra-missao-progresso" style={{ width: "50%" }}></div>
+                                    {
+                                        missoes?.filter(i => i.periodo === "semanal").map(i => (
+                                            <div className="missao-card" key={i.id}>
+                                                <i className={i.icone + " icone-missao"}></i>
+                                                <div className="missao-info">
+                                                    <span className="nome-missao">{i.nome}</span>
+                                                    <div className="missao-progresso-container">
+                                                        <div className="barra-missao-fundo">
+                                                            <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
+                                                        </div>
+                                                        <span className="missao-texto-progresso">0/{i.acoes}</span>
+                                                        <span className="xp-ganho">{i.xp} XP</span>
+                                                    </div>
                                                 </div>
-                                                <span className="missao-texto-progresso">5/10</span>
-                                                <span className="xp-ganho">+150 XP</span>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="missao-card">
-                                        <i className="fas fa-box-open icone-missao"></i>
-                                        <div className="missao-info">
-                                            <span className="nome-missao">Publique 5 itens</span>
-                                            <div className="missao-progresso-container">
-                                                <div className="barra-missao-fundo">
-                                                    <div className="barra-missao-progresso" style={{ width: "20%" }}></div>
-                                                </div>
-                                                <span className="missao-texto-progresso">1/5</span>
-                                                <span className="xp-ganho">+300 XP</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="missao-card">
-                                        <i className="fas fa-handshake icone-missao"></i>
-                                        <div className="missao-info">
-                                            <span className="nome-missao">Conclua 3 trocas</span>
-                                            <div className="missao-progresso-container">
-                                                <div className="barra-missao-fundo">
-                                                    <div className="barra-missao-progresso" style={{ width: "66%" }}></div>
-                                                </div>
-                                                <span className="missao-texto-progresso">2/3</span>
-                                                <span className="xp-ganho">+500 XP</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        ))
+                                    }
                                 </>
                             )}
                         </div>
@@ -307,7 +308,7 @@ function Gameficacao() {
                                 <i className="fas fa-trophy icone-painel"></i>
                                 <h2>Ranking dos Colecionadores</h2>
                             </div>
-                            <a href="#" onClick={() => alteraVisualizacaoRanking()} className="link-ver-todos">Ver ranking completo</a>
+                            <a href="#" onClick={(e) => { e.preventDefault(); alteraVisualizacaoRanking(); }} className="link-ver-todos">Ver ranking completo</a>
                         </header>
 
                         <div className="lista-ranking">
@@ -339,62 +340,26 @@ function Gameficacao() {
                                 <i className="fas fa-medal icone-painel"></i>
                                 <h2>Medalhas</h2>
                             </div>
-                            <a href="#" onClick={() => alteraVisualizacaoMedalhas()} className="link-ver-todos">Ver todas</a>
+                            <a href="#" onClick={(e) => { e.preventDefault(); alteraVisualizacaoMedalhas(); }} className="link-ver-todos">Ver todas</a>
                         </header>
-
                         <div className="lista-medalhas">
-                            <div className="medalha-card">
-                                <i className="fas fa-medal icone-medalha-bronze"></i>
-                                <div className="medalha-info">
-                                    <span className="nome-medalha">Iniciante</span>
-                                    <div className="progresso-medalha">
-                                        <span className="desc-medalha">Faça sua primeira troca</span>
-                                        <div className="barra-medalha-fundo">
-                                            <div className="barra-medalha-progresso" style={{ width: "20%" }}></div>
+                            {
+                                medalhas?.slice(0, 3).map(i => (
+                                    <div className="medalha-card" key={i.id}>
+                                        <i className={i.icone}></i>
+                                        <div className="medalha-info">
+                                            <span className="nome-medalha">{i.nome}</span>
+                                            <div className="progresso-medalha">
+                                                <span className="desc-medalha">{i.descricao}</span>
+                                                <div className="barra-medalha-fundo">
+                                                    <div className="barra-medalha-progresso" style={{ width: "0%" }}></div>
+                                                </div>
+                                                <span className="medalha-texto-progresso">0/{i.acoes}</span>
+                                            </div>
                                         </div>
-                                        <span className="medalha-texto-progresso">1/5</span>
                                     </div>
-                                </div>
-                            </div>
-                            <div className="medalha-card">
-                                <i className="fas fa-medal icone-medalha-prata"></i>
-                                <div className="medalha-info">
-                                    <span className="nome-medalha">Colecionador Ávido</span>
-                                    <div className="progresso-medalha">
-                                        <span className="desc-medalha">Publique 10 itens</span>
-                                        <div className="barra-medalha-fundo">
-                                            <div className="barra-medalha-progresso" style={{ width: "40%" }}></div>
-                                        </div>
-                                        <span className="medalha-texto-progresso">4/10</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="medalha-card">
-                                <i className="fas fa-medal icone-medalha-prata"></i>
-                                <div className="medalha-info">
-                                    <span className="nome-medalha">Sociável</span>
-                                    <div className="progresso-medalha">
-                                        <span className="desc-medalha">Adicione 5 amigos</span>
-                                        <div className="barra-medalha-fundo">
-                                            <div className="barra-medalha-progresso" style={{ width: "80%" }}></div>
-                                        </div>
-                                        <span className="medalha-texto-progresso">4/5</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="medalha-card">
-                                <i className="fas fa-medal icone-medalha-ouro"></i>
-                                <div className="medalha-info">
-                                    <span className="nome-medalha">Ambicioso</span>
-                                    <div className="progresso-medalha">
-                                        <span className="desc-medalha">Adicione 10 itens na lista de desejos</span>
-                                        <div className="barra-medalha-fundo">
-                                            <div className="barra-medalha-progresso" style={{ width: "80%" }}></div>
-                                        </div>
-                                        <span className="medalha-texto-progresso">6/10</span>
-                                    </div>
-                                </div>
-                            </div>
+                                ))
+                            }
                         </div>
                     </section>
                 </div>

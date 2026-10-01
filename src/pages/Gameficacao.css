@@ -28,6 +28,7 @@ body {
     --cor-cinza-claro: #ccc;
     --cor-bronze: #cd7f32;
     --cor-vermelho: #cd3232;
+    --cor-vermelho-escuro: #7e1a1a;
     --cor-prata: #c0c0c0;
     --cor-ouro: #ffd700;
 }
@@ -52,13 +53,23 @@ a {
 .janelaFlutuante {
     background-color: var(--cor-branco);
     border-radius: 12px;
-    padding: 30px;
-    width: fit-content;
+    padding: 35px;
+    width: 500px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.janelaFlutuante > h2 {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    align-items: center;
+
 }
 
 
@@ -481,11 +492,12 @@ a {
 /* Medalhas */
 .medalha-card {
     display: flex;
+    flex-direction: row;
     align-items: center;
     background-color: #f9f9f9;
     padding: 15px;
     border-radius: 8px;
-    gap: 15px;
+    gap: 30px;
 }
 
 .icone-medalha-bronze, .icone-medalha-prata, .icone-medalha-ouro {
@@ -505,10 +517,16 @@ a {
     color: var(--cor-vermelho);
 }
 
+.icone-x:hover {
+    cursor: pointer;
+    color: var(--cor-vermelho-escuro);
+}
+
 .medalha-info {
     flex: 1;
     display: flex;
     flex-direction: column;
+    text-align: left;
     gap: 5px;
 }
 
