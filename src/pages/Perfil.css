@@ -297,6 +297,26 @@ a {
   flex: 1;
 }
 
+.perfil-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.perfil-cabecalho .titulo-painel {
+  flex: 1;
+}
+
+.btn-encerrar-sessao {
+  padding: 10px 16px;
+  color: #ffffff;
+  background: #1b4986;
+  border: 0;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
 .titulo-painel {
   font-size: 20px;
   font-weight: 700;
@@ -697,4 +717,3 @@ a {
     grid-template-columns: 1fr;
   }
 }
-

@@ -2,12 +2,13 @@ import { useState } from 'react';
 import './login.css';
 import Navbar from '../navbar'
 import Rodape from '../rodape'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
 
 function Login() {
 
   const navigate = useNavigate();
+  const location = useLocation();
   const handleNavigate = (path) => navigate(`/${path}`);
   const [cadastroNome, setCadastroNome] = useState('');
   const [cadastroEmail, setCadastroEmail] = useState('');
@@ -89,8 +90,9 @@ function Login() {
         return;
       }
 
-      sessionStorage.setItem('usuarioId', usuario.id);
-      navigate('/perfil');
+      localStorage.setItem('usuarioId', usuario.id);
+      sessionStorage.removeItem('usuarioId');
+      navigate(location.state?.returnTo || '/perfil');
     } catch (error) {
       setAuthMessage(error.message || 'Não foi possível fazer login.');
       setAuthError(true);

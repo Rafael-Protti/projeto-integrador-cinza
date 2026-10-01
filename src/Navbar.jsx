@@ -6,7 +6,7 @@ function Navbar({ onNavigate }) {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <button type="button" className="navbar-logo" onClick={() => onNavigate('perfil')}>
+        <button type="button" className="navbar-logo" onClick={() => onNavigate('')}>
           <img
             src={logo}
             alt="Logo XP Shop"
@@ -33,7 +33,10 @@ function Navbar({ onNavigate }) {
             <i className="fas fa-gem"></i>
           </button>
 
-          <button className="navbar-btn-login" onClick={() => onNavigate('login')}>
+          <button
+            className="navbar-btn-login"
+            onClick={() => onNavigate(localStorage.getItem('usuarioId') || sessionStorage.getItem('usuarioId') ? 'perfil' : 'login')}
+          >
             <i className="fas fa-user"></i>
             <span>Login/Perfil</span>
           </button>

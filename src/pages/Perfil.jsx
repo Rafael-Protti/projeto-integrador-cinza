@@ -9,6 +9,11 @@ function Perfil() {
 
   const navigate = useNavigate();
   const handleNavigate = (path) => navigate(`/${path}`);
+  const handleLogout = () => {
+    localStorage.removeItem("usuarioId");
+    sessionStorage.removeItem("usuarioId");
+    navigate("/login");
+  };
 
 
   const [nome, setNome] = useState("");
@@ -17,7 +22,7 @@ function Perfil() {
   const [trocas, setTrocas] = useState(0);
 
   useEffect(() => {
-    const usuarioId = sessionStorage.getItem("usuarioId");
+    const usuarioId = localStorage.getItem("usuarioId") || sessionStorage.getItem("usuarioId");
     if (!supabase || !usuarioId) return;
 
     let componenteAtivo = true;
@@ -203,9 +208,12 @@ function Perfil() {
           </div>
 
           <div className="perfil-direito">
-            <h2 className="titulo-painel">
-              Informações Cadastrais
-            </h2>
+            <div className="perfil-cabecalho">
+              <h2 className="titulo-painel">Informações Cadastrais</h2>
+              <button type="button" className="btn-encerrar-sessao" onClick={handleLogout}>
+                Encerrar sessão
+              </button>
+            </div>
 
             {feedback.show && (
               <div
