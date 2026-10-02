@@ -9,7 +9,8 @@ function Planos() {
     const navigate = useNavigate();
     const handleNavigate = (path) => navigate(`/${path}`);
     const [modalInfo, setModalInfo] = useState(null);
-    const [planos, alteraPlanos] = useState([])
+    const [planos, alteraPlanos] = useState([]);
+    const [compraFinalizada, setCompraFinalizada] = useState(false);
 
     async function buscarPlanos () {
         const {error, data} = await supabase.from("planos").select("*")
@@ -23,6 +24,11 @@ function Planos() {
 
     const closeModal = () => {
         setModalInfo(null);
+        setCompraFinalizada(false);
+    };
+
+    const handleComprar = () => {
+        setCompraFinalizada(true);
     };
 
     useEffect(() => {
@@ -59,25 +65,7 @@ function Planos() {
                         <ul className="plan-features basic-features">
                             <li><i className="fa-solid fa-circle-check"></i> {planos[0]?.descricao}</li>
                         </ul>
-                        <button className="btn btn-basic" onClick={() => openModal({ title: planos[0]?.nome, price: `R$ ${planos[0]?.preco}/mês`, desc: planos[0]?.descricao })}>ESCOLHER PLANO</button>
-                    </div>
-
-
-                    <div className="plan-card intermediate-card">
-                        <div className="card-icon-wrapper intermediate-icon">
-                            <i className="fa-solid fa-chart-line"></i>
-                        </div>
-                        <div className="plan-header">
-                            <h2 className="plan-title">{planos[1]?.nome}</h2>
-                            <p className="plan-desc">Mais recursos para você crescer</p>
-                        </div>
-                        <div className="plan-price">
-                            <span className="currency">R$</span> <span className="amount">{planos[1]?.preco}</span> <span className="period">/mês</span>
-                        </div>
-                        <ul className="plan-features intermediate-features">
-                            <li><i className="fa-solid fa-circle-check"></i> {planos[1]?.descricao}</li>
-                        </ul>
-                        <button className="btn btn-intermediate" onClick={() => openModal({ title: planos[1]?.nome, price: `R$ ${planos[1]?.preco}/mês`, desc: planos[1]?.descricao })}>ESCOLHER PLANO</button>
+                        <button className="btn btn-basic" onClick={() => { setCompraFinalizada(false); openModal({ title: planos[0]?.nome, price: `R$ ${planos[0]?.preco}/mês`, desc: planos[0]?.descricao, type: 'basic' })}}>ESCOLHER PLANO</button>
                     </div>
 
 
@@ -87,16 +75,34 @@ function Planos() {
                             <i className="fa-solid fa-rocket"></i>
                         </div>
                         <div className="plan-header">
-                            <h2 className="plan-title">{planos[2]?.nome}</h2>
+                            <h2 className="plan-title">{planos[1]?.nome}</h2>
                             <p className="plan-desc">Máximo desempenho e controle</p>
+                        </div>
+                        <div className="plan-price">
+                            <span className="currency">R$</span> <span className="amount">{planos[1]?.preco}</span> <span className="period">/mês</span>
+                        </div>
+                        <ul className="plan-features advanced-features">
+                            <li><i className="fa-solid fa-circle-check"></i> {planos[1]?.descricao}</li>
+                        </ul>
+                        <button className="btn btn-advanced" onClick={() => { setCompraFinalizada(false); openModal({ title: planos[1]?.nome, price: `R$ ${planos[1]?.preco}/mês`, desc: planos[1]?.descricao, type: 'advanced' })}}>ESCOLHER PLANO</button>
+                    </div>
+
+
+                    <div className="plan-card intermediate-card">
+                        <div className="card-icon-wrapper intermediate-icon">
+                            <i className="fa-solid fa-chart-line"></i>
+                        </div>
+                        <div className="plan-header">
+                            <h2 className="plan-title">{planos[2]?.nome}</h2>
+                            <p className="plan-desc">Mais recursos para você crescer</p>
                         </div>
                         <div className="plan-price">
                             <span className="currency">R$</span> <span className="amount">{planos[2]?.preco}</span> <span className="period">/mês</span>
                         </div>
-                        <ul className="plan-features advanced-features">
+                        <ul className="plan-features intermediate-features">
                             <li><i className="fa-solid fa-circle-check"></i> {planos[2]?.descricao}</li>
                         </ul>
-                        <button className="btn btn-advanced" onClick={() => openModal({ title: planos[2]?.nome, price: `R$ ${planos[2]?.preco}/mês`, desc: planos[2]?.descricao })}>ESCOLHER PLANO</button>
+                        <button className="btn btn-intermediate" onClick={() => { setCompraFinalizada(false); openModal({ title: planos[2]?.nome, price: `R$ ${planos[2]?.preco}/mês`, desc: planos[2]?.descricao, type: 'intermediate' })}}>ESCOLHER PLANO</button>
                     </div>
                 </section>
 
@@ -138,11 +144,19 @@ function Planos() {
 
             {modalInfo !== null && (
                 <div className="modal-overlay2" onClick={closeModal}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                    <div className={`modal-content modal-${modalInfo.type}`} onClick={(e) => e.stopPropagation()}>
                         <h2>{modalInfo.title}</h2>
                         <p>{modalInfo.desc}</p>
                         <p className="modal-price">{modalInfo.price}</p>
-                        <button className="btn btn-close" onClick={closeModal}>Fechar</button>
+                        
+                        {compraFinalizada && (
+                            <div className="success-message">Compra finalizada!</div>
+                        )}
+
+                        <div className="modal-buttons">
+                            <button className="btn btn-close" onClick={closeModal}>Fechar</button>
+                            <button className="btn btn-buy" onClick={handleComprar}>COMPRAR</button>
+                        </div>
                     </div>
                 </div>
             )}
