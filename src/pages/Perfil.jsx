@@ -5,6 +5,8 @@ import Rodape from "../Rodape.jsx";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
 
+const XP_POR_TROCA = 50;
+
 function Perfil() {
 
   const navigate = useNavigate();
@@ -28,7 +30,20 @@ function Perfil() {
     quantidade: "1",
   });
   const [salvandoProduto, setSalvandoProduto] = useState(false);
+  const [postarProdutoAberto, setPostarProdutoAberto] = useState(false);
   const [feedbackProduto, setFeedbackProduto] = useState({ message: "", isError: false });
+  const [meusProdutos, setMeusProdutos] = useState([]);
+  const [carregandoMeusProdutos, setCarregandoMeusProdutos] = useState(() =>
+    Boolean(
+      supabase &&
+        (localStorage.getItem("usuarioId") || sessionStorage.getItem("usuarioId"))
+    )
+  );
+  const [produtoParaTrocar, setProdutoParaTrocar] = useState(null);
+  const [idDestinatario, setIdDestinatario] = useState("");
+  const [salvandoTroca, setSalvandoTroca] = useState(false);
+  const [feedbackTroca, setFeedbackTroca] = useState({ message: "", isError: false });
+  const [mensagemTroca, setMensagemTroca] = useState({ message: "", isError: false });
   const [trocas, setTrocas] = useState(0);
   const [itensTrocados, setItensTrocados] = useState([]);
   const [carregandoTrocados, setCarregandoTrocados] = useState(() =>
@@ -69,6 +84,27 @@ function Perfil() {
       }
 
       setCategorias(data ?? []);
+    };
+
+    const carregarMeusProdutos = async () => {
+      const { data, error } = await supabase
+        .from("produtos")
+        .select("id, nome, descricao, quantidade, imagem, ativo, created_at, categorias(nome)")
+        .eq("id_usuario", usuarioId)
+        .order("created_at", { ascending: false });
+
+      if (!componenteAtivo) return;
+      if (error) {
+        setFeedbackProduto({
+          message: `Não foi possível carregar seus produtos: ${error.message}`,
+          isError: true,
+        });
+        setCarregandoMeusProdutos(false);
+        return;
+      }
+
+      setMeusProdutos(data ?? []);
+      setCarregandoMeusProdutos(false);
     };
 
     const carregarTrocados = async () => {
@@ -135,13 +171,29 @@ function Perfil() {
       )
       .subscribe();
 
+    const canalProdutos = supabase
+      .channel(`perfil-produtos-${usuarioId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "produtos",
+          filter: `id_usuario=eq.${usuarioId}`,
+        },
+        carregarMeusProdutos
+      )
+      .subscribe();
+
     carregarPerfil();
     carregarTrocados();
     carregarCategorias();
+    carregarMeusProdutos();
 
     return () => {
       componenteAtivo = false;
       supabase.removeChannel(canalTrocas);
+      supabase.removeChannel(canalProdutos);
     };
   }, []);
 
@@ -155,6 +207,119 @@ function Perfil() {
     setNovoProduto((atual) => ({ ...atual, [name]: value }));
   };
 
+  const handleConcluirTroca = async (event) => {
+    event.preventDefault();
+
+    const usuarioId = localStorage.getItem("usuarioId") || sessionStorage.getItem("usuarioId");
+    const destinatarioId = Number(idDestinatario);
+    if (!supabase || !usuarioId || !produtoParaTrocar) return;
+    if (!Number.isSafeInteger(destinatarioId) || destinatarioId <= 0) {
+      setFeedbackTroca({ message: "Informe um ID de usuário válido.", isError: true });
+      return;
+    }
+    if (destinatarioId === Number(usuarioId)) {
+      setFeedbackTroca({ message: "Você não pode registrar uma troca para si mesmo.", isError: true });
+      return;
+    }
+
+    setSalvandoTroca(true);
+    setFeedbackTroca({ message: "", isError: false });
+    setMensagemTroca({ message: "", isError: false });
+
+    const { data: destinatario, error: erroDestinatario } = await supabase
+      .from("usuarios")
+      .select("id")
+      .eq("id", destinatarioId)
+      .maybeSingle();
+
+    if (erroDestinatario || !destinatario) {
+      setSalvandoTroca(false);
+      setFeedbackTroca({
+        message: erroDestinatario?.message || "Não existe usuário com esse ID.",
+        isError: true,
+      });
+      return;
+    }
+
+    const { data: produtoAtualizado, error: erroProduto } = await supabase
+      .from("produtos")
+      .update({ ativo: false })
+      .eq("id", produtoParaTrocar.id)
+      .eq("id_usuario", usuarioId)
+      .eq("ativo", true)
+      .select("id")
+      .maybeSingle();
+
+    if (erroProduto || !produtoAtualizado) {
+      setSalvandoTroca(false);
+      setFeedbackTroca({
+        message: erroProduto?.message || "Este produto não está mais disponível ou não pertence a você.",
+        isError: true,
+      });
+      return;
+    }
+
+    const { error: erroRegistro } = await supabase.from("trocados").insert({
+      id_usuario: destinatarioId,
+      id_produto: produtoParaTrocar.id,
+      status: true,
+    });
+
+    if (erroRegistro) {
+      const { error: erroReativacao } = await supabase
+        .from("produtos")
+        .update({ ativo: true })
+        .eq("id", produtoParaTrocar.id)
+        .eq("id_usuario", usuarioId)
+        .eq("ativo", false);
+
+      setSalvandoTroca(false);
+      setFeedbackTroca({
+        message: erroReativacao
+          ? `Não foi possível registrar a troca (${erroRegistro.message}) e reativar o produto (${erroReativacao.message}).`
+          : `Não foi possível registrar a troca: ${erroRegistro.message}`,
+        isError: true,
+      });
+      return;
+    }
+
+    const { data: registroXp, error: erroBuscaXp } = await supabase
+      .from("gamificacao")
+      .select("id, xp")
+      .eq("id_usuario", destinatarioId)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    let erroCreditoXp = erroBuscaXp;
+    if (!erroCreditoXp && registroXp) {
+      const { error } = await supabase
+        .from("gamificacao")
+        .update({ xp: Number(registroXp.xp || 0) + XP_POR_TROCA })
+        .eq("id", registroXp.id);
+      erroCreditoXp = error;
+    } else if (!erroCreditoXp) {
+      const { error } = await supabase
+        .from("gamificacao")
+        .insert({ id_usuario: destinatarioId, xp: XP_POR_TROCA });
+      erroCreditoXp = error;
+    }
+
+    setMeusProdutos((atuais) => atuais.map((produto) =>
+      produto.id === produtoParaTrocar.id ? { ...produto, ativo: false } : produto
+    ));
+    setSalvandoTroca(false);
+    setProdutoParaTrocar(null);
+    setIdDestinatario("");
+    setFeedbackTroca({ message: "", isError: false });
+    setMensagemTroca({
+      message: erroCreditoXp
+        ? `Produto marcado como trocado, mas os ${XP_POR_TROCA} XP não foram creditados: ${erroCreditoXp.message}`
+        : `Troca registrada. O usuário ${destinatarioId} recebeu ${XP_POR_TROCA} XP.`,
+      isError: Boolean(erroCreditoXp),
+    });
+  };
+
   const handleCadastrarProduto = async (event) => {
     event.preventDefault();
 
@@ -166,16 +331,20 @@ function Perfil() {
 
     setSalvandoProduto(true);
     setFeedbackProduto({ message: "", isError: false });
-    const { error } = await supabase.from("produtos").insert({
-      id_usuario: usuarioId,
-      nome: novoProduto.nome.trim(),
-      descricao: novoProduto.descricao.trim(),
-      quantidade: Number(novoProduto.quantidade),
-      id_categoria: Number(novoProduto.id_categoria),
-      imagem: novoProduto.imagem.trim() || null,
-      xp: 0,
-      ativo: true,
-    });
+    const { data, error } = await supabase
+      .from("produtos")
+      .insert({
+        id_usuario: usuarioId,
+        nome: novoProduto.nome.trim(),
+        descricao: novoProduto.descricao.trim(),
+        quantidade: Number(novoProduto.quantidade),
+        id_categoria: Number(novoProduto.id_categoria),
+        imagem: novoProduto.imagem.trim() || null,
+        xp: 0,
+        ativo: true,
+      })
+      .select("id, nome, descricao, quantidade, imagem, created_at, categorias(nome)")
+      .single();
 
     setSalvandoProduto(false);
     if (error) {
@@ -186,8 +355,10 @@ function Perfil() {
       return;
     }
 
+    setMeusProdutos((atuais) => [data, ...atuais]);
     setNovoProduto({ nome: "", descricao: "", id_categoria: "", imagem: "", quantidade: "1" });
     setFeedbackProduto({ message: "Item cadastrado com sucesso.", isError: false });
+    setPostarProdutoAberto(false);
   };
 
   const handleSubmit = async (event) => {
@@ -383,7 +554,18 @@ function Perfil() {
 
         <section className="secao-novos-itens">
           <header className="header-novos-itens">
-            <h2>Seus Itens</h2>
+            <h2>Postar produto</h2>
+            <button
+              type="button"
+              className="btn-toggle-postar"
+              onClick={() => setPostarProdutoAberto((aberto) => !aberto)}
+              aria-expanded={postarProdutoAberto}
+              aria-controls="form-novo-produto"
+              aria-label={postarProdutoAberto ? "Minimizar formulário" : "Expandir formulário"}
+              title={postarProdutoAberto ? "Minimizar" : "Expandir"}
+            >
+              <i className={`fas ${postarProdutoAberto ? "fa-minus" : "fa-plus"}`} aria-hidden="true"></i>
+            </button>
           </header>
 
           {feedbackProduto.message && (
@@ -392,7 +574,8 @@ function Perfil() {
             </p>
           )}
 
-          <form className="form-novo-produto" onSubmit={handleCadastrarProduto}>
+          {postarProdutoAberto && (
+          <form id="form-novo-produto" className="form-novo-produto" onSubmit={handleCadastrarProduto}>
             <div className="campo-grupo">
               <label htmlFor="produto-nome" className="campo-rotulo">Nome do item</label>
               <input
@@ -474,6 +657,67 @@ function Perfil() {
               {salvandoProduto ? "Cadastrando..." : "Cadastrar item"}
             </button>
           </form>
+          )}
+        </section>
+
+        <section className="secao-meus-produtos">
+          <header className="header-meus-produtos">
+            <h2>Meus Produtos</h2>
+          </header>
+
+          {mensagemTroca.message && (
+            <p className={`feedback-produto ${mensagemTroca.isError ? "erro" : "sucesso"}`} role="status">
+              {mensagemTroca.message}
+            </p>
+          )}
+
+          <div className="grid-meus-produtos">
+            {carregandoMeusProdutos ? (
+              <p className="estado-meus-produtos">Carregando seus produtos...</p>
+            ) : meusProdutos.length === 0 ? (
+              <p className="estado-meus-produtos">Você ainda não postou produtos.</p>
+            ) : meusProdutos.map((produto) => (
+              <article
+                className="card-meu-produto"
+                key={produto.id}
+                role={produto.ativo ? "button" : undefined}
+                tabIndex={produto.ativo ? 0 : undefined}
+                aria-disabled={produto.ativo ? undefined : "true"}
+                onClick={() => {
+                  if (!produto.ativo) return;
+                  setProdutoParaTrocar(produto);
+                  setIdDestinatario("");
+                  setFeedbackTroca({ message: "", isError: false });
+                }}
+                onKeyDown={(event) => {
+                  if (produto.ativo && (event.key === "Enter" || event.key === " ")) {
+                    event.preventDefault();
+                    setProdutoParaTrocar(produto);
+                    setIdDestinatario("");
+                    setFeedbackTroca({ message: "", isError: false });
+                  }
+                }}
+                aria-label={produto.ativo ? `Registrar troca de ${produto.nome}` : `${produto.nome}, trocado`}
+              >
+                <div className="imagem-meu-produto">
+                  {produto.imagem ? (
+                    <img src={produto.imagem} alt={produto.nome} />
+                  ) : (
+                    <i className="fas fa-box-open" aria-hidden="true"></i>
+                  )}
+                </div>
+                <div className="info-meu-produto">
+                  <h3>{produto.nome}</h3>
+                  <p className="categoria-meu-produto">{produto.categorias?.nome || "Sem categoria"}</p>
+                  <p className="descricao-meu-produto">{produto.descricao}</p>
+                  <p className="quantidade-meu-produto">Quantidade: {produto.quantidade}</p>
+                  <span className={`status-meu-produto ${produto.ativo ? "disponivel" : "trocado"}`}>
+                    {produto.ativo ? "Disponível" : "Trocado"}
+                  </span>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
         {/* COLEÇÕES */}
@@ -523,6 +767,64 @@ function Perfil() {
           </div>
         </section>
       </main>
+
+      {produtoParaTrocar && (
+        <div className="modal-troca-overlay" onClick={() => !salvandoTroca && setProdutoParaTrocar(null)}>
+          <section
+            className="modal-troca"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="titulo-modal-troca"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="fechar-modal-troca"
+              aria-label="Fechar"
+              disabled={salvandoTroca}
+              onClick={() => setProdutoParaTrocar(null)}
+            >
+              &times;
+            </button>
+            <h2 id="titulo-modal-troca">Registrar troca</h2>
+            <p className="resumo-modal-troca">
+              <strong>{produtoParaTrocar.nome}</strong> ficará indisponível no catálogo e aparecerá como trocado no seu perfil.
+            </p>
+            <p className="aviso-xp-troca">O usuário informado receberá {XP_POR_TROCA} XP.</p>
+
+            {feedbackTroca.message && (
+              <p className="feedback-produto erro" role="alert">{feedbackTroca.message}</p>
+            )}
+
+            <form className="form-finalizar-troca" onSubmit={handleConcluirTroca}>
+              <label className="campo-rotulo" htmlFor="id-destinatario-xp">ID do usuário que recebeu o produto</label>
+              <input
+                id="id-destinatario-xp"
+                className="campo-input"
+                type="number"
+                min="1"
+                step="1"
+                value={idDestinatario}
+                onChange={(event) => setIdDestinatario(event.target.value)}
+                required
+              />
+              <div className="acoes-modal-troca">
+                <button
+                  type="button"
+                  className="btn-cancelar-troca"
+                  disabled={salvandoTroca}
+                  onClick={() => setProdutoParaTrocar(null)}
+                >
+                  Cancelar
+                </button>
+                <button type="submit" className="btn-confirmar-troca" disabled={salvandoTroca}>
+                  {salvandoTroca ? "Concluindo..." : "Confirmar troca"}
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
 
       <Rodape onNavigate={handleNavigate} /> 
       </div>

@@ -124,9 +124,15 @@ function Produtos() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'categorias' }, () => loadCategories())
       .subscribe()
 
+    const productChannel = supabase
+      .channel('catalogo-produtos')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'produtos' }, loadProducts)
+      .subscribe()
+
     return () => {
       isCurrent = false
       supabase.removeChannel(categoryChannel)
+      supabase.removeChannel(productChannel)
     }
   }, [])
 
