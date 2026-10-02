@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./Planos.css";
-import Navbar from '../Navbar.jsx'
-import Rodape from '../Rodape.jsx'
+import Navbar from '../Navbar.jsx';
+import Rodape from '../Rodape.jsx';
+import { supabase } from "../supabase.js";
 
 function Planos() {
     const navigate = useNavigate();
     const handleNavigate = (path) => navigate(`/${path}`);
     const [modalInfo, setModalInfo] = useState(null);
+    const [planos, alteraPlanos] = useState([])
+
+    async function buscarPlanos () {
+        const {error, data} = await supabase.from("planos").select("*")
+        console.log(data)
+        alteraPlanos(data)
+    }
 
     const openModal = (plan) => {
         setModalInfo(plan);
@@ -16,6 +24,10 @@ function Planos() {
     const closeModal = () => {
         setModalInfo(null);
     };
+
+    useEffect(() => {
+        buscarPlanos()
+    }, [] )
 
     return (
         <div>
