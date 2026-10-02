@@ -539,23 +539,7 @@ a {
   color: inherit;
   font: inherit;
   text-align: left;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card-meu-produto[role="button"]:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--sombra-hover);
-}
-
-.card-meu-produto[role="button"]:focus-visible {
-  outline: 3px solid var(--cor-azul-destaque);
-  outline-offset: 2px;
-}
-
-.card-meu-produto[aria-disabled="true"] {
   cursor: default;
-  opacity: 1;
 }
 
 .imagem-meu-produto {
@@ -612,6 +596,39 @@ a {
 .status-meu-produto.trocado {
   color: #842029;
   background-color: #f8d7da;
+}
+
+.status-meu-produto.reservado {
+  color: #664d03;
+  background-color: #fff3cd;
+}
+
+.acoes-meu-produto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.btn-acao-produto {
+  padding: 8px 11px;
+  border: 0;
+  border-radius: 6px;
+  background-color: var(--cor-azul-destaque);
+  color: var(--cor-texto-branco);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btn-acao-produto.reserva {
+  background-color: var(--cor-cinza-claro);
+  color: var(--cor-texto-escuro);
+}
+
+.btn-acao-produto:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
 .modal-troca-overlay {

@@ -84,11 +84,19 @@ create table public.produtos (
   quantidade integer not null,
   xp integer not null,
   ativo boolean null,
+  reservado boolean not null default false,
   id_categoria bigint not null,
   created_at timestamp with time zone null default now(),
   constraint produtos_pkey primary key (id),
   constraint produtos_id_categoria_fkey foreign KEY (id_categoria) references categorias (id) on update CASCADE on delete CASCADE
 ) TABLESPACE pg_default;
+```
+
+Para atualizar um banco já existente antes de usar a opção de reserva no perfil, execute no SQL Editor do Supabase:
+
+```sql
+alter table public.produtos
+add column if not exists reservado boolean not null default false;
 ```
 
 ## Trocados
@@ -346,6 +354,5 @@ INSERT INTO public.gamificacao (id_usuario, xp, conquistas) VALUES
 (3, 850, '{"nivel": 7, "medalhas_ids": [1, 4, 5], "titulo": "Mestre dos Colecionáveis"}'),
 (4, 150, '{"nivel": 2, "medalhas_ids": [1], "titulo": "Novato Enthusiast"}'),
 (5, 520, '{"nivel": 5, "medalhas_ids": [1, 5], "titulo": "Colecionador Veterano"}');
-
 
 

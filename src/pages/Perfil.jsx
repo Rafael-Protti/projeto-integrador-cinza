@@ -42,6 +42,7 @@ function Perfil() {
   const [produtoParaTrocar, setProdutoParaTrocar] = useState(null);
   const [idDestinatario, setIdDestinatario] = useState("");
   const [salvandoTroca, setSalvandoTroca] = useState(false);
+  const [salvandoReserva, setSalvandoReserva] = useState(null);
   const [feedbackTroca, setFeedbackTroca] = useState({ message: "", isError: false });
   const [mensagemTroca, setMensagemTroca] = useState({ message: "", isError: false });
   const [trocas, setTrocas] = useState(0);
@@ -89,7 +90,7 @@ function Perfil() {
     const carregarMeusProdutos = async () => {
       const { data, error } = await supabase
         .from("produtos")
-        .select("id, nome, descricao, quantidade, imagem, ativo, created_at, categorias(nome)")
+        .select("id, nome, descricao, quantidade, imagem, ativo, reservado, created_at, categorias(nome)")
         .eq("id_usuario", usuarioId)
         .order("created_at", { ascending: false });
 
@@ -205,6 +206,43 @@ function Perfil() {
   const handleProdutoChange = (event) => {
     const { name, value } = event.target;
     setNovoProduto((atual) => ({ ...atual, [name]: value }));
+  };
+
+  const handleAlternarReserva = async (produto) => {
+    const usuarioId = localStorage.getItem("usuarioId") || sessionStorage.getItem("usuarioId");
+    if (!supabase || !usuarioId || !produto.ativo || salvandoReserva !== null) return;
+
+    setSalvandoReserva(produto.id);
+    setMensagemTroca({ message: "", isError: false });
+
+    const { data, error } = await supabase
+      .from("produtos")
+      .update({ reservado: !produto.reservado })
+      .eq("id", produto.id)
+      .eq("id_usuario", usuarioId)
+      .eq("ativo", true)
+      .eq("reservado", Boolean(produto.reservado))
+      .select("id, reservado")
+      .maybeSingle();
+
+    setSalvandoReserva(null);
+    if (error || !data) {
+      setMensagemTroca({
+        message: error
+          ? `Não foi possível alterar a reserva: ${error.message}`
+          : "Este produto não está mais disponível para alteração.",
+        isError: true,
+      });
+      return;
+    }
+
+    setMeusProdutos((atuais) => atuais.map((item) =>
+      item.id === data.id ? { ...item, reservado: data.reservado } : item
+    ));
+    setMensagemTroca({
+      message: data.reservado ? "Produto reservado no catálogo." : "Reserva removida do produto.",
+      isError: false,
+    });
   };
 
   const handleConcluirTroca = async (event) => {
@@ -342,8 +380,9 @@ function Perfil() {
         imagem: novoProduto.imagem.trim() || null,
         xp: 0,
         ativo: true,
+        reservado: false,
       })
-      .select("id, nome, descricao, quantidade, imagem, created_at, categorias(nome)")
+      .select("id, nome, descricao, quantidade, imagem, ativo, reservado, created_at, categorias(nome)")
       .single();
 
     setSalvandoProduto(false);
@@ -680,24 +719,6 @@ function Perfil() {
               <article
                 className="card-meu-produto"
                 key={produto.id}
-                role={produto.ativo ? "button" : undefined}
-                tabIndex={produto.ativo ? 0 : undefined}
-                aria-disabled={produto.ativo ? undefined : "true"}
-                onClick={() => {
-                  if (!produto.ativo) return;
-                  setProdutoParaTrocar(produto);
-                  setIdDestinatario("");
-                  setFeedbackTroca({ message: "", isError: false });
-                }}
-                onKeyDown={(event) => {
-                  if (produto.ativo && (event.key === "Enter" || event.key === " ")) {
-                    event.preventDefault();
-                    setProdutoParaTrocar(produto);
-                    setIdDestinatario("");
-                    setFeedbackTroca({ message: "", isError: false });
-                  }
-                }}
-                aria-label={produto.ativo ? `Registrar troca de ${produto.nome}` : `${produto.nome}, trocado`}
               >
                 <div className="imagem-meu-produto">
                   {produto.imagem ? (
@@ -711,9 +732,36 @@ function Perfil() {
                   <p className="categoria-meu-produto">{produto.categorias?.nome || "Sem categoria"}</p>
                   <p className="descricao-meu-produto">{produto.descricao}</p>
                   <p className="quantidade-meu-produto">Quantidade: {produto.quantidade}</p>
-                  <span className={`status-meu-produto ${produto.ativo ? "disponivel" : "trocado"}`}>
-                    {produto.ativo ? "Disponível" : "Trocado"}
+                  <span className={`status-meu-produto ${!produto.ativo ? "trocado" : produto.reservado ? "reservado" : "disponivel"}`}>
+                    {!produto.ativo ? "Trocado" : produto.reservado ? "Reservado" : "Disponível"}
                   </span>
+                  {produto.ativo && (
+                    <div className="acoes-meu-produto">
+                      <button
+                        type="button"
+                        className="btn-acao-produto"
+                        onClick={() => {
+                          setProdutoParaTrocar(produto);
+                          setIdDestinatario("");
+                          setFeedbackTroca({ message: "", isError: false });
+                        }}
+                      >
+                        Registrar troca
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-acao-produto reserva"
+                        disabled={salvandoReserva !== null}
+                        onClick={() => handleAlternarReserva(produto)}
+                      >
+                        {salvandoReserva === produto.id
+                          ? "Salvando..."
+                          : produto.reservado
+                            ? "Remover reserva"
+                            : "Reservar"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </article>
             ))}
