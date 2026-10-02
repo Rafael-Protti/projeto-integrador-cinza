@@ -222,7 +222,7 @@ function Gameficacao() {
                         <div className="painel-status">
                             <div className="status-card">
                                 <i className="fas fa-star icone-status"></i>
-                                <span className="status-valor">{xpAtual}</span>
+                                <span className="status-valor">{usuarioGameficacao?.xp}</span>
                                 <span className="status-texto">XP Total</span>
                             </div>
                             <div className="status-card">
