@@ -469,8 +469,6 @@ function Perfil() {
                 alt="Foto do usuário"
                 className="foto-usuario"
               />
-
-              <span className="legenda-foto">Foto</span>
             </div>
 
             <div className="foto-url-grupo">
