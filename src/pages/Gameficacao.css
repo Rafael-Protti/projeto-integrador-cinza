@@ -11,9 +11,7 @@
 body {
     background-color: #f0f0f0;
     color: #000;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    height: 100%;
 }
 
 /* Cores e Variáveis (usadas no código) */
@@ -22,6 +20,7 @@ body {
     --cor-navbar: #002a57;
     --cor-rodape: #007bff;
     --cor-azul: #007bff;
+    --cor-azul-claro: #00346b;
     --cor-branco: #fff;
     --cor-preto: #000;
     --cor-cinza-escuro: #555;
@@ -31,6 +30,32 @@ body {
     --cor-vermelho-escuro: #7e1a1a;
     --cor-prata: #c0c0c0;
     --cor-ouro: #ffd700;
+}
+
+.gameficacao {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+}
+
+.alerta {
+    text-align: center;
+    margin-top: 50px;
+    justify-content: center;
+}
+
+.alerta > a {
+    color: var(--cor-azul);
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.alerta > a:hover {
+    color: var(--cor-azul-claro);
+    font-weight: bolder;
+    text-decoration: underline;
+    font-size: 20px;
 }
 
 a {
