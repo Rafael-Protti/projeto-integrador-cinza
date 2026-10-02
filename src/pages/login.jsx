@@ -26,7 +26,7 @@ function Login() {
     setAuthError(false);
 
     if (!supabase) {
-      setAuthMessage('Supabase não configurado. Confira as variáveis VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.');
+      setAuthMessage('Supabase não configurado.');
       setAuthError(true);
       return;
     }
@@ -34,6 +34,8 @@ function Login() {
     setCarregando(true);
     try {
       const email = cadastroEmail.trim().toLowerCase();
+      
+      // 1. Verifica se já existe
       const { data: usuarioExistente, error: erroBusca } = await supabase
         .from('usuarios')
         .select('id')
@@ -47,13 +49,25 @@ function Login() {
         return;
       }
 
-      const { error } = await supabase.from('usuarios').insert({
-        nome: cadastroNome.trim(),
-        email,
-        senha: cadastroSenha,
-      });
+      // 2. Insere o usuário e Pede para retornar o ID gerado (.select('id').single())
+      const { data: novoUsuario, error } = await supabase
+        .from('usuarios')
+        .insert({
+          nome: cadastroNome.trim(),
+          email,
+          senha: cadastroSenha,
+          foto: 'https://api.dicebear.com/9.x/initials/svg?seed=' + cadastroNome.trim().replace(/\s+/g, '+'),
+        })
+        .select('id')
+        .single();
 
       if (error) throw error;
+
+      // 3. Chamar a gamificação passando o ID recém-criado!
+      if (novoUsuario) {
+        await handleGameficacaoCadastro(novoUsuario.id);
+      }
+
       setAuthMessage('Cadastro realizado. Agora você já pode fazer login.');
     } catch (error) {
       setAuthMessage(error.message || 'Não foi possível realizar o cadastro.');
@@ -62,6 +76,20 @@ function Login() {
       setCarregando(false);
     }
   };
+
+  const handleGameficacaoCadastro = async (usuarioId) => {
+  try {
+    const { data, error } = await supabase.from("gamificacao").insert({
+      id_usuario: usuarioId,
+      xp: 0,
+    });
+    
+    if (error) throw error;
+    console.log('Gamificação inicializada com sucesso:', data);
+  } catch (error) {
+    console.error('Erro ao criar gamificação:', error.message);
+  }
+};
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
