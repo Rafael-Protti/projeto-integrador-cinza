@@ -48,6 +48,9 @@ function Gameficacao() {
         alteraUsuarioGameficacao(data)
         console.log(data)
 
+        buscarMissoes(data?.id)
+        buscarMedalhas(data?.id)
+
         alteraCarregando(false)
 
         calcularNivel(data?.xp)
@@ -61,16 +64,125 @@ function Gameficacao() {
 
     }
 
-    async function buscarMissoes() {
-        const { error, data } = await supabase.from('missoes').select("*")
-        alteraMissoes(data)
-        console.log(data)
-    }
-    async function buscarMedalhas() {
-        const { error, data } = await supabase.from('medalhas').select("*")
-        alteraMedalhas(data)
+    async function buscarMissoes(id) {
+        try {
+        // 1. Busca as missões já existentes para o usuário (gamificação)
+        let { data, error } = await supabase
+            .from('missoes_usuarios')
+            .select("*, id_gameficacao(id), id_missao(*)")
+            .eq("id_gameficacao", id);
 
-        console.log(data)
+        if (error) throw error;
+
+        // 2. Se estiver vazio, popula automaticamente para este usuário
+        if (!data || data.length === 0) {
+            console.log("Nenhuma missão encontrada para este usuário. Inicializando...");
+
+            // Busca todas as missões cadastradas
+            const { data: todasMissoes, error: erroMissoes } = await supabase
+                .from('missoes')
+                .select('id');
+
+            if (erroMissoes) throw erroMissoes;
+
+            if (todasMissoes && todasMissoes.length > 0) {
+                // Prepara os dados para inserir em lote (bulk insert)
+                const novasMissoesUsuarios = todasMissoes.map(missao => ({
+                    id_gameficacao: id,
+                    id_missao: missao.id,
+                    acoes: 0 // Valor inicial padrão
+                }));
+
+                // Insere no banco de dados
+                const { error: erroInsert } = await supabase
+                    .from('missoes_usuarios')
+                    .upsert(novasMissoesUsuarios, { 
+                        onConflict: 'id_gameficacao,id_missao', 
+                        ignoreDuplicates: true // Ignora se já existir
+                    });
+
+                if (erroInsert) throw erroInsert;
+
+                // 3. Refaz a busca para trazer os dados completos já com as relações preenchidas
+                const { data: dadosAtualizados, error: erroBuscaNovamente } = await supabase
+                    .from('missoes_usuarios')
+                    .select("*, id_gameficacao(id), id_missao(*)")
+                    .eq("id_gameficacao", id);
+
+                if (erroBuscaNovamente) throw erroBuscaNovamente;
+
+                data = dadosAtualizados;
+            }
+        }
+
+        // Atualiza o estado da tela com os dados obtidos
+        alteraMissoes(data);
+        console.log(data);
+
+    } catch (error) {
+        console.error("Erro ao buscar ou inicializar missões do usuário:", error.message);
+    }
+    }
+
+    async function buscarMedalhas(id) {
+        try {
+        // 1. Busca as medalhas já existentes para o usuário (gamificação)
+        let { data, error } = await supabase
+            .from('medalhas_usuarios')
+            .select("*, id_gameficacao(id), id_medalha(*)")
+            .eq("id_gameficacao", id);
+
+        if (error) throw error;
+
+        // 2. Se estiver vazio, popula automaticamente para este usuário
+        if (!data || data.length === 0) {
+            console.log("Nenhuma medalha encontrada para este usuário. Inicializando...");
+
+            // Busca todas as medalhas cadastradas na tabela 'medalhas'
+            const { data: todasMedalhas, error: erroMedalhas } = await supabase
+                .from('medalhas')
+                .select('id');
+
+            if (erroMedalhas) throw erroMedalhas;
+
+            if (todasMedalhas && todasMedalhas.length > 0) {
+                // Prepara os dados para inserir em lote
+                const novasMedalhasUsuarios = todasMedalhas.map(medalha => ({
+                    id_gameficacao: id,
+                    id_medalha: medalha.id,
+                    acoes: 0
+                    // Adicione outros campos padrão se necessário (ex: conquistada: false, progresso: 0)
+                }));
+
+                // Insere no banco de dados
+                const { error: erroInsert } = await supabase
+                    .from('medalhas_usuarios')
+                    .upsert(novasMedalhasUsuarios, { 
+                        onConflict: 'id_gameficacao,id_medalha', 
+                        ignoreDuplicates: true // Ignora se já existir
+                    });
+
+                if (erroInsert) throw erroInsert;
+
+                // 3. Refaz a busca para trazer os dados completos já com as relações preenchidas
+                const { data: dadosAtualizados, error: erroBuscaNovamente } = await supabase
+                    .from('medalhas_usuarios')
+                    .select("*, id_gameficacao(id), id_medalha(*)")
+                    .eq("id_gameficacao", id);
+
+                if (erroBuscaNovamente) throw erroBuscaNovamente;
+
+                data = dadosAtualizados;
+            }
+        }
+
+        // Atualiza o estado da tela com as medalhas
+        alteraMedalhas(data);
+        console.log(data);
+
+    } catch (error) {
+        console.error("Erro ao buscar ou inicializar medalhas do usuário:", error.message);
+    }
     }
 
     useEffect(() => { /*copiar*/
@@ -84,8 +196,6 @@ function Gameficacao() {
         } else {alteraAlertaVisivel(false)}
 
         buscarUsuariosRanking()
-        buscarMissoes()
-        buscarMedalhas()
         buscarUsuarioAutenticado(id)
     }, [])
 
@@ -152,15 +262,15 @@ function Gameficacao() {
                                     {
                                         medalhas?.map(i => (
                                             <div className="medalha-card" key={i.id}>
-                                                <i className={i.icone}></i>
+                                                <i className={i?.id_medalha.icone}></i>
                                                 <div className="medalha-info">
-                                                    <span className="nome-medalha">{i.nome}</span>
+                                                    <span className="nome-medalha">{i?.id_medalha.nome}</span>
                                                     <div className="progresso-medalha">
-                                                        <span className="desc-medalha">{i.descricao}</span>
+                                                        <span className="desc-medalha">{i?.id_medalha.descricao}</span>
                                                         <div className="barra-medalha-fundo">
                                                             <div className="barra-medalha-progresso" style={{ width: "0%" }}></div>
                                                         </div>
-                                                        <span className="medalha-texto-progresso">0/{i.acoes}</span>
+                                                        <span className="medalha-texto-progresso">{i?.acoes}/{i?.id_medalha.acoes}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -178,15 +288,15 @@ function Gameficacao() {
                                     {
                                         missoes?.map(i => (
                                             <div className="missao-card" key={i.id}>
-                                                <i className={i.icone + " icone-missao"}></i>
+                                                <i className={i.id_missao.icone + " icone-missao"}></i>
                                                 <div className="missao-info">
-                                                    <span className="nome-missao">{i.nome}</span>
+                                                    <span className="nome-missao">{i.id_missao.nome}</span>
                                                     <div className="missao-progresso-container">
                                                         <div className="barra-missao-fundo">
                                                             <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
                                                         </div>
-                                                        <span className="missao-texto-progresso">0/{i.acoes}</span>
-                                                        <span className="xp-ganho">{i.xp} XP</span>
+                                                        <span className="missao-texto-progresso">{i.acoes}/{i.id_missao.acoes}</span>
+                                                        <span className="xp-ganho">{i.id_missao.xp} XP</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -260,17 +370,17 @@ function Gameficacao() {
                                 {abaMissoes === 'diarias' ? (
                                     <>
                                         {
-                                            missoes?.filter(i => i.periodo === "diaria").map(i => (
+                                            missoes?.filter(i => i.id_missao.periodo === "diaria").map(i => (
                                                 <div className="missao-card" key={i.id}>
-                                                    <i className={i.icone + " icone-missao"}></i>
+                                                    <i className={i.id_missao.icone + " icone-missao"}></i>
                                                     <div className="missao-info">
-                                                        <span className="nome-missao">{i.nome}</span>
+                                                        <span className="nome-missao">{i.id_missao.nome}</span>
                                                         <div className="missao-progresso-container">
                                                             <div className="barra-missao-fundo">
                                                                 <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
                                                             </div>
-                                                            <span className="missao-texto-progresso">0/{i.acoes}</span>
-                                                            <span className="xp-ganho">{i.xp} XP</span>
+                                                            <span className="missao-texto-progresso">0/{i.id_missao.acoes}</span>
+                                                            <span className="xp-ganho">{i.id_missao.xp} XP</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -280,17 +390,17 @@ function Gameficacao() {
                                 ) : (
                                     <>
                                         {
-                                            missoes?.filter(i => i.periodo === "semanal").map(i => (
+                                            missoes?.filter(i => i.id_missao.periodo === "semanal").map(i => (
                                                 <div className="missao-card" key={i.id}>
-                                                    <i className={i.icone + " icone-missao"}></i>
+                                                    <i className={i.id_missao.icone + " icone-missao"}></i>
                                                     <div className="missao-info">
-                                                        <span className="nome-missao">{i.nome}</span>
+                                                        <span className="nome-missao">{i.id_missao.nome}</span>
                                                         <div className="missao-progresso-container">
                                                             <div className="barra-missao-fundo">
                                                                 <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
                                                             </div>
-                                                            <span className="missao-texto-progresso">0/{i.acoes}</span>
-                                                            <span className="xp-ganho">{i.xp} XP</span>
+                                                            <span className="missao-texto-progresso">0/{i.id_missao.acoes}</span>
+                                                            <span className="xp-ganho">{i.id_missao.xp} XP</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -343,15 +453,15 @@ function Gameficacao() {
                                 {
                                     medalhas?.slice(0, 3).map(i => (
                                         <div className="medalha-card" key={i.id}>
-                                            <i className={i.icone}></i>
+                                            <i className={i.id_medalha.icone}></i>
                                             <div className="medalha-info">
-                                                <span className="nome-medalha">{i.nome}</span>
+                                                <span className="nome-medalha">{i.id_medalha.nome}</span>
                                                 <div className="progresso-medalha">
-                                                    <span className="desc-medalha">{i.descricao}</span>
+                                                    <span className="desc-medalha">{i.id_medalha.descricao}</span>
                                                     <div className="barra-medalha-fundo">
                                                         <div className="barra-medalha-progresso" style={{ width: "0%" }}></div>
                                                     </div>
-                                                    <span className="medalha-texto-progresso">0/{i.acoes}</span>
+                                                    <span className="medalha-texto-progresso">0/{i.id_medalha.acoes}</span>
                                                 </div>
                                             </div>
                                         </div>
