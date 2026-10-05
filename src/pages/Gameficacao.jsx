@@ -40,16 +40,61 @@ function Gameficacao() {
         alteraMissoesVisivel(!missoesVisivel)
     }
 
-    async function buscarUsuarioAutenticado(xp) {
+    async function calculaMissoesConcluidas(id) {
+        let trocas = 0
+        let carrinho = 0
+        let produtos = 0
+        let colecoes = 0
+        let categoria = 0
+
+        const { error: trocadosError, data: trocadosData } = await supabase.from('trocados').select('id_usuario(id), status').eq('id_usuario', id)
+        const { error: carrinhoError, data: carrinhoData } = await supabase.from('carrinho').select('id_usuario(id), quantidade').eq('id_usuario', id)
+        const { error: produtosError, data: produtosData } = await supabase.from('produtos').select('id_usuario(id), id_categoria(nome), quantidade, ativo').eq('id_usuario', id)
+        const { error: colecoesError, data: colecoesData } = await supabase.from('colecoes').select('id_usuario(id), quantidade').eq('id_usuario', id)
+
+        console.log(trocadosData, carrinhoData, produtosData, colecoesData)
+
+        trocadosData?.forEach((item) => {
+            if (item.status) {
+                trocas += 1
+            }
+        });
+
+        carrinhoData?.forEach((item) => {
+            carrinho += item.quantidade
+        });
+
+        produtosData?.forEach((item) => {
+            if (item.ativo) {
+                produtos += item.quantidade
+            }
+        });
+
+        produtosData?.forEach((item) => {
+            if (item.id_categoria?.nome === "Jogos Retrô" || item.id_categoria?.nome === "Moedas & Cédulas") {
+                categoria += item.quantidade
+            }
+        });
+
+        colecoesData?.forEach((item) => {
+            colecoes += item.quantidade
+        });
+
+        console.log("Missões concluídas: ", { trocas, carrinho, produtos, colecoes, categoria })
+
+    }
+
+    async function buscarUsuarioAutenticado(id) {
 
         alteraCarregando(true)
 
-        const { error, data } = await supabase.from('gamificacao').select("*, id_usuario(nome, foto)").eq("id_usuario", xp).single()
+        const { error, data } = await supabase.from('gamificacao').select("*, id_usuario(nome, foto)").eq("id_usuario", id).single()
         alteraUsuarioGameficacao(data)
         console.log(data)
 
         buscarMissoes(data?.id)
         buscarMedalhas(data?.id)
+        calculaMissoesConcluidas(data?.id)
 
         alteraCarregando(false)
 
@@ -66,123 +111,123 @@ function Gameficacao() {
 
     async function buscarMissoes(id) {
         try {
-        // 1. Busca as missões já existentes para o usuário (gamificação)
-        let { data, error } = await supabase
-            .from('missoes_usuarios')
-            .select("*, id_gameficacao(id), id_missao(*)")
-            .eq("id_gameficacao", id);
+            // 1. Busca as missões já existentes para o usuário (gamificação)
+            let { data, error } = await supabase
+                .from('missoes_usuarios')
+                .select("*, id_gameficacao(id), id_missao(*)")
+                .eq("id_gameficacao", id);
 
-        if (error) throw error;
+            if (error) throw error;
 
-        // 2. Se estiver vazio, popula automaticamente para este usuário
-        if (!data || data.length === 0) {
-            console.log("Nenhuma missão encontrada para este usuário. Inicializando...");
+            // 2. Se estiver vazio, popula automaticamente para este usuário
+            if (!data || data.length === 0) {
+                console.log("Nenhuma missão encontrada para este usuário. Inicializando...");
 
-            // Busca todas as missões cadastradas
-            const { data: todasMissoes, error: erroMissoes } = await supabase
-                .from('missoes')
-                .select('id');
+                // Busca todas as missões cadastradas
+                const { data: todasMissoes, error: erroMissoes } = await supabase
+                    .from('missoes')
+                    .select('id');
 
-            if (erroMissoes) throw erroMissoes;
+                if (erroMissoes) throw erroMissoes;
 
-            if (todasMissoes && todasMissoes.length > 0) {
-                // Prepara os dados para inserir em lote (bulk insert)
-                const novasMissoesUsuarios = todasMissoes.map(missao => ({
-                    id_gameficacao: id,
-                    id_missao: missao.id,
-                    acoes: 0 // Valor inicial padrão
-                }));
+                if (todasMissoes && todasMissoes.length > 0) {
+                    // Prepara os dados para inserir em lote (bulk insert)
+                    const novasMissoesUsuarios = todasMissoes.map(missao => ({
+                        id_gameficacao: id,
+                        id_missao: missao.id,
+                        acoes: 0 // Valor inicial padrão
+                    }));
 
-                // Insere no banco de dados
-                const { error: erroInsert } = await supabase
-                    .from('missoes_usuarios')
-                    .upsert(novasMissoesUsuarios, { 
-                        onConflict: 'id_gameficacao,id_missao', 
-                        ignoreDuplicates: true // Ignora se já existir
-                    });
+                    // Insere no banco de dados
+                    const { error: erroInsert } = await supabase
+                        .from('missoes_usuarios')
+                        .upsert(novasMissoesUsuarios, {
+                            onConflict: 'id_gameficacao,id_missao',
+                            ignoreDuplicates: true // Ignora se já existir
+                        });
 
-                if (erroInsert) throw erroInsert;
+                    if (erroInsert) throw erroInsert;
 
-                // 3. Refaz a busca para trazer os dados completos já com as relações preenchidas
-                const { data: dadosAtualizados, error: erroBuscaNovamente } = await supabase
-                    .from('missoes_usuarios')
-                    .select("*, id_gameficacao(id), id_missao(*)")
-                    .eq("id_gameficacao", id);
+                    // 3. Refaz a busca para trazer os dados completos já com as relações preenchidas
+                    const { data: dadosAtualizados, error: erroBuscaNovamente } = await supabase
+                        .from('missoes_usuarios')
+                        .select("*, id_gameficacao(id), id_missao(*)")
+                        .eq("id_gameficacao", id);
 
-                if (erroBuscaNovamente) throw erroBuscaNovamente;
+                    if (erroBuscaNovamente) throw erroBuscaNovamente;
 
-                data = dadosAtualizados;
+                    data = dadosAtualizados;
+                }
             }
+
+            // Atualiza o estado da tela com os dados obtidos
+            alteraMissoes(data);
+            console.log(data);
+
+        } catch (error) {
+            console.error("Erro ao buscar ou inicializar missões do usuário:", error.message);
         }
-
-        // Atualiza o estado da tela com os dados obtidos
-        alteraMissoes(data);
-        console.log(data);
-
-    } catch (error) {
-        console.error("Erro ao buscar ou inicializar missões do usuário:", error.message);
-    }
     }
 
     async function buscarMedalhas(id) {
         try {
-        // 1. Busca as medalhas já existentes para o usuário (gamificação)
-        let { data, error } = await supabase
-            .from('medalhas_usuarios')
-            .select("*, id_gameficacao(id), id_medalha(*)")
-            .eq("id_gameficacao", id);
+            // 1. Busca as medalhas já existentes para o usuário (gamificação)
+            let { data, error } = await supabase
+                .from('medalhas_usuarios')
+                .select("*, id_gameficacao(id), id_medalha(*)")
+                .eq("id_gameficacao", id);
 
-        if (error) throw error;
+            if (error) throw error;
 
-        // 2. Se estiver vazio, popula automaticamente para este usuário
-        if (!data || data.length === 0) {
-            console.log("Nenhuma medalha encontrada para este usuário. Inicializando...");
+            // 2. Se estiver vazio, popula automaticamente para este usuário
+            if (!data || data.length === 0) {
+                console.log("Nenhuma medalha encontrada para este usuário. Inicializando...");
 
-            // Busca todas as medalhas cadastradas na tabela 'medalhas'
-            const { data: todasMedalhas, error: erroMedalhas } = await supabase
-                .from('medalhas')
-                .select('id');
+                // Busca todas as medalhas cadastradas na tabela 'medalhas'
+                const { data: todasMedalhas, error: erroMedalhas } = await supabase
+                    .from('medalhas')
+                    .select('id');
 
-            if (erroMedalhas) throw erroMedalhas;
+                if (erroMedalhas) throw erroMedalhas;
 
-            if (todasMedalhas && todasMedalhas.length > 0) {
-                // Prepara os dados para inserir em lote
-                const novasMedalhasUsuarios = todasMedalhas.map(medalha => ({
-                    id_gameficacao: id,
-                    id_medalha: medalha.id,
-                    acoes: 0
-                    // Adicione outros campos padrão se necessário (ex: conquistada: false, progresso: 0)
-                }));
+                if (todasMedalhas && todasMedalhas.length > 0) {
+                    // Prepara os dados para inserir em lote
+                    const novasMedalhasUsuarios = todasMedalhas.map(medalha => ({
+                        id_gameficacao: id,
+                        id_medalha: medalha.id,
+                        acoes: 0
+                        // Adicione outros campos padrão se necessário (ex: conquistada: false, progresso: 0)
+                    }));
 
-                // Insere no banco de dados
-                const { error: erroInsert } = await supabase
-                    .from('medalhas_usuarios')
-                    .upsert(novasMedalhasUsuarios, { 
-                        onConflict: 'id_gameficacao,id_medalha', 
-                        ignoreDuplicates: true // Ignora se já existir
-                    });
+                    // Insere no banco de dados
+                    const { error: erroInsert } = await supabase
+                        .from('medalhas_usuarios')
+                        .upsert(novasMedalhasUsuarios, {
+                            onConflict: 'id_gameficacao,id_medalha',
+                            ignoreDuplicates: true // Ignora se já existir
+                        });
 
-                if (erroInsert) throw erroInsert;
+                    if (erroInsert) throw erroInsert;
 
-                // 3. Refaz a busca para trazer os dados completos já com as relações preenchidas
-                const { data: dadosAtualizados, error: erroBuscaNovamente } = await supabase
-                    .from('medalhas_usuarios')
-                    .select("*, id_gameficacao(id), id_medalha(*)")
-                    .eq("id_gameficacao", id);
+                    // 3. Refaz a busca para trazer os dados completos já com as relações preenchidas
+                    const { data: dadosAtualizados, error: erroBuscaNovamente } = await supabase
+                        .from('medalhas_usuarios')
+                        .select("*, id_gameficacao(id), id_medalha(*)")
+                        .eq("id_gameficacao", id);
 
-                if (erroBuscaNovamente) throw erroBuscaNovamente;
+                    if (erroBuscaNovamente) throw erroBuscaNovamente;
 
-                data = dadosAtualizados;
+                    data = dadosAtualizados;
+                }
             }
+
+            // Atualiza o estado da tela com as medalhas
+            alteraMedalhas(data);
+            console.log(data);
+
+        } catch (error) {
+            console.error("Erro ao buscar ou inicializar medalhas do usuário:", error.message);
         }
-
-        // Atualiza o estado da tela com as medalhas
-        alteraMedalhas(data);
-        console.log(data);
-
-    } catch (error) {
-        console.error("Erro ao buscar ou inicializar medalhas do usuário:", error.message);
-    }
     }
 
     useEffect(() => { /*copiar*/
@@ -193,7 +238,7 @@ function Gameficacao() {
             alteraAlertaVisivel(true)
             console.log("Usuário não autenticado")
             return
-        } else {alteraAlertaVisivel(false)}
+        } else { alteraAlertaVisivel(false) }
 
         buscarUsuariosRanking()
         buscarUsuarioAutenticado(id)
