@@ -268,7 +268,7 @@ function Gameficacao() {
                                                     <div className="progresso-medalha">
                                                         <span className="desc-medalha">{i?.id_medalha.descricao}</span>
                                                         <div className="barra-medalha-fundo">
-                                                            <div className="barra-medalha-progresso" style={{ width: "0%" }}></div>
+                                                            <div className="barra-medalha-progresso" style={{ width: (i?.acoes / i?.id_medalha.acoes * 100) + "%" }}></div>
                                                         </div>
                                                         <span className="medalha-texto-progresso">{i?.acoes}/{i?.id_medalha.acoes}</span>
                                                     </div>
@@ -293,7 +293,7 @@ function Gameficacao() {
                                                     <span className="nome-missao">{i.id_missao.nome}</span>
                                                     <div className="missao-progresso-container">
                                                         <div className="barra-missao-fundo">
-                                                            <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
+                                                            <div className="barra-missao-progresso" style={{ width: (i?.acoes / i?.id_missao.acoes * 100) + "%" }}></div>
                                                         </div>
                                                         <span className="missao-texto-progresso">{i.acoes}/{i.id_missao.acoes}</span>
                                                         <span className="xp-ganho">{i.id_missao.xp} XP</span>
@@ -377,9 +377,9 @@ function Gameficacao() {
                                                         <span className="nome-missao">{i.id_missao.nome}</span>
                                                         <div className="missao-progresso-container">
                                                             <div className="barra-missao-fundo">
-                                                                <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
+                                                                <div className="barra-missao-progresso" style={{ width: (i?.acoes / i?.id_missao.acoes * 100) + "%" }}></div>
                                                             </div>
-                                                            <span className="missao-texto-progresso">0/{i.id_missao.acoes}</span>
+                                                            <span className="missao-texto-progresso">{i?.acoes}/{i.id_missao.acoes}</span>
                                                             <span className="xp-ganho">{i.id_missao.xp} XP</span>
                                                         </div>
                                                     </div>
@@ -397,9 +397,9 @@ function Gameficacao() {
                                                         <span className="nome-missao">{i.id_missao.nome}</span>
                                                         <div className="missao-progresso-container">
                                                             <div className="barra-missao-fundo">
-                                                                <div className="barra-missao-progresso" style={{ width: "0%" }}></div>
+                                                                <div className="barra-missao-progresso" style={{ width: (i?.acoes / i?.id_missao.acoes * 100) + "%" }}></div>
                                                             </div>
-                                                            <span className="missao-texto-progresso">0/{i.id_missao.acoes}</span>
+                                                            <span className="missao-texto-progresso">{i?.acoes}/{i.id_missao.acoes}</span>
                                                             <span className="xp-ganho">{i.id_missao.xp} XP</span>
                                                         </div>
                                                     </div>
@@ -459,9 +459,9 @@ function Gameficacao() {
                                                 <div className="progresso-medalha">
                                                     <span className="desc-medalha">{i.id_medalha.descricao}</span>
                                                     <div className="barra-medalha-fundo">
-                                                        <div className="barra-medalha-progresso" style={{ width: "0%" }}></div>
+                                                        <div className="barra-medalha-progresso" style={{ width: (i?.acoes / i?.id_medalha.acoes * 100) + "%" }}></div>
                                                     </div>
-                                                    <span className="medalha-texto-progresso">0/{i.id_medalha.acoes}</span>
+                                                    <span className="medalha-texto-progresso">{i?.acoes}/{i.id_medalha.acoes}</span>
                                                 </div>
                                             </div>
                                         </div>
